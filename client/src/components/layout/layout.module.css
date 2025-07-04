@@ -1,0 +1,36 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  background-color: grey;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.navbar {
+  width: 200px;
+  background-color: #f4f4f4;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.navbar ul {
+  list-style-type: none;
+}
+
+.content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: #fff;
+}

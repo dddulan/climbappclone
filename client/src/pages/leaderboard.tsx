@@ -1,7 +1,12 @@
 import React from "react";
 
 const Leaderboard: React.FC = () => {
-  return <h1>WELCOME TO THE LEADERBORD</h1>
+
+  return (
+    <div>
+      <h1>WELCOME TO THE LEADERBORD</h1>
+    </div>
+  );
 };
 
 export default Leaderboard;

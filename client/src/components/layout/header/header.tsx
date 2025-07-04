@@ -1,7 +1,9 @@
+import classes from "../layout.module.css"
+
 const Header = () => {
 
   return (
-    <div>
+    <div className={classes.header}>
       HEADER
     </div>
   )

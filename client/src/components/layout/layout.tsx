@@ -1,18 +1,20 @@
-import React from "react"
-import Header from "./header"
-import Navbar from "./navbar"
+import Header from "./header/header";
+import Navbar from "./navbar/navbar";
+import classes from "./layout.module.css"
+import { Outlet } from "react-router-dom";
 
 const Layout = () => {
-
   return (
-    <div>
+    <div className={classes.layout}>
       <Header />
-      <Navbar />
-      <div>
-        
+      <div className={classes.body}>
+        <Navbar />
+        <main>
+          <Outlet />
+        </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
