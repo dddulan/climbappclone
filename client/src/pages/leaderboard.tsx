@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Button from "../components/button/button"
+import classes from "./competitions.module.css"
 
 const Leaderboard: React.FC = () => {
   const [message, setMessage] = useState<string>("");
@@ -11,7 +12,7 @@ const Leaderboard: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className={classes.title}>
       <h1>WELCOME TO THE LEADERBOARD</h1>
 
       <Button onClick={testfn}>View Leaderboard</Button>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Button from "../components/button/button"
+import classes from "./competitions.module.css"
 
 const Competitions: React.FC = () => {
   const [message, setMessage] = useState<string>("");
@@ -11,8 +12,8 @@ const Competitions: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>WELCOME TO THE COMPETITIONS</h1>
+    <div className={classes.title}>
+      <h1 >WELCOME TO THE COMPETITIONS</h1>
 
       <Button onClick={testfn}>View Competitions</Button>
       

@@ -2,13 +2,30 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color:#cacaca;
+  font-family: 'Arial', sans-serif;
 }
 
 .header {
-  background-color: grey;
+  width: 100%;
+  background-color: #9b9b9b;
+  display: flex;
+  padding: 2px 0px;
   color: white;
-  padding: 1rem;
-  text-align: center;
+}
+
+.headerLogo {
+  height: 30px;
+  padding:5px;
+  padding-right: 10px;
+}
+
+.headerLinks {
+  display: flex;
+  justify-content: flex-end;
+  list-style: none;
+  gap: 0px;
+  flex:0; /*goes right*/
 }
 
 .body {
@@ -17,15 +34,19 @@
   overflow: hidden;
 }
 
-.navbar {
-  width: 200px;
-  background-color: #f4f4f4;
-  padding: 1rem;
-  box-sizing: border-box;
+.header li {
+  color: white;
+  padding: 5px 5px;
+  border-radius: 6px;
+  cursor: pointer; /* clickable cursor */
+  display: flex;
+  align-items: center;
 }
-
-.navbar ul {
-  list-style-type: none;
+.header li a {
+   color: #353535;
+  text-decoration: none;  /* removes underline */
+  font-weight: 550;
+  font-size: 12px;
 }
 
 .content {
