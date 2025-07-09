@@ -1,3 +1,10 @@
 .tempButton {
-  color: red;
+  background-color: #8a9441;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
 }
