@@ -34,3 +34,19 @@
   overflow-y: auto;
   background-color: #fff;
 }
+
+.footer {
+  height: 1dvh;
+  background-color: grey;
+  color: white;
+  padding: 1dvh;
+}
+
+.footerRight {
+  text-align: right;
+  float: right;
+}
+
+.footerLeft {
+  text-align: left;
+}

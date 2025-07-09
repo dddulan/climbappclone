@@ -1,3 +1,12 @@
 .tempButton {
-  color: red;
+  font-family: sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 3dvh;
+  width: 20dvh;
+  color: white;
+  background-color: #BD5923;
+  border-color: #BD5923;
+  border-radius: 10px;
+  cursor: pointer;
 }
