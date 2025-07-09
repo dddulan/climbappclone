@@ -13,15 +13,19 @@ const Competitions: React.FC = () => {
 
   return (
     <div className={classes.title}>
-      <h1 >WELCOME TO THE COMPETITION</h1>
+      <h1 >WELCOME TO THE COMPETITIONS</h1>
 
-      <Button onClick={testfn}></Button>
+      <Button onClick={testfn}>View Competitions</Button>
       
       <div>
         <span>{message}</span>
       </div>
+      <div>
+         <Button onClick={testfn}>Edit Competitions</Button>
+      </div>
     </div>
   );
 };
+
 
 export default Competitions;

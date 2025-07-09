@@ -1,10 +1,12 @@
 .tempButton {
-  background-color: #8a9441;
+  font-family: sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 3dvh;
+  width: 20dvh;
   color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 1rem;
+  background-color: #BD5923;
+  border-color: #BD5923;
+  border-radius: 10px;
   cursor: pointer;
 }

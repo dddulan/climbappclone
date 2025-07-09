@@ -1,15 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import classes from "./button.module.css"
+
 
 interface MyButtonProps {
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  children: React.ReactNode;
 }
 
-const Button: React.FC<MyButtonProps> = ({ onClick }) => {
+const Button: React.FC<MyButtonProps> = ({ onClick, children }) => {
 
   return (
     <>
-      <button className={classes.tempButton} onClick={onClick}>GET List of all competitions</button>
+      <button className={classes.tempButton} onClick={onClick}>
+        {children}
+      </button>
     </>
   )
 }
