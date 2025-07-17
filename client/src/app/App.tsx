@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Competitions from '../pages/competitions';
-import Contestants from '../pages/contestants';
-import Leaderboard from '../pages/leaderboard';
-import Login from '../pages/login';
+import Competitions from '../pages/competitions/competitions';
+import Contestants from '../pages/contestants/contestants';
+import Leaderboard from '../pages/leaderboard/leaderboard';
+import Login from '../pages/login/login';
 import Layout from '../components/layout/layout';
 
 const App: React.FC = () => {

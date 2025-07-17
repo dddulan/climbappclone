@@ -4,8 +4,6 @@ import { useNavigation } from "react-router-dom";
 const Login: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   
-  //const navigate = useNavigation();
-
   const onSubmit = () => {};
 
   const handleChange = (event: any) => {
