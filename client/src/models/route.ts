@@ -6,5 +6,5 @@ export interface Route {
   grade: string;
   color: string;
   point_value: number;
-  set_date: Date;
+  set_date: string;
 }
