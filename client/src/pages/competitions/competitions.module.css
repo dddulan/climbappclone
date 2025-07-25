@@ -1,16 +1,10 @@
-
-
-
-
-
-   
-:global(.rdg)  {
+:global(.rdg) {
   font-size: 14px;
   border-radius: 4px;
 
   background-color: #ffffff;
   --rdg-background-color: #fafafa;
-  --rdg-color: black
+  --rdg-color: black;
 }
 
 :global(.rdg-header-row) {
@@ -18,52 +12,51 @@
   color: #000000;
 }
 
-
-
 .pageWrapper {
   display: flex;
-  justify-content: center;     /* Center horizontally */
+  justify-content: center; /* Center horizontally */
   width: 100%;
 }
+
 .pageContent {
-   max-width: 1000px;
+  max-width: 1000px;
   width: 100%;
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
-  align-items: center;         /* Center inner items */
+  align-items: center; /* Center inner items */
   gap: 2rem;
 }
-.tableGrid{
+
+.tableGrid {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   gap: 1rem;
-
 }
-.compTable{
+
+.compTable {
   width: 90%;
   max-width: 800px;
   min-width: 300px;
   overflow-x: auto;
   box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.3);
-
-  
 }
-.routeTable{
-width: 100%;
+
+.routeTable {
+  width: 100%;
   max-width: 600px;
   min-width: 300px;
   overflow-x: auto;
-    box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.3);
-
+  box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.3);
 }
 
+.rdg-cell {
+  background-color: #9370db;
+  color: white;
+}
 
-
-
-
-
-
-
+&:hover .rdg-cell {
+  background-color: #800080;
+}
