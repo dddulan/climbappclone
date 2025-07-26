@@ -22,8 +22,8 @@ const Competitions: React.FC = () => {
  // text editor is used for rendering editable cells
  // editable flag is used to toggle edit mode
   const columns: Column<Competition>[] = [
-    { key: "name", name: "Competition", renderEditCell: textEditor, editable: compEditFlag,resizable: true,},
-    { key: "date", name: "Date", renderEditCell: textEditor, editable: compEditFlag,resizable: true,},
+    { key: "name", name: "Competitions", renderEditCell: textEditor, editable: compEditFlag,resizable: true,},
+   // { key: "date", name: "Date", renderEditCell: textEditor, editable: compEditFlag,resizable: true,},
 
   ];
 
@@ -152,43 +152,86 @@ const Competitions: React.FC = () => {
   };
   return (
     <div className={classes.pageWrapper}>
-      <div className={classes.pageContent}>
-   
-        
-            <div>
-              {/* Save and edit button*/}
-              <Button onClick={handleCompEdit }>{compEditFlag===true ? 'Save' :'Edit Competitions'}</Button>
-              
+        <div className={classes.pageContent}>
+              <div className={classes.title}>
+                <h2>Competitions</h2>
+                <div className={classes.buttonGrid}>
+
+                {/* Save and edit button*/}
+                  <Button onClick={handleCompEdit }>{compEditFlag===true ? 'Save' :'Edit'}</Button>
+
               {/* Cancel Button appears after pressing "edit" Button */}
               {compEditFlag && 
                   
-                    <Button onClick={handleCancel}>Cancel</Button> 
+              <Button onClick={handleCancel}>Cancel</Button> 
               }
-              {/* Temp button for console logging*/}
-              <Button onClick={temp}>check</Button>
+               {/* Temp button for adding competitions*/}
+              <div className={classes.plusButton}>
+              <button>-</button>
+              <button>+</button>
+              </div>
+
+              
+
             </div>
+
+
+              </div>
+               
+          <p>Select a competition to view routes</p> 
+
+            
+        
+        </div>
+
+        <div className={classes.pageContent}>
+          
+          <div>
+              <h4>New competition</h4>
+              <input className={classes.textBox}></input>
+              <button className={classes.plusButton}>add</button>
+
+          </div>
+        </div>
+
+        <div className={classes.pageContent}>
+
             <div className={classes.tableGrid}>
             {/* Displays the competition Table */}
             
               <div className={classes.compTable}>
                 <DataGrid style={{ height: "auto", maxHeight: "100%", width: "100%" }}columns={columns} rows={compRowsCopy} onRowsChange={setCompRowsCopy} onCellClick={handleCellClick} />
-              </div>
-              {/* Displays routes table */}
-              {selectedCompetition !==null &&
-              <div>
-                <Button onClick={handleRouteEdit }>{routeEditFlag===true ? 'RouteSave' :'RouteEdit'}</Button>
-              {
-                routeEditFlag &&
-                <Button  onClick={handleCancel}>Route Cancel</Button> 
-              }
-                <div className={classes.routeTable}>
-                  <DataGrid style={{ height: "auto", maxHeight: "100%", width: "100%" }}columns={routes} rows={routeRowsCopy.filter(route => route.competition_id===selectedCompetition)} onRowsChange={setRouteRowsCopy} />
-                </div>
-              </div>
-              }
             </div>
-          
-       </div>  
+            </div>
+            </div>
+
+              {/* Displays routes table */}
+              
+
+              {selectedCompetition !==null &&
+              <div className={classes.routeContent}>
+                  <div className={classes.routeButtonGrid}>
+                      <div>
+                        <Button onClick={handleRouteEdit }>{routeEditFlag===true ? 'RouteSave' :'RouteEdit'}</Button>
+                        </div>
+                      {
+                        routeEditFlag &&
+                        <div>
+                            <Button  onClick={handleCancel}>Route Cancel</Button> 
+                        </div>
+                      } 
+                  </div>
+
+                    <div className={classes.routeTable}>
+                      <DataGrid style={{ height: "auto", maxHeight: "100%", width: "100%" }}columns={routes} rows={routeRowsCopy.filter(route => route.competition_id===selectedCompetition)} onRowsChange={setRouteRowsCopy} />
+                    
+                  </div>
+              </div>
+
+              }
+
+
+        
     </div>
 
   );

@@ -2,11 +2,12 @@
   font-family: sans-serif;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 3dvh;
-  width: 20dvh;
+  height: 100%;
+  width: 100%;
+  padding: 5px;
   color: white;
   background-color: #BD5923;
   border-color: #BD5923;
-  border-radius: 10px;
+  border-radius: 3px;
   cursor: pointer;
 }
