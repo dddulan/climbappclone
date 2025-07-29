@@ -1,7 +1,7 @@
 import classes from "./competitions.module.css";
 import Button from "../../components/button/button";
 import {Link} from "react-router-dom";
-import TextBox from "../../components/textbox/textbox";
+import TextBox from '../../components/textbox/textbox';
 const CompetitionsForm: React.FC = () => {
 
   return (

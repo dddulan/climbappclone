@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import CompetitionsHome from '../pages/competitions/CompetitionsHome';
+import CompetitionsHome from '../pages/competitions/competitions';
 import CompetitionsForm from '../pages/competitions/CompetitionForm';
 
-import Contestants from '../pages/contestants/ContestantsHome';
+import Contestants from '../pages/contestants/contestants';
 import Leaderboard from '../pages/leaderboard/Leaderboard';
 import Login from '../pages/login/login';
 import Layout from '../components/layout/layout';
