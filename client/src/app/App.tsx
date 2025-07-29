@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Competitions from '../pages/competitions/competitions';
 import Contestants from '../pages/contestants/contestants';
-import Leaderboard from '../pages/leaderboard/leaderboard';
+import Leaderboard from '../pages/leaderboard/Leaderboard';
 import Login from '../pages/login/login';
 import Layout from '../components/layout/layout';
 
