@@ -4,6 +4,8 @@ import { Column, DataGrid, textEditor } from "react-data-grid";
 import "react-data-grid/lib/styles.css";
 import { Contestant } from "../../models/contestant";
 import Button from "../../components/button/button";
+import { getAllContestants } from "../../services/contestantService";
+
 
 const Contestants: React.FC = () => {
   const [rows, setRows] = useState<Contestant[]>([]);
@@ -23,17 +25,12 @@ const Contestants: React.FC = () => {
 
   
   useEffect(() => {
-    getAllContestants();
+    loadData();
   }, []);
 
-  const getAllContestants = () => {
-    fetch("http://localhost:5000/contestant")
-      .then((res) => res.json())
-      .then((data) => {
-        setRows(data);
-      });
+  const loadData = () => {
+    getAllContestants().then(setRows).catch(console.error);
   };
-
 
   return (
 

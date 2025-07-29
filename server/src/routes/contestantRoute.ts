@@ -1,8 +1,8 @@
 import express from 'express';
-import { getUsers } from '../controllers/contestantController';
+import { getAllContestants } from '../controllers/contestantController';
 
 const router = express.Router();
 
-router.get('/', getUsers);
+router.get('', getAllContestants);
 
 export default router;
