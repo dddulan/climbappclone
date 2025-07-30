@@ -172,14 +172,17 @@ const CompetitionsHome: React.FC = () => {
   };
 
   const test = () => {
-    const blankRow: Competition = {
-      id: 0,
-      date_of: "",
-      type: "",
-      routes: [],
-    };
+    // const blankRow: Competition = {
+    //   id: 0,
+    //   date_of: "",
+    //   type: "",
+    //   routes: [],
+    // };
 
-    setCompRowsCopy([...compRowsCopy, blankRow]);
+    // setCompRowsCopy([...compRowsCopy, blankRow]);
+
+    console.log("REQUEST", compRowsCopy);
+    
   };
 
   return (
