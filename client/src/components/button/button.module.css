@@ -1,7 +1,6 @@
 .tempButton {
   font-family: sans-serif;
   overflow: hidden;
-  text-overflow: ellipsis;
   height: 2.5dvh;
   width:10dvh;
   color: white;

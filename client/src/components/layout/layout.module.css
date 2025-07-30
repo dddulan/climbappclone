@@ -12,7 +12,10 @@
   display: flex;
   padding: 2px 0px;
   color: white;
-  border: 1px solid rgba(122, 122, 122, 0.534);
+  border: 1px solid black;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  border-radius: 8px;
 }
 
 .headerLogo {
@@ -26,7 +29,7 @@
   justify-content: flex-end;
   list-style: none;
   gap: 0px;
-  flex:0; /*goes right*/
+  flex:0; 
 }
 
 .body {
@@ -38,22 +41,19 @@
 }
 
 .header li {
-  color: white;
   padding: 5px 5px;
-  border-radius: 6px;
-  cursor: pointer; /* clickable cursor */
+  cursor: pointer; 
   display: flex;
   align-items: center;
 }
 .header li a {
-   color: #353535;
-  text-decoration: none;  /* removes underline */
-  font-weight: 550;
-  font-size: 12px;
+   color: #000000;
+  text-decoration: none; 
+  font-weight:bold;
+  font-size: 14px;
 }
 
 .content {
-  
 }
 
 .footer {
@@ -61,6 +61,7 @@
   background-color: grey;
   color: white;
   padding: 1dvh;
+
 }
 
 .footerRight {
