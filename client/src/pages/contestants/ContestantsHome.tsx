@@ -9,9 +9,11 @@ import { getAllContestants } from "../../services/contestantService";
 
 const Contestants: React.FC = () => {
   const [rows, setRows] = useState<Contestant[]>([]);
+  const [contestRowsCopy, setContestRowsCopy] = useState<Contestant[]>([]);
   const [editFlag, setEditFlag] = useState<boolean>(false);
+  const [isContestEdit, setIsContestEdit] = useState<boolean>(false);
 
-  
+
   const columns: Column<Contestant>[] = [
     { key: "id", name: "ID", renderEditCell: textEditor, editable: editFlag },
     { key: "name", name: "Name", renderEditCell: textEditor, editable: editFlag },
@@ -23,7 +25,7 @@ const Contestants: React.FC = () => {
     },
   ];
 
-  
+
   useEffect(() => {
     loadData();
   }, []);
@@ -32,18 +34,68 @@ const Contestants: React.FC = () => {
     getAllContestants().then(setRows).catch(console.error);
   };
 
+
+  // State to manage the edit flag for Contestants
+  const handleCancel = () => {
+    if (isContestEdit) {
+      setRows(contestRowsCopy);
+      setEditFlag(false);
+      setContestRowsCopy(rows);
+    };
+  }
+
+  // Function to handle the edit/save button click
+  // editFlag is toggled to switch between edit and save mode
+  const handleContestEdit = () => {
+    if (isContestEdit === false) {
+      setContestRowsCopy([...rows]);
+      setEditFlag(true);
+      setIsContestEdit(true);
+    } else if (isContestEdit === true) {
+      setEditFlag(false);
+      setIsContestEdit(false);
+    }
+  };
+
+  const handleCellClick = (args: {
+    row: Contestant;
+    column: Column<Contestant>;
+  }) => {
+    //handleCellClick
+    if (isContestEdit === true) {
+      return setRows;
+    }
+  };
+
+
   return (
 
-    
     <div>
-      
-      <div className={classes.title}>
-        <h1>All Contestants</h1>
+        <div className={classes.title}>
+          <h1>All Contestants</h1>
       </div>
+      <div style={{width: "80vw", margin: "0 10vw" }}>
+        {/* Save and edit button*/}
+        <Button
+          onClick={handleContestEdit}
+        >
+          {isContestEdit === true ? "Save" : "Edit "}
+        </Button>
+        {/* Cancel Button appears after pressing "edit" Button */}
+        {isContestEdit && <Button onClick={handleCancel}>Undo</Button>}
+      </div>
+    
 
-      <DataGrid columns={columns} rows={rows} onRowsChange={setRows} />
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        onRowsChange={setRows}
+      />
     </div>
   );
 };
 
 export default Contestants;
+
+
+
