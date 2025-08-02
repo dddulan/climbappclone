@@ -3,9 +3,15 @@ import { Column, DataGrid, textEditor } from "react-data-grid";
 import { Competition } from "../../models/competition";
 import { Route } from "../../models/route";
 import Button from "../../components/button/button";
-import { getAllCompetitions } from "../../services/competitionService";
+import {
+  getAllCompetitions,
+  saveCompetitions,
+} from "../../services/competitionService";
 import { getRoutesById } from "../../services/routeService";
 import classes from "./competitions.module.css";
+
+import { Link } from "react-router-dom";
+import EditIcon from "../../components/editIcon/editIcon";
 
 const CompetitionsHome: React.FC = () => {
   //Competitions state Management
@@ -16,7 +22,6 @@ const CompetitionsHome: React.FC = () => {
   const [isRouteEdit, setRouteEditFlag] = useState<boolean>(false);
   const [routeRows, setRouteRows] = useState<Route[]>([]);
   const [routeRowsCopy, setRouteRowsCopy] = useState<Route[]>([]);
-
   const [selectedCompetition, setSelectedCompetition] = useState<number | null>(
     null
   );
@@ -40,14 +45,15 @@ const CompetitionsHome: React.FC = () => {
   const columns: Column<Competition>[] = [
     {
       key: "id",
-      name: "comp_id",
+      name: "Id",
       renderEditCell: textEditor,
       editable: isCompEdit,
       resizable: true,
     },
+
     {
       key: "date_of",
-      name: "Competition Date",
+      name: "Date",
       renderEditCell: textEditor,
       editable: isCompEdit,
       resizable: true,
@@ -116,20 +122,20 @@ const CompetitionsHome: React.FC = () => {
   // editFlag is toggled to switch between edit and save mode
   // if editFlag is false, set it to tru and enable editing
   const handleCompEdit = () => {
-    if (isCompEdit === false) {
-      setCompEditFlag(!isCompEdit);
-    } else if (isCompEdit === true) {
+    if (isCompEdit) {
       setCompEditFlag(false);
       setCompRows(compRowsCopy);
+    } else {
+      setCompEditFlag(!isCompEdit);
     }
   };
 
   const handleRouteEdit = () => {
-    if (isRouteEdit === false) {
+    if (!isRouteEdit) {
       setRouteEditFlag(!isRouteEdit);
 
       //if editFlag is true, save the changes and set the edited rows to copyRows
-    } else if (isRouteEdit === true) {
+    } else {
       setRouteEditFlag(false);
 
       //prevRows is your current state. "All the routes"
@@ -149,10 +155,10 @@ const CompetitionsHome: React.FC = () => {
     column: Column<Competition>;
   }) => {
     //handleCellClick
-    if (isCompEdit === true) {
+    if (isCompEdit) {
       return setSelectedCompetition(null);
     }
-    if (isRouteEdit === true) {
+    if (isRouteEdit) {
       alert("Save Changes Before Opening Another Competition");
       return;
     }
@@ -165,47 +171,83 @@ const CompetitionsHome: React.FC = () => {
       .catch(console.error);
   };
 
-  
+  const test = () => {
+    // const blankRow: Competition = {
+    //   id: 0,
+    //   date_of: "",
+    //   type: "",
+    //   routes: [],
+    // };
+
+    // setCompRowsCopy([...compRowsCopy, blankRow]);
+
+    console.log("REQUEST", compRowsCopy);
+    
+  };
 
   return (
-    <>
-      <div>
-        {/* Save and edit button*/}
-        <Button onClick={handleCompEdit}>
-          {isCompEdit === true ? "Save" : "Edit Competitions"}
-        </Button>
+    //Align children center
+    <div className={classes.pageContainer}>
+      {/* Gap between both tables and have them side by side */}
+      <div className={classes.layoutContainer}>
+        {/* Competitions Section */}
+        <div className={classes.compContainer}>
+          {/* Title */}
 
-        {/* Cancel Button appears after pressing "edit" Button */}
-        {isCompEdit && <Button onClick={handleCancel}>Cancel</Button>}
-      </div>
+          <div className={classes.title}>
+            <h1>Competitions</h1>
+            {/* Title Buttons */}
 
-      <div>
-        {/* Competitions Table */}
-        <div style={{ height: 400, width: "100%" }}>
-          <DataGrid
-            columns={columns}
-            rows={compRowsCopy}
-            onRowsChange={setCompRowsCopy}
-            onCellClick={handleCellClick}
-          />
-        </div>
+            <EditIcon onClick={handleCompEdit}></EditIcon>
+            <Link to="/competitionform">
+              <button
+                className={classes.addButton}
+                onClick={() => console.log("hello")}
+              >
+                +
+              </button>
+            </Link>
+            {/* Cancel Button appears after pressing "edit" Button */}
+            {isCompEdit && <Button onClick={handleCancel}>Cancel</Button>}
+          </div>
+          {/* Competitions Table */}
 
-        {/* Routes Table */}
-        <div>
-          <Button onClick={handleRouteEdit}>
-            {isRouteEdit === true ? "RouteSave" : "RouteEdit"}
-          </Button>
-          {isRouteEdit && <Button onClick={handleCancel}>Route Cancel</Button>}
-          <div style={{ height: 400, width: "100%" }}>
+          <div>
             <DataGrid
-              columns={routes}
-              rows={routeRowsCopy}
-              onRowsChange={setRouteRowsCopy}
+              style={{ maxHeight: "700px" }}
+              columns={columns}
+              rows={compRowsCopy}
+              onRowsChange={setCompRowsCopy}
+              onCellClick={handleCellClick}
+              className={classes.compTableSize}
             />
           </div>
         </div>
+        {/* Routes Section */}
+
+        <div>
+          <div className={classes.title}>
+            <h1>Routes</h1>
+            <EditIcon onClick={handleRouteEdit}></EditIcon>
+
+            {isRouteEdit && <Button onClick={handleCancel}>Cancel</Button>}
+          </div>
+          {/* Routes Table */}
+
+          <div>
+            <DataGrid
+              style={{ width: "758px", height: "500px" }}
+              columns={routes}
+              rows={routeRowsCopy}
+              onRowsChange={setRouteRowsCopy}
+              className={classes.routeTableSize}
+            />
+          </div>
+
+          <Button onClick={test}>SAVE</Button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

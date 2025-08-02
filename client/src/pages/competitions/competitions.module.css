@@ -1,62 +1,136 @@
+h1 {
+  margin: 0;
+  color: #000000;
+  font-size: 25px;
+}
+.pageContainer {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 5rem;
+}
+.layoutContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+.compContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+}
+.compBackground {
+  border: 1px solid black;
+  display: flex;
+}
+.title {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding: 10px;
+  gap: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  background-color: #eae9e9;
+  border: 1px solid rgb(0, 0, 0);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+}
+
+.addButton {
+  font-family: sans-serif;
+  overflow: hidden;
+  min-height: 1dvh;
+  min-width: 1dvh;
+  height: 2dvh;
+  width: 2dvh;
+  color: rgb(0, 0, 0);
+  font-size: 1.7dvh;
+  background-color: #bd5923;
+  border-color: #bd5923;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Competition Form Classes */
+p {
+  font-weight: bolder;
+}
+.compForm {
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  padding: 0.5dvh;
+  border-radius: 6px;
+  gap: 1dvh;
+  padding-left: 2dvh;
+  padding-right: 2dvh;
+  border: solid 1px black;
+}
+
+.formLayout {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.formTitle {
+  display: flex;
+  justify-content: row;
+  gap: 1rem;
+  padding: 10px;
+}
+
+.formButton {
+  padding-top: 2rem;
+}
+
+.editAlign {
+  overflow: auto;
+}
+
+.routeTableSize {
+  height: 500px;
+  width: 50vw;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+}
+.compTableSize {
+  height: 100%;
+  max-height: auto;
+  width: auto;
+  min-width: 300px;
+  border-radius: 10px;
+
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* React Data Grid global styles */
 :global(.rdg) {
   font-size: 14px;
   border-radius: 4px;
-
-  background-color: #ffffff;
-  --rdg-background-color: #fafafa;
+  background-color: #f0f0f0;
+  --rdg-background-color: #f0f0f0;
   --rdg-color: black;
+  --rdg-row-hover-background-color: #f0f0f0;
 }
 
 :global(.rdg-header-row) {
-  background-color: #ffffff;
+  background-color: #eeeeee;
   color: #000000;
 }
 
-.pageWrapper {
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  width: 100%;
+:global(.rdg-row:hover) {
+  background-color: #f9f9f9;
+}
+:global(.rdg .rdg-cell:focus-within) {
+  background-color: #c5c5c5;
+  border: none;
+  outline: none;
+  box-shadow: inset 0 0 0 1px #757575;
 }
 
-.pageContent {
-  max-width: 1000px;
-  width: 100%;
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center inner items */
-  gap: 2rem;
-}
-
-.tableGrid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 1rem;
-}
-
-.compTable {
-  width: 90%;
-  max-width: 800px;
-  min-width: 300px;
-  overflow-x: auto;
-  box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.3);
-}
-
-.routeTable {
-  width: 100%;
-  max-width: 600px;
-  min-width: 300px;
-  overflow-x: auto;
-  box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.3);
-}
-
-.rdg-cell {
-  background-color: #9370db;
-  color: white;
-}
-
-&:hover .rdg-cell {
-  background-color: #800080;
+:global(.rdg-cell) {
+  border-right: none;
+  padding: 1px 20px;
 }
