@@ -10,3 +10,30 @@ export const getAllContestants = async (req: Request, res: Response): Promise<vo
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+export const saveContestants = async (req: Request, res: Response): Promise<void> => {
+  const contestants = req.body;
+  const values: any[] = [];
+  const batch: string[] = []
+
+  contestants.forEach((comp, i) => {
+    values.push(comp.id, comp.date_of, comp.type);
+    const idx = i * 3;
+    batch.push(`($${idx + 1}, $${idx + 2}, $${idx + 3})`);
+  });
+
+  try {
+    const query = `
+      INSERT INTO contestants (id, date_of, type)
+      VALUES ${batch.join(', ')}
+      ON CONFLICT (id) DO UPDATE 
+      SET date_of = EXCLUDED.date_of,
+          type = EXCLUDED.type
+    `;
+
+    await pool.query(query, values);
+    res.json({ message: 'Success' });
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+};

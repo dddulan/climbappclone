@@ -12,27 +12,28 @@ export const getAllCompetitions = async (req: Request, res: Response): Promise<v
 };
 
 export const saveCompetitions = async (req: Request, res: Response): Promise<void> => {
-  const compsToBeSaved = req.body.data;
+  const competitions = req.body;
+  const values: any[] = [];
+  const batch: string[] = []
+
+  competitions.forEach((comp, i) => {
+    values.push(comp.id, comp.date_of, comp.type);
+    const idx = i * 3;
+    batch.push(`($${idx + 1}, $${idx + 2}, $${idx + 3})`);
+  });
 
   try {
-    await pool.query('BEGIN');
-
-    for (const row of compsToBeSaved) {
-      await pool.query(
-      `INSERT INTO competitions (id, date_of, type)
-      VALUES ($1, $2, $3)
-      ON CONFLICT (id) DO UPDATE
+    const query = `
+      INSERT INTO competitions (id, date_of, type)
+      VALUES ${batch.join(', ')}
+      ON CONFLICT (id) DO UPDATE 
       SET date_of = EXCLUDED.date_of,
-          type = EXCLUDED.type`,
-      [row.id, row.date_of, row.type]
-    );
+          type = EXCLUDED.type
+    `;
 
-    await pool.query('COMMIT');
-
+    await pool.query(query, values);
     res.json({ message: 'Success' });
-  }
   } catch (err) {
-    console.error('Query error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: err });
   }
 };

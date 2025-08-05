@@ -4,7 +4,7 @@ import CompetitionsHome from '../pages/competitions/CompetitionsHome';
 import CompetitionsForm from '../pages/competitions/CompetitionForm';
 
 import Contestants from '../pages/contestants/ContestantsHome';
-import Leaderboard from '../pages/leaderboard/leaderboard';
+import Leaderboard from '../pages/leaderboard/Leaderboard';
 import Login from '../pages/login/login';
 import Layout from '../components/layout/layout';
 

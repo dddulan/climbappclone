@@ -181,8 +181,7 @@ const CompetitionsHome: React.FC = () => {
 
     // setCompRowsCopy([...compRowsCopy, blankRow]);
 
-    console.log("REQUEST", compRowsCopy);
-    
+    saveCompetitions(compRowsCopy);
   };
 
   return (
