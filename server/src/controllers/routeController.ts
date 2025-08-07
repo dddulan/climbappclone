@@ -6,7 +6,15 @@ export const getRoutesById = async (req: Request, res: Response): Promise<void> 
   
   try {
     const result = await pool.query(`
-      SELECT * FROM routes
+      SELECT * 
+        id,
+        name,
+        number,
+        grade,
+        color,
+        point_value,
+        TO_CHAR(date_of, 'DD-MM-YYYY') AS set_date
+      FROM routes
       WHERE competition_id = ${id}
     `);
     res.json(result.rows);
@@ -16,22 +24,6 @@ export const getRoutesById = async (req: Request, res: Response): Promise<void> 
   }
 };
 
-export const upsertRoutes = async (req: Request, res: Response): Promise<void> => {
-  const temp = req.body;
-  temp.flatMap
-  
-  try {
-    // const result = await pool.query(`
-    //   INSERT INTO routes (name, number, grade, color, point_value, set_date)
-    //   VALUES ${values}
-    //   ON CONFLICT (id)
-    //   DO UPDATE SET
-    //     name = EXCLUDED.name,
-    //     email = EXCLUDED.email;
-    // `);
-    // res.json(result.rows);
-  } catch (err) {
-    console.error('Query error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+export const saveRoutes = async (req: Request, res: Response): Promise<void> => {
+
 };

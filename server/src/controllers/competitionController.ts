@@ -3,7 +3,15 @@ import pool from '../config/database';
 
 export const getAllCompetitions = async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await pool.query('SELECT * FROM competitions');
+    const result = await pool.query(`
+      SELECT
+        id, 
+        type,
+        TO_CHAR(date_of, 'DD-MM-YYYY') AS date_of
+      FROM competitions 
+      ORDER BY date_of
+      `);
+    result.rows.map
     res.json(result.rows);
   } catch (err) {
     console.error('Query error:', err);

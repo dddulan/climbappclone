@@ -3,7 +3,13 @@ import pool from '../config/database';
 
 export const getAllContestants = async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await pool.query('SELECT * FROM contestants');
+    const result = await pool.query(`
+      SELECT 
+        c.name, 
+        c.gender, 
+        s.name AS school_name 
+      FROM contestants c 
+      INNER JOIN schools s ON c.school_id = s.id`);
     res.json(result.rows);
   } catch (err) {
     console.error('Query error:', err);
@@ -16,8 +22,8 @@ export const saveContestants = async (req: Request, res: Response): Promise<void
   const values: any[] = [];
   const batch: string[] = []
 
-  contestants.forEach((comp, i) => {
-    values.push(comp.id, comp.date_of, comp.type);
+  contestants.forEach((contestant, i) => {
+    values.push(contestant.id, contestant.date_of, contestant.type);
     const idx = i * 3;
     batch.push(`($${idx + 1}, $${idx + 2}, $${idx + 3})`);
   });

@@ -15,7 +15,7 @@ const Contestants: React.FC = () => {
 
 
   const columns: Column<Contestant>[] = [
-    { key: "id", name: "ID", renderEditCell: textEditor, editable: editFlag },
+    { key: "school_name", name: "School", renderEditCell: textEditor, editable: editFlag },
     { key: "name", name: "Name", renderEditCell: textEditor, editable: editFlag },
     {
       key: "gender",
@@ -31,7 +31,7 @@ const Contestants: React.FC = () => {
   }, []);
 
   const loadData = () => {
-    getAllContestants().then(setRows).catch(console.error);
+    getAllContestants().then(setRows).catch(console.error)
   };
 
 

@@ -14,14 +14,17 @@ import { Link } from "react-router-dom";
 import EditIcon from "../../components/editIcon/editIcon";
 
 const CompetitionsHome: React.FC = () => {
+  // true state of tables, update when user saves any edits
+  var originalComps: Competition[];
+  var originalRoutes: Route[];
+
   //Competitions state Management
   const [compRows, setCompRows] = useState<Competition[]>([]);
-  const [compRowsCopy, setCompRowsCopy] = useState<Competition[]>([]);
-  const [isCompEdit, setCompEditFlag] = useState<boolean>(false);
+  const [isCompEdit, setIsCompEdit] = useState<boolean>(false);
   //Routes state Management
-  const [isRouteEdit, setRouteEditFlag] = useState<boolean>(false);
   const [routeRows, setRouteRows] = useState<Route[]>([]);
-  const [routeRowsCopy, setRouteRowsCopy] = useState<Route[]>([]);
+  const [isRouteEdit, setRouteEditFlag] = useState<boolean>(false);
+
   const [selectedCompetition, setSelectedCompetition] = useState<number | null>(
     null
   );
@@ -32,9 +35,9 @@ const CompetitionsHome: React.FC = () => {
 
   const loadData = () => {
     getAllCompetitions()
-      .then((res) => {
-        setCompRows(res);
-        setCompRowsCopy(res);
+      .then((comps) => {
+        originalComps = comps;
+        setCompRows(comps);
       })
       .catch(console.error);
   };
@@ -43,14 +46,6 @@ const CompetitionsHome: React.FC = () => {
   // text editor is used for rendering editable cells
   // editable flag is used to toggle edit mode
   const columns: Column<Competition>[] = [
-    {
-      key: "id",
-      name: "Id",
-      renderEditCell: textEditor,
-      editable: isCompEdit,
-      resizable: true,
-    },
-
     {
       key: "date_of",
       name: "Date",
@@ -110,33 +105,35 @@ const CompetitionsHome: React.FC = () => {
   // State to manage the edit flag for Competition routes
   const handleCancel = () => {
     if (isCompEdit) {
-      setCompEditFlag(false);
-      setCompRowsCopy(compRows);
-    } else if (isRouteEdit) {
+      setIsCompEdit(false);
+      setCompRows(originalComps);
+    }
+
+    if (isRouteEdit) {
       setRouteEditFlag(false);
-      setRouteRowsCopy(routeRows);
+      setRouteRows(originalRoutes);
     }
   };
 
   // Function to handle the edit/save button click
   // editFlag is toggled to switch between edit and save mode
-  // if editFlag is false, set it to tru and enable editing
+  // if editFlag is false, set it to true and enable editing
   const handleCompEdit = () => {
     if (isCompEdit) {
-      setCompEditFlag(false);
-      setCompRows(compRowsCopy);
+      setIsCompEdit(false);
+      originalComps = compRows;
     } else {
-      setCompEditFlag(!isCompEdit);
+      setIsCompEdit(true);
     }
   };
 
   const handleRouteEdit = () => {
-    if (!isRouteEdit) {
-      setRouteEditFlag(!isRouteEdit);
+    if (isRouteEdit) {
+      setRouteEditFlag(false);
 
       //if editFlag is true, save the changes and set the edited rows to copyRows
     } else {
-      setRouteEditFlag(false);
+      setRouteEditFlag(true);
 
       //prevRows is your current state. "All the routes"
       setRouteRows((prevRows) => {
@@ -145,7 +142,7 @@ const CompetitionsHome: React.FC = () => {
           (row) => row.competition_id !== selectedCompetition
         );
         //returns the updated and previous
-        return [...untouchedRows, ...routeRowsCopy];
+        return [...untouchedRows, ...routeRows];
       });
     }
   };
@@ -166,12 +163,13 @@ const CompetitionsHome: React.FC = () => {
     getRoutesById(args.row.id)
       .then((res) => {
         setRouteRows(res);
-        setRouteRowsCopy(res);
+        setRouteRows(res);
       })
       .catch(console.error);
   };
 
-  const test = () => {
+  // REWRITE THIS
+  const tempSaveButton = () => {
     // const blankRow: Competition = {
     //   id: 0,
     //   date_of: "",
@@ -181,70 +179,62 @@ const CompetitionsHome: React.FC = () => {
 
     // setCompRowsCopy([...compRowsCopy, blankRow]);
 
-    saveCompetitions(compRowsCopy);
+    saveCompetitions(compRows);
   };
 
   return (
     //Align children center
-    <div className={classes.pageContainer}>
-      {/* Gap between both tables and have them side by side */}
-      <div className={classes.layoutContainer}>
-        {/* Competitions Section */}
-        <div className={classes.compContainer}>
-          {/* Title */}
+    <div className={classes.container}>
+      {/* Competitions Section */}
+      <div>
+        <div className={classes.title}>
+          <h1>Competitions</h1>
 
-          <div className={classes.title}>
-            <h1>Competitions</h1>
-            {/* Title Buttons */}
-
-            <EditIcon onClick={handleCompEdit}></EditIcon>
-            <Link to="/competitionform">
-              <button
-                className={classes.addButton}
-                onClick={() => console.log("hello")}
-              >
-                +
-              </button>
-            </Link>
-            {/* Cancel Button appears after pressing "edit" Button */}
-            {isCompEdit && <Button onClick={handleCancel}>Cancel</Button>}
-          </div>
-          {/* Competitions Table */}
-
-          <div>
-            <DataGrid
-              style={{ maxHeight: "700px" }}
-              columns={columns}
-              rows={compRowsCopy}
-              onRowsChange={setCompRowsCopy}
-              onCellClick={handleCellClick}
-              className={classes.compTableSize}
-            />
-          </div>
+          <EditIcon onClick={handleCompEdit}></EditIcon>
+          <Link to="/competitionform">
+            <button
+              className={classes.addButton}
+              onClick={() => console.log("hello")}
+            >
+              +
+            </button>
+          </Link>
+          {/* Cancel Button appears after pressing "edit" Button */}
+          {isCompEdit && <Button onClick={handleCancel}>Cancel</Button>}
         </div>
-        {/* Routes Section */}
 
+        {/* Competitions Table */}
         <div>
-          <div className={classes.title}>
-            <h1>Routes</h1>
-            <EditIcon onClick={handleRouteEdit}></EditIcon>
-
-            {isRouteEdit && <Button onClick={handleCancel}>Cancel</Button>}
-          </div>
-          {/* Routes Table */}
-
-          <div>
-            <DataGrid
-              style={{ width: "758px", height: "500px" }}
-              columns={routes}
-              rows={routeRowsCopy}
-              onRowsChange={setRouteRowsCopy}
-              className={classes.routeTableSize}
-            />
-          </div>
-
-          <Button onClick={test}>SAVE</Button>
+          <DataGrid
+            columns={columns}
+            rows={compRows}
+            onRowsChange={setCompRows}
+            onCellClick={handleCellClick}
+            className={classes.compTableSize}
+          />
         </div>
+      </div>
+
+      {/* Routes Section */}
+      <div>
+        <div className={classes.title}>
+          <h1>Routes</h1>
+          <EditIcon onClick={handleRouteEdit}></EditIcon>
+
+          {isRouteEdit && <Button onClick={handleCancel}>Cancel</Button>}
+        </div>
+
+        {/* Routes Table */}
+        <div>
+          <DataGrid
+            columns={routes}
+            rows={routeRows}
+            onRowsChange={setRouteRows}
+            className={classes.routeTableSize}
+          />
+        </div>
+
+        <Button onClick={tempSaveButton}>SAVE</Button>
       </div>
     </div>
   );
