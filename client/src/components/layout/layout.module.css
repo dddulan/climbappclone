@@ -10,7 +10,6 @@
   width: 100%;
   background-color: #e6e6e6;
   display: flex;
-  padding: 2px 0px;
   color: white;
   border: 1px solid black;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -27,9 +26,6 @@
 .headerLinks {
   display: flex;
   justify-content: flex-end;
-  list-style: none;
-  gap: 0px;
-  flex:0; 
 }
 
 .body {
