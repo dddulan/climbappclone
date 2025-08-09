@@ -14,15 +14,13 @@ import { Link } from "react-router-dom";
 import EditIcon from "../../components/editIcon/editIcon";
 
 const CompetitionsHome: React.FC = () => {
-  // true state of tables, update when user saves any edits
-  var originalComps: Competition[];
-  var originalRoutes: Route[];
-
   //Competitions state Management
-  const [compRows, setCompRows] = useState<Competition[]>([]);
+  const [competitions, setCompetitions] = useState<Competition[]>([]); // original copy of competitions, update when user saves any edits
+  const [compRows, setCompRows] = useState<Competition[]>([]); // rows for data table
   const [isCompEdit, setIsCompEdit] = useState<boolean>(false);
   //Routes state Management
-  const [routeRows, setRouteRows] = useState<Route[]>([]);
+  const [routes, setRoutes] = useState<Route[]>([]); // original copy of routes, update when user saves any edits
+  const [routeRows, setRouteRows] = useState<Route[]>([]); // rows for data table
   const [isRouteEdit, setRouteEditFlag] = useState<boolean>(false);
 
   const [selectedCompetition, setSelectedCompetition] = useState<number | null>(
@@ -36,7 +34,7 @@ const CompetitionsHome: React.FC = () => {
   const loadData = () => {
     getAllCompetitions()
       .then((comps) => {
-        originalComps = comps;
+        setCompetitions(comps);
         setCompRows(comps);
       })
       .catch(console.error);
@@ -45,7 +43,7 @@ const CompetitionsHome: React.FC = () => {
   // Competition columns properties
   // text editor is used for rendering editable cells
   // editable flag is used to toggle edit mode
-  const columns: Column<Competition>[] = [
+  const compColumns: Column<Competition>[] = [
     {
       key: "date_of",
       name: "Date",
@@ -63,7 +61,7 @@ const CompetitionsHome: React.FC = () => {
   ];
 
   // Route columns properties
-  const routes: Column<Route>[] = [
+  const routesColumns: Column<Route>[] = [
     {
       key: "name",
       name: "Name",
@@ -102,16 +100,14 @@ const CompetitionsHome: React.FC = () => {
     },
   ];
 
-  // State to manage the edit flag for Competition routes
+  // user canceled edit, revert tables back to original state
   const handleCancel = () => {
     if (isCompEdit) {
       setIsCompEdit(false);
-      setCompRows(originalComps);
-    }
-
-    if (isRouteEdit) {
+      setCompRows(competitions);
+    } else if (isRouteEdit) {
       setRouteEditFlag(false);
-      setRouteRows(originalRoutes);
+      setRouteRows(routes);
     }
   };
 
@@ -121,7 +117,7 @@ const CompetitionsHome: React.FC = () => {
   const handleCompEdit = () => {
     if (isCompEdit) {
       setIsCompEdit(false);
-      originalComps = compRows;
+      setCompetitions(compRows);
     } else {
       setIsCompEdit(true);
     }
@@ -130,7 +126,7 @@ const CompetitionsHome: React.FC = () => {
   const handleRouteEdit = () => {
     if (isRouteEdit) {
       setRouteEditFlag(false);
-
+      setRoutes(routeRows);
       //if editFlag is true, save the changes and set the edited rows to copyRows
     } else {
       setRouteEditFlag(true);
@@ -163,7 +159,7 @@ const CompetitionsHome: React.FC = () => {
     getRoutesById(args.row.id)
       .then((res) => {
         setRouteRows(res);
-        setRouteRows(res);
+        setRoutes(res);
       })
       .catch(console.error);
   };
@@ -178,7 +174,6 @@ const CompetitionsHome: React.FC = () => {
     // };
 
     // setCompRowsCopy([...compRowsCopy, blankRow]);
-
     saveCompetitions(compRows);
   };
 
@@ -206,7 +201,7 @@ const CompetitionsHome: React.FC = () => {
         {/* Competitions Table */}
         <div>
           <DataGrid
-            columns={columns}
+            columns={compColumns}
             rows={compRows}
             onRowsChange={setCompRows}
             onCellClick={handleCellClick}
@@ -227,7 +222,7 @@ const CompetitionsHome: React.FC = () => {
         {/* Routes Table */}
         <div>
           <DataGrid
-            columns={routes}
+            columns={routesColumns}
             rows={routeRows}
             onRowsChange={setRouteRows}
             className={classes.routeTableSize}
