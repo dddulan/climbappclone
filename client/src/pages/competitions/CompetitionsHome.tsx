@@ -101,14 +101,13 @@ const CompetitionsHome: React.FC = () => {
   ];
 
   // user canceled edit, revert tables back to original state
-  const handleCancel = () => {
-    if (isCompEdit) {
-      setIsCompEdit(false);
-      setCompRows(competitions);
-    } else if (isRouteEdit) {
-      setRouteEditFlag(false);
-      setRouteRows(routes);
-    }
+  const handleCompCancel = () => {
+    setIsCompEdit(false);
+    setCompRows(competitions);
+  };
+  const handleRouteCancel = () => {
+    setRouteEditFlag(false);
+    setRouteRows(routes);
   };
 
   // Function to handle the edit/save button click
@@ -137,8 +136,12 @@ const CompetitionsHome: React.FC = () => {
         const untouchedRows = prevRows.filter(
           (row) => row.competition_id !== selectedCompetition
         );
+        // Get original rows for the selected competition from a separate source
+        const selectedCompRows = routeRows.filter(
+          (row) => row.competition_id === selectedCompetition
+        );
         //returns the updated and previous
-        return [...untouchedRows, ...routeRows];
+        return [...untouchedRows, ...selectedCompRows];
       });
     }
   };
@@ -163,39 +166,62 @@ const CompetitionsHome: React.FC = () => {
       })
       .catch(console.error);
   };
+  const compAdd = () => {
+    const blankRow: Competition = {
+      id: 0,
+      date_of: "",
+      type: "",
+      routes: [],
+      isEditing: true,
+    };
+    setCompRows([blankRow, ...compRows]);
 
-  // REWRITE THIS
-  const tempSaveButton = () => {
-    // const blankRow: Competition = {
-    //   id: 0,
-    //   date_of: "",
-    //   type: "",
-    //   routes: [],
-    // };
+    console.log("REQUEST", compRows);
+  };
 
-    // setCompRowsCopy([...compRowsCopy, blankRow]);
-    saveCompetitions(compRows);
+  const routeAdd = () => {
+    const blankRoute: Route = {
+      id: 0,
+      name: "",
+      number: 0,
+      grade: "",
+      color: "",
+      competition_id: 0,
+      point_value: 0,
+      set_date: "",
+      isEditing: true,
+    };
+    setRouteRows([blankRoute, ...routeRows]);
+
+    console.log("REQUEST", routeRows);
   };
 
   return (
     //Align children center
     <div className={classes.container}>
       {/* Competitions Section */}
+      <div className={classes.compButtons}>
+        {isCompEdit === false ? (
+          <EditIcon onClick={handleCompEdit}></EditIcon>
+        ) : (
+          <button className={classes.addButton} onClick={handleCompEdit}>
+            Y
+          </button>
+        )}
+        {isCompEdit && (
+          <button className={classes.addButton} onClick={handleCompCancel}>
+            x
+          </button>
+        )}
+        {isCompEdit && (
+          <button className={classes.addButton} onClick={compAdd}>
+            add
+          </button>
+        )}
+      </div>
       <div>
         <div className={classes.title}>
           <h1>Competitions</h1>
-
-          <EditIcon onClick={handleCompEdit}></EditIcon>
-          <Link to="/competitionform">
-            <button
-              className={classes.addButton}
-              onClick={() => console.log("hello")}
-            >
-              +
-            </button>
-          </Link>
-          {/* Cancel Button appears after pressing "edit" Button */}
-          {isCompEdit && <Button onClick={handleCancel}>Cancel</Button>}
         </div>
 
         {/* Competitions Table */}
@@ -214,9 +240,6 @@ const CompetitionsHome: React.FC = () => {
       <div>
         <div className={classes.title}>
           <h1>Routes</h1>
-          <EditIcon onClick={handleRouteEdit}></EditIcon>
-
-          {isRouteEdit && <Button onClick={handleCancel}>Cancel</Button>}
         </div>
 
         {/* Routes Table */}
@@ -228,8 +251,25 @@ const CompetitionsHome: React.FC = () => {
             className={classes.routeTableSize}
           />
         </div>
-
-        <Button onClick={tempSaveButton}>SAVE</Button>
+      </div>
+      <div className={classes.compButtons}>
+        {isRouteEdit === false ? (
+          <EditIcon onClick={handleRouteEdit}></EditIcon>
+        ) : (
+          <button className={classes.addButton} onClick={handleRouteEdit}>
+            y
+          </button>
+        )}
+        {isRouteEdit && (
+          <button className={classes.addButton} onClick={handleRouteCancel}>
+            x
+          </button>
+        )}
+        {isRouteEdit && (
+          <button className={classes.addButton} onClick={routeAdd}>
+            +
+          </button>
+        )}
       </div>
     </div>
   );

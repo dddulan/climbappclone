@@ -5,4 +5,5 @@ export interface Competition {
   date_of: string;
   type: string;
   routes: Route[];
+  isEditing:boolean;
 }
