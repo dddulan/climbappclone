@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color:#cacaca;
+  background-color: #cacaca;
   font-family: 'Arial', sans-serif;
 }
 
@@ -13,13 +13,12 @@
   color: white;
   border: 1px solid black;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
   border-radius: 8px;
 }
 
 .headerLogo {
   height: 30px;
-  padding:5px;
+  padding: 5px;
   padding-right: 10px;
 }
 
@@ -28,29 +27,40 @@
   justify-content: flex-end;
 }
 
+.currentHeader {
+  color: black;
+  text-decoration: none;
+  font-size: x-large;
+  padding: 10px;
+  font-family: 'Arial', sans-serif;
+}
+
+.currentHeader:hover {
+  color: rgb(106, 0, 255);
+  transform: font-size(xx-large);
+}
+
 .body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  
   overflow: hidden;
 }
 
 .header li {
   padding: 5px 5px;
-  cursor: pointer; 
+  cursor: pointer;
   display: flex;
   align-items: center;
 }
+
 .header li a {
-   color: #000000;
-  text-decoration: none; 
-  font-weight:bold;
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
   font-size: 14px;
 }
 
-.content {
-}
 
 .footer {
   height: 1dvh;
