@@ -31,7 +31,6 @@ h1 {
   flex-direction: row;
   gap:1rem;
   align-items: center;
-  padding-bottom: 1rem;
   }
 
 .title {
@@ -43,6 +42,22 @@ h1 {
   border: 1px solid rgb(0, 0, 0);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
 }
+
+/*temp*/
+.tabButton {
+  border: none;                 /* remove all borders */
+  border-bottom: none;          /* explicitly remove bottom border */
+  border-top-left-radius: 8px;  /* rounded top corners like tabs */
+  border-top-right-radius: 8px;
+  border-top:#000000 1px solid; /* add a top border to simulate tab effect */
+  border-left: 1px solid #000000; /* add left border for separation */
+  border-right: #000000 1px solid; /* add right border for separation */
+  background-color: #f0f0f0;
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+}
+
+
 
 /* React Data Grid global styles */
 :global(.rdg) {

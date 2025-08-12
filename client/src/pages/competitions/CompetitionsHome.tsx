@@ -9,9 +9,7 @@ import {
 } from "../../services/competitionService";
 import { getRoutesById } from "../../services/routeService";
 import classes from "./competitions.module.css";
-
 import { Link } from "react-router-dom";
-import EditIcon from "../../components/editIcon/editIcon";
 
 const CompetitionsHome: React.FC = () => {
   //Competitions state Management
@@ -200,7 +198,7 @@ const CompetitionsHome: React.FC = () => {
       {/* Competitions Section */}
 
       <div>
-              <div className={classes.compButtons}>
+        <div className={classes.compButtons}>
         {isCompEdit === false ? (
           <Button onClick={handleCompEdit}>Edit</Button>
         ) : (
@@ -239,7 +237,8 @@ const CompetitionsHome: React.FC = () => {
       <div>
         <div className={classes.compButtons}>
         {isRouteEdit === false ? (
-          <Button onClick={handleRouteEdit}>Edit</Button>
+          /*temp */
+          <button className={classes.tabButton} onClick={handleRouteEdit}>Edit</button>
         ) : (
           <Button  onClick={handleRouteEdit}>
             Save
