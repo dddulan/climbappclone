@@ -116,6 +116,7 @@ const CompetitionsHome: React.FC = () => {
     if (isCompEdit) {
       setIsCompEdit(false);
       setCompetitions(compRows);
+      
     } else {
       setIsCompEdit(true);
     }
@@ -197,26 +198,27 @@ const CompetitionsHome: React.FC = () => {
     //Align children center
     <div className={classes.container}>
       {/* Competitions Section */}
-      <div className={classes.compButtons}>
+
+      <div>
+              <div className={classes.compButtons}>
         {isCompEdit === false ? (
-          <EditIcon onClick={handleCompEdit}></EditIcon>
+          <Button onClick={handleCompEdit}>Edit</Button>
         ) : (
-          <button className={classes.addButton} onClick={handleCompEdit}>
-            Y
-          </button>
+          <Button onClick={handleCompEdit}>
+            Save
+          </Button>
         )}
         {isCompEdit && (
-          <button className={classes.addButton} onClick={handleCompCancel}>
-            x
-          </button>
+          <Button onClick={handleCompCancel}>
+            Cancel
+          </Button>
         )}
         {isCompEdit && (
-          <button className={classes.addButton} onClick={compAdd}>
-            add
-          </button>
+          <Button onClick={compAdd}>
+            New 
+          </Button>
         )}
       </div>
-      <div>
         <div className={classes.title}>
           <h1>Competitions</h1>
         </div>
@@ -235,6 +237,25 @@ const CompetitionsHome: React.FC = () => {
 
       {/* Routes Section */}
       <div>
+        <div className={classes.compButtons}>
+        {isRouteEdit === false ? (
+          <Button onClick={handleRouteEdit}>Edit</Button>
+        ) : (
+          <Button  onClick={handleRouteEdit}>
+            Save
+          </Button>
+        )}
+        {isRouteEdit && (
+          <Button  onClick={handleRouteCancel}>
+            Cancel
+          </Button>
+        )}
+        {isRouteEdit && (
+          <Button  onClick={routeAdd}>
+            New Route
+          </Button>
+        )}
+      </div>
         <div className={classes.title}>
           <h1>Routes</h1>
         </div>
@@ -250,25 +271,7 @@ const CompetitionsHome: React.FC = () => {
           />
         </div>
       </div>
-      <div className={classes.compButtons}>
-        {isRouteEdit === false ? (
-          <EditIcon onClick={handleRouteEdit}></EditIcon>
-        ) : (
-          <button className={classes.addButton} onClick={handleRouteEdit}>
-            y
-          </button>
-        )}
-        {isRouteEdit && (
-          <button className={classes.addButton} onClick={handleRouteCancel}>
-            x
-          </button>
-        )}
-        {isRouteEdit && (
-          <button className={classes.addButton} onClick={routeAdd}>
-            +
-          </button>
-        )}
-      </div>
+
     </div>
   );
 };

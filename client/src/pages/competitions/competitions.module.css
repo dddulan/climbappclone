@@ -17,17 +17,22 @@ h1 {
   height: 100%;
   width: 60%;
   min-width: 663px;
-
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
 }
 
 .compTableSize {
   height: 100%;
   width: 60%;
-  min-width: 312px;
-
+  min-width: 412px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
 }
+.compButtons {
+  display: flex;
+  flex-direction: row;
+  gap:1rem;
+  align-items: center;
+  padding-bottom: 1rem;
+  }
 
 .title {
   padding: 10px;
@@ -37,21 +42,6 @@ h1 {
   background-color: #eae9e9;
   border: 1px solid rgb(0, 0, 0);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
-}
-
-.addButton {
-  font-family: sans-serif;
-  overflow: hidden;
-  min-height: 1dvh;
-  min-width: 1dvh;
-  height: 2dvh;
-  width: 2dvh;
-  color: rgb(0, 0, 0);
-  font-size: 1.7dvh;
-  background-color: #bd5923;
-  border-color: #bd5923;
-  border-radius: 6px;
-  cursor: pointer;
 }
 
 /* React Data Grid global styles */
