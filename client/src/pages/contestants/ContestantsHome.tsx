@@ -4,7 +4,7 @@ import { Column, DataGrid, textEditor } from "react-data-grid";
 import "react-data-grid/lib/styles.css";
 import { Contestant } from "../../models/contestant";
 import Button from "../../components/button/button";
-import { getAllContestants } from "../../services/contestantService";
+import { getAllContestants, saveContestants } from "../../services/contestantService";
 
 
 const Contestants: React.FC = () => {
@@ -67,30 +67,37 @@ const Contestants: React.FC = () => {
     }
   };
 
+  const tempSave = (
+    saveContestants(rows)
+  )
+
 
   return (
 
-    <div>
+    <div className={classes.container}>
+      <div>
         <div className={classes.title}>
-          <h1>All Contestants</h1>
-      </div>
-      <div style={{width: "80vw", margin: "0 10vw" }}>
-        {/* Save and edit button*/}
-        <Button
-          onClick={handleContestEdit}
-        >
-          {isContestEdit === true ? "Save" : "Edit "}
-        </Button>
-        {/* Cancel Button appears after pressing "edit" Button */}
-        {isContestEdit && <Button onClick={handleCancel}>Undo</Button>}
-      </div>
-    
 
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        onRowsChange={setRows}
-      />
+          <h1>All Contestants</h1>
+          {/* Save and edit button*/}
+          <Button
+            onClick={handleContestEdit}
+          >
+            {isContestEdit === true ? "Save" : "Edit "}
+          </Button>
+          {/* Cancel Button appears after pressing "edit" Button */}
+          {isContestEdit && <Button onClick={handleCancel}>Undo</Button>}
+        </div>
+
+        <div>
+          <DataGrid
+            className={classes.tableSize}
+            columns={columns}
+            rows={rows}
+            onRowsChange={setRows}
+          />
+        </div>
+      </div>
     </div>
   );
 };

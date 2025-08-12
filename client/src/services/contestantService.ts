@@ -8,7 +8,7 @@ export const getAllContestants = async (): Promise<Contestant[]> => {
 }
 
 // Upsert contestants
-export const saveCompetitions = async (contestants: Contestant[]) => {
+export const saveContestants = async (contestants: Contestant[]) => {
   let res = await axios.post('/contestants/save', contestants);
   return res.data;
 }
