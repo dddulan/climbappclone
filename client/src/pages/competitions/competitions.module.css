@@ -3,36 +3,33 @@ h1 {
   color: #000000;
   font-size: 25px;
 }
+
 .container {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   gap: 1rem;
-  margin-top: 2rem;
-}
-
-.compBackground {
-  border: 1px solid black;
-  display: flex;
+  margin-top: 5rem;
 }
 
 .routeTableSize {
   height: 100%;
-  min-width: 600px;
+  width: 60%;
+  min-width: 663px;
+
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
 }
+
 .compTableSize {
   height: 100%;
-  width: 100%;
-  min-width: 300px;
+  width: 60%;
+  min-width: 312px;
+
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
 }
 
 .title {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
   padding: 10px;
   gap: 1rem;
   border-radius: 4px;
@@ -55,48 +52,6 @@ h1 {
   border-color: #bd5923;
   border-radius: 6px;
   cursor: pointer;
-}
-
-.compButtons {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Competition Form Classes */
-p {
-  font-weight: bolder;
-}
-.compForm {
-  display: flex;
-  background-color: rgb(255, 255, 255);
-  padding: 0.5dvh;
-  border-radius: 6px;
-  gap: 1dvh;
-  padding-left: 2dvh;
-  padding-right: 2dvh;
-  border: solid 1px black;
-}
-
-.formLayout {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-}
-
-.formTitle {
-  display: flex;
-  justify-content: row;
-  gap: 1rem;
-  padding: 10px;
-}
-
-.formButton {
-  padding-top: 2rem;
-}
-
-.editAlign {
-  overflow: auto;
 }
 
 /* React Data Grid global styles */
@@ -126,5 +81,6 @@ p {
 
 :global(.rdg-cell) {
   border-right: none;
-  padding: 1px 20px;
+  padding: 0px 20px;
+  cursor: pointer;
 }

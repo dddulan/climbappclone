@@ -4,8 +4,10 @@ import { Column, DataGrid, textEditor } from "react-data-grid";
 import "react-data-grid/lib/styles.css";
 import { Contestant } from "../../models/contestant";
 import Button from "../../components/button/button";
-import { getAllContestants, saveContestants } from "../../services/contestantService";
-
+import {
+  getAllContestants,
+  saveContestants,
+} from "../../services/contestantService";
 
 const Contestants: React.FC = () => {
   const [rows, setRows] = useState<Contestant[]>([]);
@@ -13,27 +15,34 @@ const Contestants: React.FC = () => {
   const [editFlag, setEditFlag] = useState<boolean>(false);
   const [isContestEdit, setIsContestEdit] = useState<boolean>(false);
 
-
   const columns: Column<Contestant>[] = [
-    { key: "school_name", name: "School", renderEditCell: textEditor, editable: editFlag },
-    { key: "name", name: "Name", renderEditCell: textEditor, editable: editFlag },
+    {
+      key: "name",
+      name: "Name",
+      renderEditCell: textEditor,
+      editable: editFlag,
+    },
+    {
+      key: "school_name",
+      name: "School",
+      renderEditCell: textEditor,
+      editable: editFlag,
+    },
     {
       key: "gender",
       name: "Gender",
       renderEditCell: textEditor,
-      editable: false
+      editable: false,
     },
   ];
-
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = () => {
-    getAllContestants().then(setRows).catch(console.error)
+    getAllContestants().then(setRows).catch(console.error);
   };
-
 
   // State to manage the edit flag for Contestants
   const handleCancel = () => {
@@ -41,8 +50,8 @@ const Contestants: React.FC = () => {
       setRows(contestRowsCopy);
       setEditFlag(false);
       setContestRowsCopy(rows);
-    };
-  }
+    }
+  };
 
   // Function to handle the edit/save button click
   // editFlag is toggled to switch between edit and save mode
@@ -68,16 +77,12 @@ const Contestants: React.FC = () => {
   };
 
   return (
-
     <div className={classes.container}>
       <div>
         <div className={classes.title}>
-
           <h1>All Contestants</h1>
           {/* Save and edit button*/}
-          <Button
-            onClick={handleContestEdit}
-          >
+          <Button onClick={handleContestEdit}>
             {isContestEdit === true ? "Save" : "Edit "}
           </Button>
           {/* Cancel Button appears after pressing "edit" Button */}
@@ -98,6 +103,3 @@ const Contestants: React.FC = () => {
 };
 
 export default Contestants;
-
-
-

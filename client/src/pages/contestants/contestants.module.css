@@ -21,8 +21,9 @@
 }
 
 .tableSize {
-    height: 100%;
-    width: 100%;
-    min-width: 600px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+  height: 100%;
+  width: 60%;
+  min-width: 600px;
+
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
 }

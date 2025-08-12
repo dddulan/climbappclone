@@ -48,15 +48,13 @@ const CompetitionsHome: React.FC = () => {
       key: "date_of",
       name: "Date",
       renderEditCell: textEditor,
-      editable: isCompEdit,
-      resizable: true,
+      editable: isCompEdit
     },
     {
       key: "type",
       name: "Type",
       renderEditCell: textEditor,
-      editable: isCompEdit,
-      resizable: true,
+      editable: isCompEdit
     },
   ];
 
@@ -105,6 +103,7 @@ const CompetitionsHome: React.FC = () => {
     setIsCompEdit(false);
     setCompRows(competitions);
   };
+
   const handleRouteCancel = () => {
     setRouteEditFlag(false);
     setRouteRows(routes);
@@ -174,9 +173,8 @@ const CompetitionsHome: React.FC = () => {
       routes: [],
       isEditing: true,
     };
+    
     setCompRows([blankRow, ...compRows]);
-
-    console.log("REQUEST", compRows);
   };
 
   const routeAdd = () => {
@@ -191,9 +189,8 @@ const CompetitionsHome: React.FC = () => {
       set_date: "",
       isEditing: true,
     };
+    
     setRouteRows([blankRoute, ...routeRows]);
-
-    console.log("REQUEST", routeRows);
   };
 
   return (
@@ -249,6 +246,7 @@ const CompetitionsHome: React.FC = () => {
             rows={routeRows}
             onRowsChange={setRouteRows}
             className={classes.routeTableSize}
+            
           />
         </div>
       </div>
