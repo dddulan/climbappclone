@@ -7,7 +7,7 @@ export const getAllCompetitions = async (req: Request, res: Response): Promise<v
       SELECT
         id, 
         type,
-        TO_CHAR(date_of, 'DD-MM-YYYY') AS date_of
+        date_of
       FROM competitions 
       ORDER BY date_of
       `);

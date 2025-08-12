@@ -7,4 +7,5 @@ export interface Route {
   color: string;
   point_value: number;
   set_date: string;
+  isEditing:boolean;
 }

@@ -14,15 +14,13 @@ import { Link } from "react-router-dom";
 import EditIcon from "../../components/editIcon/editIcon";
 
 const CompetitionsHome: React.FC = () => {
-  // true state of tables, update when user saves any edits
-  var originalComps: Competition[];
-  var originalRoutes: Route[];
-
   //Competitions state Management
-  const [compRows, setCompRows] = useState<Competition[]>([]);
+  const [competitions, setCompetitions] = useState<Competition[]>([]); // original copy of competitions, update when user saves any edits
+  const [compRows, setCompRows] = useState<Competition[]>([]); // rows for data table
   const [isCompEdit, setIsCompEdit] = useState<boolean>(false);
   //Routes state Management
-  const [routeRows, setRouteRows] = useState<Route[]>([]);
+  const [routes, setRoutes] = useState<Route[]>([]); // original copy of routes, update when user saves any edits
+  const [routeRows, setRouteRows] = useState<Route[]>([]); // rows for data table
   const [isRouteEdit, setRouteEditFlag] = useState<boolean>(false);
 
   const [selectedCompetition, setSelectedCompetition] = useState<number | null>(
@@ -36,7 +34,7 @@ const CompetitionsHome: React.FC = () => {
   const loadData = () => {
     getAllCompetitions()
       .then((comps) => {
-        originalComps = comps;
+        setCompetitions(comps);
         setCompRows(comps);
       })
       .catch(console.error);
@@ -45,7 +43,7 @@ const CompetitionsHome: React.FC = () => {
   // Competition columns properties
   // text editor is used for rendering editable cells
   // editable flag is used to toggle edit mode
-  const columns: Column<Competition>[] = [
+  const compColumns: Column<Competition>[] = [
     {
       key: "date_of",
       name: "Date",
@@ -63,7 +61,7 @@ const CompetitionsHome: React.FC = () => {
   ];
 
   // Route columns properties
-  const routes: Column<Route>[] = [
+  const routesColumns: Column<Route>[] = [
     {
       key: "name",
       name: "Name",
@@ -102,17 +100,14 @@ const CompetitionsHome: React.FC = () => {
     },
   ];
 
-  // State to manage the edit flag for Competition routes
-  const handleCancel = () => {
-    if (isCompEdit) {
-      setIsCompEdit(false);
-      setCompRows(originalComps);
-    }
-
-    if (isRouteEdit) {
-      setRouteEditFlag(false);
-      setRouteRows(originalRoutes);
-    }
+  // user canceled edit, revert tables back to original state
+  const handleCompCancel = () => {
+    setIsCompEdit(false);
+    setCompRows(competitions);
+  };
+  const handleRouteCancel = () => {
+    setRouteEditFlag(false);
+    setRouteRows(routes);
   };
 
   // Function to handle the edit/save button click
@@ -121,7 +116,7 @@ const CompetitionsHome: React.FC = () => {
   const handleCompEdit = () => {
     if (isCompEdit) {
       setIsCompEdit(false);
-      originalComps = compRows;
+      setCompetitions(compRows);
     } else {
       setIsCompEdit(true);
     }
@@ -130,7 +125,7 @@ const CompetitionsHome: React.FC = () => {
   const handleRouteEdit = () => {
     if (isRouteEdit) {
       setRouteEditFlag(false);
-
+      setRoutes(routeRows);
       //if editFlag is true, save the changes and set the edited rows to copyRows
     } else {
       setRouteEditFlag(true);
@@ -141,8 +136,12 @@ const CompetitionsHome: React.FC = () => {
         const untouchedRows = prevRows.filter(
           (row) => row.competition_id !== selectedCompetition
         );
+        // Get original rows for the selected competition from a separate source
+        const selectedCompRows = routeRows.filter(
+          (row) => row.competition_id === selectedCompetition
+        );
         //returns the updated and previous
-        return [...untouchedRows, ...routeRows];
+        return [...untouchedRows, ...selectedCompRows];
       });
     }
   };
@@ -163,50 +162,72 @@ const CompetitionsHome: React.FC = () => {
     getRoutesById(args.row.id)
       .then((res) => {
         setRouteRows(res);
-        setRouteRows(res);
+        setRoutes(res);
       })
       .catch(console.error);
   };
+  const compAdd = () => {
+    const blankRow: Competition = {
+      id: 0,
+      date_of: "",
+      type: "",
+      routes: [],
+      isEditing: true,
+    };
+    setCompRows([blankRow, ...compRows]);
 
-  // REWRITE THIS
-  const tempSaveButton = () => {
-    // const blankRow: Competition = {
-    //   id: 0,
-    //   date_of: "",
-    //   type: "",
-    //   routes: [],
-    // };
+    console.log("REQUEST", compRows);
+  };
 
-    // setCompRowsCopy([...compRowsCopy, blankRow]);
+  const routeAdd = () => {
+    const blankRoute: Route = {
+      id: 0,
+      name: "",
+      number: 0,
+      grade: "",
+      color: "",
+      competition_id: 0,
+      point_value: 0,
+      set_date: "",
+      isEditing: true,
+    };
+    setRouteRows([blankRoute, ...routeRows]);
 
-    saveCompetitions(compRows);
+    console.log("REQUEST", routeRows);
   };
 
   return (
     //Align children center
     <div className={classes.container}>
       {/* Competitions Section */}
+      <div className={classes.compButtons}>
+        {isCompEdit === false ? (
+          <EditIcon onClick={handleCompEdit}></EditIcon>
+        ) : (
+          <button className={classes.addButton} onClick={handleCompEdit}>
+            Y
+          </button>
+        )}
+        {isCompEdit && (
+          <button className={classes.addButton} onClick={handleCompCancel}>
+            x
+          </button>
+        )}
+        {isCompEdit && (
+          <button className={classes.addButton} onClick={compAdd}>
+            add
+          </button>
+        )}
+      </div>
       <div>
         <div className={classes.title}>
           <h1>Competitions</h1>
-
-          <EditIcon onClick={handleCompEdit}></EditIcon>
-          <Link to="/competitionform">
-            <button
-              className={classes.addButton}
-              onClick={() => console.log("hello")}
-            >
-              +
-            </button>
-          </Link>
-          {/* Cancel Button appears after pressing "edit" Button */}
-          {isCompEdit && <Button onClick={handleCancel}>Cancel</Button>}
         </div>
 
         {/* Competitions Table */}
         <div>
           <DataGrid
-            columns={columns}
+            columns={compColumns}
             rows={compRows}
             onRowsChange={setCompRows}
             onCellClick={handleCellClick}
@@ -219,22 +240,36 @@ const CompetitionsHome: React.FC = () => {
       <div>
         <div className={classes.title}>
           <h1>Routes</h1>
-          <EditIcon onClick={handleRouteEdit}></EditIcon>
-
-          {isRouteEdit && <Button onClick={handleCancel}>Cancel</Button>}
         </div>
 
         {/* Routes Table */}
         <div>
           <DataGrid
-            columns={routes}
+            columns={routesColumns}
             rows={routeRows}
             onRowsChange={setRouteRows}
             className={classes.routeTableSize}
           />
         </div>
-
-        <Button onClick={tempSaveButton}>SAVE</Button>
+      </div>
+      <div className={classes.compButtons}>
+        {isRouteEdit === false ? (
+          <EditIcon onClick={handleRouteEdit}></EditIcon>
+        ) : (
+          <button className={classes.addButton} onClick={handleRouteEdit}>
+            y
+          </button>
+        )}
+        {isRouteEdit && (
+          <button className={classes.addButton} onClick={handleRouteCancel}>
+            x
+          </button>
+        )}
+        {isRouteEdit && (
+          <button className={classes.addButton} onClick={routeAdd}>
+            +
+          </button>
+        )}
       </div>
     </div>
   );

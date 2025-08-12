@@ -6,14 +6,14 @@ export const getRoutesById = async (req: Request, res: Response): Promise<void> 
   
   try {
     const result = await pool.query(`
-      SELECT * 
+      SELECT 
         id,
         name,
         number,
         grade,
         color,
         point_value,
-        TO_CHAR(date_of, 'DD-MM-YYYY') AS set_date
+        set_date
       FROM routes
       WHERE competition_id = ${id}
     `);
