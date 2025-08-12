@@ -67,11 +67,6 @@ const Contestants: React.FC = () => {
     }
   };
 
-  const tempSave = (
-    saveContestants(rows)
-  )
-
-
   return (
 
     <div className={classes.container}>
