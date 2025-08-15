@@ -239,21 +239,21 @@ const CompetitionsHome: React.FC = () => {
         <div className={classes.compButtons}>
         {isRouteEdit === false ? (
           /*temp */
-          <button className={classes.tabButton} onClick={handleRouteEdit}>Edit</button>
+          <Button onClick={handleRouteEdit}>Edit</Button>
         ) : (
-          <button className={classes.tabButton}  onClick={handleRouteEdit}>
+          <Button onClick={handleRouteEdit}>
             Save
-          </button>
+          </Button>
         )}
         {isRouteEdit && (
-          <button className={classes.tabButton} onClick={handleRouteCancel}>
+          <Button onClick={handleRouteCancel}>
             Cancel
-          </button>
+          </Button>
         )}
         {isRouteEdit && (
-          <button className={classes.tabButton}  onClick={routeAdd}>
+          <Button onClick={routeAdd}>
             New Route
-          </button>
+          </Button>
         )}
       </div>
         <div className={layout.title}>
