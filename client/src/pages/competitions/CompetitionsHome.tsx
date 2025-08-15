@@ -10,6 +10,7 @@ import {
 import { getRoutesById } from "../../services/routeService";
 import classes from "./competitions.module.css";
 import { Link } from "react-router-dom";
+import layout from "../../components/layout/layout.module.css";
 
 const CompetitionsHome: React.FC = () => {
   //Competitions state Management
@@ -194,7 +195,7 @@ const CompetitionsHome: React.FC = () => {
 
   return (
     //Align children center
-    <div className={classes.container}>
+    <div className={layout.container}>
       {/* Competitions Section */}
 
       <div>
@@ -217,7 +218,7 @@ const CompetitionsHome: React.FC = () => {
           </Button>
         )}
       </div>
-        <div className={classes.title}>
+        <div className={layout.title}>
           <h1>Competitions</h1>
         </div>
 
@@ -240,22 +241,22 @@ const CompetitionsHome: React.FC = () => {
           /*temp */
           <button className={classes.tabButton} onClick={handleRouteEdit}>Edit</button>
         ) : (
-          <Button  onClick={handleRouteEdit}>
+          <button className={classes.tabButton}  onClick={handleRouteEdit}>
             Save
-          </Button>
+          </button>
         )}
         {isRouteEdit && (
-          <Button  onClick={handleRouteCancel}>
+          <button className={classes.tabButton} onClick={handleRouteCancel}>
             Cancel
-          </Button>
+          </button>
         )}
         {isRouteEdit && (
-          <Button  onClick={routeAdd}>
+          <button className={classes.tabButton}  onClick={routeAdd}>
             New Route
-          </Button>
+          </button>
         )}
       </div>
-        <div className={classes.title}>
+        <div className={layout.title}>
           <h1>Routes</h1>
         </div>
 

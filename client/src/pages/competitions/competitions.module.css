@@ -4,15 +4,6 @@ h1 {
   font-size: 25px;
 }
 
-.container {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-top: 5rem;
-}
-
 .routeTableSize {
   height: 100%;
   width: 60%;
@@ -29,35 +20,9 @@ h1 {
 .compButtons {
   display: flex;
   flex-direction: row;
-  gap:1rem;
+  
   align-items: center;
   }
-
-.title {
-  padding: 10px;
-  gap: 1rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-  background-color: #eae9e9;
-  border: 1px solid rgb(0, 0, 0);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
-}
-
-/*temp*/
-.tabButton {
-  border: none;                 /* remove all borders */
-  border-bottom: none;          /* explicitly remove bottom border */
-  border-top-left-radius: 8px;  /* rounded top corners like tabs */
-  border-top-right-radius: 8px;
-  border-top:#000000 1px solid; /* add a top border to simulate tab effect */
-  border-left: 1px solid #000000; /* add left border for separation */
-  border-right: #000000 1px solid; /* add right border for separation */
-  background-color: #f0f0f0;
-  padding: 0.3rem 1rem;
-  cursor: pointer;
-}
-
-
 
 /* React Data Grid global styles */
 :global(.rdg) {
@@ -87,5 +52,19 @@ h1 {
 :global(.rdg-cell) {
   border-right: none;
   padding: 0px 20px;
+  cursor: pointer;
+}
+
+/*temp*/
+.tabButton {
+  border: none;                 /* remove all borders */
+  border-bottom: none;          /* explicitly remove bottom border */
+  border-top-left-radius: 8px;  /* rounded top corners like tabs */
+  border-top-right-radius: 8px;
+  border-top:#000000 1px solid; /* add a top border to simulate tab effect */
+  border-left: 1px solid #000000; /* add left border for separation */
+  border-right: #000000 1px solid; /* add right border for separation */
+  background-color: #f0f0f0;
+  padding: 0.3rem 1rem;
   cursor: pointer;
 }
