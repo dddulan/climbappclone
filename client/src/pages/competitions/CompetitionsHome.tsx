@@ -197,7 +197,6 @@ const CompetitionsHome: React.FC = () => {
     //Align children center
     <div className={layout.container}>
       {/* Competitions Section */}
-
       <div>
         <div className={classes.compButtons}>
         {isCompEdit === false ? (
