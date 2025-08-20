@@ -23,7 +23,7 @@ export const CompetitionsTable: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-10 w-90">
       <DataTable columns={competitionColumns} data={rows} />
     </div>
   );

@@ -1,19 +1,15 @@
 import Header from "./header/header";
-import classes from "./layout.module.css"
 import { Outlet } from "react-router-dom";
 import Footer from "./footer/footer";
 import { Toaster } from "sonner";
 
 const Layout = () => {
   return (
-    <div className={classes.layout}>
+    <div className="flex flex-col min-h-screen bg-[#cacaca]">
       <Header />
-      <div className={classes.body}>
-        <main>
+        <main className="flex-1">
           <Outlet />
         </main>
-        <Toaster/>
-      </div>
       <Footer />
     </div>
   );

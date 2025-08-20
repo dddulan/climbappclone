@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import layout from "../../components/layout/layout.module.css";
 import {
   Card,
   CardContent,
@@ -36,12 +35,12 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <div className={layout.container}>
+    <div className="flex items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Sign Up</CardTitle>
           <CardDescription>
-            Enter your information to compete<br></br> in the competition
+            Enter your information to compete in the competition
           </CardDescription>
         </CardHeader>
         <CardContent>

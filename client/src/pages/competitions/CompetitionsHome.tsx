@@ -1,102 +1,10 @@
-import React, { useEffect, useState } from "react";
-
-
-
-import {
-  getAllCompetitions,
-  saveCompetitions,
-} from "../../services/competitionService";
-import { getRoutesById } from "../../services/routeService";
-import classes from "./competitions.module.css";
-import { Link } from "react-router-dom";
+import React from "react";
 import layout from "../../components/layout/layout.module.css";
 import { CompetitionsTable } from "@/features/competitions-table/CompetitionsTable";
 import { RoutesTable } from "@/features/routes-table/RoutesTable";
 
 const CompetitionsHome: React.FC = () => {
-  //Competitions state Management
-  // const [competitions, setCompetitions] = useState<Competition[]>([]); // original copy of competitions, update when user saves any edits
-  // const [compRows, setCompRows] = useState<Competition[]>([]); // rows for data table
-  // const [isCompEdit, setIsCompEdit] = useState<boolean>(false);
-  // //Routes state Management
-  // const [routes, setRoutes] = useState<Route[]>([]); // original copy of routes, update when user saves any edits
-  // const [routeRows, setRouteRows] = useState<Route[]>([]); // rows for data table
-  // const [isRouteEdit, setRouteEditFlag] = useState<boolean>(false);
 
-  // const [selectedCompetition, setSelectedCompetition] = useState<number | null>(
-  //   null
-  // );
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = () => {
-    getAllCompetitions()
-      .then((comps) => {
-        // setCompetitions(comps);
-        // setCompRows(comps);
-      })
-      .catch(console.error);
-  };
-
-  // Competition columns properties
-  // text editor is used for rendering editable cells
-  // editable flag is used to toggle edit mode
-  // const compColumns: Column<Competition>[] = [
-  //   {
-  //     key: "date_of",
-  //     name: "Date",
-  //     renderEditCell: textEditor,
-  //     editable: isCompEdit
-  //   },
-  //   {
-  //     key: "type",
-  //     name: "Type",
-  //     renderEditCell: textEditor,
-  //     editable: isCompEdit
-  //   },
-  // ];
-
-  // // Route columns properties
-  // const routesColumns: Column<Route>[] = [
-  //   {
-  //     key: "name",
-  //     name: "Name",
-  //     renderEditCell: textEditor,
-  //     editable: isRouteEdit,
-  //   },
-  //   {
-  //     key: "number",
-  //     name: "Number",
-  //     renderEditCell: textEditor,
-  //     editable: isRouteEdit,
-  //   },
-  //   {
-  //     key: "grade",
-  //     name: "Grade",
-  //     renderEditCell: textEditor,
-  //     editable: isRouteEdit,
-  //   },
-  //   {
-  //     key: "color",
-  //     name: "Color",
-  //     renderEditCell: textEditor,
-  //     editable: isRouteEdit,
-  //   },
-  //   {
-  //     key: "point_value",
-  //     name: "Point Value",
-  //     renderEditCell: textEditor,
-  //     editable: isRouteEdit,
-  //   },
-  //   {
-  //     key: "set_date",
-  //     name: "Set Date",
-  //     renderEditCell: textEditor,
-  //     editable: isRouteEdit,
-  //   },
-  // ];
 
   // // user canceled edit, revert tables back to original state
   // const handleCompCancel = () => {
@@ -196,14 +104,15 @@ const CompetitionsHome: React.FC = () => {
 
   return (
     //Align children center
-    <div className={layout.container}>
+    <div className="flex flex-row justify-center">
       <div>
         <CompetitionsTable></CompetitionsTable>
       </div>
-      <div>
+      <div className="pl-7">
         <RoutesTable></RoutesTable>
       </div>
     </div>
+
   );
 };
 
