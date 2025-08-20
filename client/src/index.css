@@ -47,6 +47,12 @@
   --foreground: oklch(0.147 0.004 49.25);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.147 0.004 49.25);
+  --card-border: oklch(70.8% 0 0);
+  --select: oklch(92.2% 0 0);
+  --select-border: oklch(70.8% 0 0);
+  --subtext: oklch(43.9% 0 0);
+  --buttoncolor: oklch(14.7% 0.004 49.25);
+  --buttontext: oklch(98.5% 0.001 106.423);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.147 0.004 49.25);
   --primary: oklch(0.216 0.006 56.043);
