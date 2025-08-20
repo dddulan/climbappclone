@@ -1,9 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Competitions from '../pages/competitions';
-import Contestants from '../pages/contestants';
-import Leaderboard from '../pages/leaderboard';
-import Login from '../pages/login';
+import CompetitionsHome from '../pages/competitions/CompetitionsHome';
+
+import Contestants from '../pages/contestants/ContestantsHome';
+import Leaderboard from '../pages/leaderboard/leaderboard';
+import SignUp from '../pages/signup/SignUp';
+import Login from '../pages/login/login';
 import Layout from '../components/layout/layout';
 
 const App: React.FC = () => {
@@ -11,9 +13,10 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="competitions" element={<Competitions />} />
+          <Route path="competitions" element={<CompetitionsHome />} />
           <Route path="contestants" element={<Contestants />} />
           <Route path="leaderboard" element={<Leaderboard />} />
+          <Route path="signup" element={<SignUp />} />
         </Route>
       </Routes>
     </BrowserRouter>
