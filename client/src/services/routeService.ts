@@ -1,5 +1,5 @@
 import axios from "./axios";
-import { Route } from "../models/route";
+import type { Route } from "../models/route";
 
 // Get all routes for a specific competition
 export const getRoutesById = async (competitionId: number): Promise<Route[]> => {

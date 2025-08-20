@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigation } from "react-router-dom";
 import classes from "./signup.module.css";
-import TextBox from "../../components/textbox/textbox";
 import layout from "../../components/layout/layout.module.css";
 import {
   Card,
@@ -46,23 +45,6 @@ const SignUp: React.FC = () => {
   if (isNewStudentClick) {
     return (
       <div className={layout.container}>
-        <div className={classes.temp}>
-          <div className={layout.title}>
-            <h1>Hello new student</h1>
-          </div>
-          <div className={layout.title}>
-            <p>First Name</p>
-            <TextBox></TextBox>
-            <p>Last Name</p>
-
-            <TextBox></TextBox>
-            <p>School</p>
-
-            <TextBox></TextBox>
-
-            <Button onClick={() => onSubmit("new")}>Submit</Button>
-          </div>
-        </div>
       </div>
     );
   }

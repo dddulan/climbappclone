@@ -2,15 +2,12 @@ import * as React from "react"
 import * as SelectPrimitive from "@radix-ui/react-select"
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 
-import { cn } from "../../lib/utils"
+import { cn } from "@/lib/utils"
 
 function Select({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
-  return <SelectPrimitive.Root data-slot="select" 
-  
-  
-  {...props} />
+  return <SelectPrimitive.Root data-slot="select" {...props} />
 }
 
 function SelectGroup({
@@ -165,7 +162,6 @@ function SelectScrollDownButton({
         "flex cursor-default items-center justify-center py-1",
         className
       )}
-
       {...props}
     >
       <ChevronDownIcon className="size-4" />

@@ -1,5 +1,5 @@
 import axios from "./axios";
-import { Competition } from "../models/competition";
+import type { Competition } from "../models/competition";
 
 
 // Get all competitions for competition home page
