@@ -1,5 +1,6 @@
 import axios from "./axios";
 import type { Contestant } from "../models/contestant";
+import type { School } from "@/models/school";
 
 // Get all contestants for contestants home page
 export const getAllContestants = async (): Promise<Contestant[]> => {
@@ -10,5 +11,10 @@ export const getAllContestants = async (): Promise<Contestant[]> => {
 // Upsert contestants
 export const saveContestants = async (contestants: Contestant[]) => {
   let res = await axios.post('/contestants/save', contestants);
+  return res.data;
+}
+
+export const getAllSchools = async ():Promise<School[]> => {
+  let res = await axios.get('/contestants/schools');
   return res.data;
 }

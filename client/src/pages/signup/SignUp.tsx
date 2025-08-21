@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -13,30 +13,81 @@ import { Button } from "../../components/ui/button";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
+import { getAllSchools } from "@/services/contestantService";
+import { SignupTable } from "@/features/signup-table/SignupTable";
+import type { School } from "@/models/school";
+import type { Contestant } from "@/models/contestant";
 
 const SignUp: React.FC = () => {
-  const [inputValue, setInputValue] = useState("");
-  const [isNewStudentClick, setisNewStudentClick] = useState(false);
-  const [isReturnStudentClick, setisReturnStudentClick] = useState(false);
+    const [selectedGender, setSelectedGender] = useState<string>("");
+    const [firstName, setFirstName] = useState<string>("");
+    const [lastName, setLastName] = useState<string>("");
+    const [schools, setSchools] = useState<School[]>([]); 
+    const [selectedSchool, setSelectedSchool] = useState<string>("");
+    const [rows, setRows] = useState<Contestant[]>([]); 
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = () => {
+    getAllSchools()
+      .then((res: School[]) => {
+        setSchools(res);
+      })
+      .catch(console.error);
+  };
 
   const onSubmit = () => {
+    if (!firstName || !lastName || !selectedGender || !selectedSchool) {
+      toast("Please fill in all fields");
+      return;
+    }
+
+
+    console.log("Gender", selectedGender);
+    console.log("first ", firstName);
+    console.log("last", lastName);
+    console.log("school", selectedSchool);
+
+    const newRow: Contestant = {
+    name: firstName + " " + lastName,
+    gender: selectedGender || "",
+    id:1,
+    school_id: 1,
+    //school: selectedSchool || "",
+  }
+
+    setRows((prev) => [...prev, newRow]);
+    console.log("Rows", rows);
+setFirstName("");
+setLastName("");
+setSelectedGender("");
+setSelectedSchool("");
+
     toast("Registration Complete", {
       description: "Welcome to the competition",
     });
   };
+ 
+ 
 
-  const handleChange = (event: any) => {
-    setInputValue(event.target.value);
-  };
+ 
 
+  
   return (
-    <div className="flex items-center justify-center">
-      <Card className="w-full max-w-sm">
+    <div className="flex items-center justify-center h-180 gap-6 ">
+      <Toaster></Toaster>
+          <div className="flex flex-row gap-6 w-full  max-w-4xl">
+
+      <Card className="w-1/2 max-w-lg">
         <CardHeader>
           <CardTitle>Sign Up</CardTitle>
           <CardDescription>
@@ -49,32 +100,41 @@ const SignUp: React.FC = () => {
               <div className="grid gap-2">
                 <Label>First Name</Label>
                 <Input
+                value={firstName}
                   id="first-name"
-                  type="email"
+                  type="first-name"
                   placeholder="Magnus"
+                   onChange={(e) => setFirstName(e.target.value)}
                   required
                 />
               </div>
               <div className="grid gap-2">
                 <Label>Last Name</Label>
                 <Input
+                value={lastName}
                   id="last-name"
-                  type="email"
+                  type="last-name"
                   placeholder="Midtbo"
+                   onChange={(e) => setLastName(e.target.value)}
+
                   required
                 />
               </div>
               <div className="grid gap-2">
                 <Label>Gender</Label>
-                <Select>
+                {/*after choosing a gender the value will be stored in selectedValue */}
+                <Select value={selectedGender} onValueChange={setSelectedGender}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select a Gender" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="nonbinary">Non-Binary</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectGroup>
+                    <SelectLabel>Gender</SelectLabel>
+                    <SelectItem value="Male">Male</SelectItem>
+                    <SelectItem value="Female">Female</SelectItem>
+                    <SelectItem value="Non-Binary">Non-Binary</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
               </div>
@@ -82,12 +142,15 @@ const SignUp: React.FC = () => {
                 <div className="flex items-center">
                   <Label>School</Label>
                 </div>
-                <Select>
+                <Select value={selectedSchool} onValueChange={setSelectedSchool}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select a School" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sac">SacState</SelectItem>
+                    {schools.map((school,index) => (
+                    <SelectItem key={index} value={school.name}>{school.name}</SelectItem>
+                    ))}
+                    
                   </SelectContent>
                 </Select>
               </div>
@@ -95,13 +158,22 @@ const SignUp: React.FC = () => {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button onClick={onSubmit} variant="outline" className="w-full">
+          <Button onClick={onSubmit} variant="default" className="w-full">
             Submit
           </Button>
         </CardFooter>
       </Card>
+          
+
+      <div  className="w-1/2 max-w-lg">
+      <SignupTable rows={rows}></SignupTable>
+      </div>
+      </div>
     </div>
   );
 };
 
+
 export default SignUp;
+
+
