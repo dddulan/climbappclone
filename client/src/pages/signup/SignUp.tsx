@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { toast, Toaster } from "sonner";
-import { getAllSchools } from "@/services/contestantService";
+import { getAllSchools, saveContestants } from "@/services/contestantService";
 import { SignupTable } from "@/features/signup-table/SignupTable";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
@@ -44,29 +44,35 @@ const SignUp: React.FC = () => {
       })
       .catch(console.error);
   };
-
+//button function to handle the submission of the form
   const onSubmit = () => {
+    // Check if all fields are filled
     if (!firstName || !lastName || !selectedGender || !selectedSchool) {
       toast("Please fill in all fields");
       return;
     }
 
-
     console.log("Gender", selectedGender);
     console.log("first ", firstName);
     console.log("last", lastName);
     console.log("school", selectedSchool);
-
+    
+// Create a new contestant object
     const newRow: Contestant = {
-    name: firstName + " " + lastName,
+    name: `${firstName} ${lastName}`,
+    school_id:31, // Assuming school_id is auto-incremented based on the current length of rows
     gender: selectedGender || "",
-    id:1,
-    school_id: 1,
-    //school: selectedSchool || "",
   }
+const updatedRows=[...rows,newRow];
+console.log("Updated Rows", updatedRows);
+       saveContestants(updatedRows)
+      .then(() => {
+        console.log("Contestants saved successfully");})
+      .catch((error) => {
+        console.error("Error saving contestants:", error);
+        toast("Error saving contestants");
+      });
 
-    setRows((prev) => [...prev, newRow]);
-    console.log("Rows", rows);
 setFirstName("");
 setLastName("");
 setSelectedGender("");
@@ -76,12 +82,6 @@ setSelectedSchool("");
       description: "Welcome to the competition",
     });
   };
- 
- 
-
- 
-
-  
   return (
     <div className="flex items-center justify-center h-180 gap-6 ">
       <Toaster></Toaster>
