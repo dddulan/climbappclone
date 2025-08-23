@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { toast, Toaster } from "sonner";
-import { getAllSchools, saveContestants } from "@/services/contestantService";
+import { getAllSchools } from "@/services/contestantService";
 import { SignupTable } from "@/features/signup-table/SignupTable";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
@@ -32,6 +32,9 @@ const SignUp: React.FC = () => {
     const [schools, setSchools] = useState<School[]>([]); 
     const [selectedSchool, setSelectedSchool] = useState<string>("");
     const [rows, setRows] = useState<Contestant[]>([]); 
+  const schoolObj = schools.find(school => school.name === selectedSchool);
+
+
 
   useEffect(() => {
     loadData();
@@ -44,27 +47,26 @@ const SignUp: React.FC = () => {
       })
       .catch(console.error);
   };
-//button function to handle the submission of the form
+
+//Button function to handle the submission of the form
   const onSubmit = () => {
     // Check if all fields are filled
-    if (!firstName || !lastName || !selectedGender || !selectedSchool) {
+    if (!firstName || !lastName || !selectedGender || !selectedSchool || !schoolObj) {
       toast("Please fill in all fields");
       return;
     }
 
-    console.log("Gender", selectedGender);
-    console.log("first ", firstName);
-    console.log("last", lastName);
-    console.log("school", selectedSchool);
-    
 // Create a new contestant object
     const newRow: Contestant = {
     name: `${firstName} ${lastName}`,
-    school_id:31, // Assuming school_id is auto-incremented based on the current length of rows
+    school_id:schoolObj.id||0, // Assuming school_id is auto-incremented based on the current length of rows
     gender: selectedGender || "",
+    id: null,
   }
+//updatedRows contains the updated array of contestant objects
 const updatedRows=[...rows,newRow];
-console.log("Updated Rows", updatedRows);
+  // Save the new contestant to the database
+  /*
        saveContestants(updatedRows)
       .then(() => {
         console.log("Contestants saved successfully");})
@@ -72,22 +74,34 @@ console.log("Updated Rows", updatedRows);
         console.error("Error saving contestants:", error);
         toast("Error saving contestants");
       });
+      
+       */
+   
+      console.log("Updated Rows", updatedRows);
+
+//temp shows the new contestant in the table
+setRows(updatedRows);
 
 setFirstName("");
 setLastName("");
 setSelectedGender("");
 setSelectedSchool("");
 
+
+        // Show success message
     toast("Registration Complete", {
-      description: "Welcome to the competition",
+      description: "Welcome to the competition" + " " + firstName,
+      className: "!bg-emerald-400 !text-neutral-800 !border-neutral-400",
     });
   };
-  return (
-    <div className="flex items-center justify-center h-180 gap-6 ">
-      <Toaster></Toaster>
-          <div className="flex flex-row gap-6 w-full  max-w-4xl">
 
-      <Card className="w-1/2 max-w-lg">
+  return (
+    <div className="flex items-start justify-start gap-6 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-20">
+      
+      <Toaster></Toaster>
+          <div className="flex flex-row justify-center  gap-6 w-full  max-w-screen">
+
+      <Card className=" bg-white shadow-md rounded-lg p-8 w-full max-w-xl">
         <CardHeader>
           <CardTitle>Sign Up</CardTitle>
           <CardDescription>
@@ -96,7 +110,7 @@ setSelectedSchool("");
         </CardHeader>
         <CardContent>
           <form>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 ">
               <div className="grid gap-2">
                 <Label>First Name</Label>
                 <Input
@@ -165,8 +179,8 @@ setSelectedSchool("");
       </Card>
           
 
-      <div  className="w-1/2 max-w-lg">
-      <SignupTable rows={rows}></SignupTable>
+      <div  className="flex flex-col gap-6 w-full max-w-3xl">
+      <SignupTable rows={rows} ></SignupTable>
       </div>
       </div>
     </div>

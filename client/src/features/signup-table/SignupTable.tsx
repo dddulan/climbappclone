@@ -9,7 +9,7 @@ export const SignupTable: React.FC<SignupProp> = ({rows}) => {
   return (
 
     
-    <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm w-full">
+    <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl  shadow-sm  ">
       <DataTable columns={signupColumns} data={rows} />
     </div>
   );
