@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import classes from "./contestants.module.css";
 import type { Contestant } from "../../models/contestant";
+import { LogScore } from "@/features/log-score/LogScore";
 
 import {
   getAllContestants,
@@ -75,7 +76,9 @@ const Contestants: React.FC = () => {
   // };
 
   return (
-    <div className={classes.container}>
+       <div className="flex items-center justify-center">
+
+      <LogScore className="w-100"></LogScore>
     </div>
   );
 };

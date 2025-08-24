@@ -36,7 +36,7 @@ const SignUp: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center">
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-sm min-w-max">
         <CardHeader>
           <CardTitle>Sign Up</CardTitle>
           <CardDescription>
