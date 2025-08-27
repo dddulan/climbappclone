@@ -26,15 +26,13 @@ import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
 
 const SignUp: React.FC = () => {
-    const [selectedGender, setSelectedGender] = useState<string>("");
-    const [firstName, setFirstName] = useState<string>("");
-    const [lastName, setLastName] = useState<string>("");
-    const [schools, setSchools] = useState<School[]>([]); 
-    const [selectedSchool, setSelectedSchool] = useState<string>("");
-    const [rows, setRows] = useState<Contestant[]>([]); 
-  const schoolObj = schools.find(school => school.name === selectedSchool);
-
-
+  const [selectedGender, setSelectedGender] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [schools, setSchools] = useState<School[]>([]);
+  const [selectedSchool, setSelectedSchool] = useState<string>("");
+  const [rows, setRows] = useState<Contestant[]>([]);
+  const schoolObj = schools.find((school) => school.name === selectedSchool);
 
   useEffect(() => {
     loadData();
@@ -48,47 +46,37 @@ const SignUp: React.FC = () => {
       .catch(console.error);
   };
 
-//Button function to handle the submission of the form
+  //Button function to handle the submission of the form
   const onSubmit = () => {
     // Check if all fields are filled
-    if (!firstName || !lastName || !selectedGender || !selectedSchool || !schoolObj) {
+    if (
+      !firstName ||
+      !lastName ||
+      !selectedGender ||
+      !selectedSchool ||
+      !schoolObj
+    ) {
       toast("Please fill in all fields");
       return;
     }
 
-// Create a new contestant object
+    // Create a new contestant object
     const newRow: Contestant = {
-    name: `${firstName} ${lastName}`,
-    school_id:schoolObj.id||0, // Assuming school_id is auto-incremented based on the current length of rows
-    gender: selectedGender || "",
-    id: null,
-  }
-//updatedRows contains the updated array of contestant objects
-const updatedRows=[...rows,newRow];
-  // Save the new contestant to the database
-  /*
-       saveContestants(updatedRows)
-      .then(() => {
-        console.log("Contestants saved successfully");})
-      .catch((error) => {
-        console.error("Error saving contestants:", error);
-        toast("Error saving contestants");
-      });
-      
-       */
-   
-      console.log("Updated Rows", updatedRows);
+      name: `${firstName} ${lastName}`,
+      school_id: schoolObj.id || 0, // Assuming school_id is auto-incremented based on the current length of rows
+      gender: selectedGender || "",
+      id: null,
+    };
+    //updatedRows contains the updated array of contestant objects
+    const updatedRows = [...rows, newRow];
+    console.log("Updated Rows", updatedRows);
 
-//temp shows the new contestant in the table
-setRows(updatedRows);
+    setFirstName("");
+    setLastName("");
+    setSelectedGender("");
+    setSelectedSchool("");
 
-setFirstName("");
-setLastName("");
-setSelectedGender("");
-setSelectedSchool("");
-
-
-        // Show success message
+    // Show success message
     toast("Registration Complete", {
       description: "Welcome to the competition" + " " + firstName,
       className: "!bg-emerald-400 !text-neutral-800 !border-neutral-400",
@@ -97,97 +85,97 @@ setSelectedSchool("");
 
   return (
     <div className="flex items-start justify-start gap-6 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-20">
-      
       <Toaster></Toaster>
-          <div className="flex flex-row justify-center  gap-6 w-full  max-w-screen">
-
-      <Card className=" bg-white shadow-md rounded-lg p-8 w-full max-w-xl">
-        <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
-          <CardDescription>
-            Enter your information to compete in the competition
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="flex flex-col gap-6 ">
-              <div className="grid gap-2">
-                <Label>First Name</Label>
-                <Input
-                value={firstName}
-                  id="first-name"
-                  type="first-name"
-                  placeholder="Magnus"
-                   onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Last Name</Label>
-                <Input
-                value={lastName}
-                  id="last-name"
-                  type="last-name"
-                  placeholder="Midtbo"
-                   onChange={(e) => setLastName(e.target.value)}
-
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Gender</Label>
-                {/*after choosing a gender the value will be stored in selectedValue */}
-                <Select value={selectedGender} onValueChange={setSelectedGender}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a Gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                    <SelectLabel>Gender</SelectLabel>
-                    <SelectItem value="Male">Male</SelectItem>
-                    <SelectItem value="Female">Female</SelectItem>
-                    <SelectItem value="Non-Binary">Non-Binary</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label>School</Label>
+      <div className="flex flex-row justify-center  gap-6 w-full  max-w-screen">
+        <Card className=" bg-white shadow-md rounded-lg p-8 w-full max-w-xl">
+          <CardHeader>
+            <CardTitle>Sign Up</CardTitle>
+            <CardDescription>
+              Enter your information to compete in the competition
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form>
+              <div className="flex flex-col gap-6 ">
+                <div className="grid gap-2">
+                  <Label>First Name</Label>
+                  <Input
+                    value={firstName}
+                    id="first-name"
+                    type="first-name"
+                    placeholder="Magnus"
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
                 </div>
-                <Select value={selectedSchool} onValueChange={setSelectedSchool}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a School" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {schools.map((school,index) => (
-                    <SelectItem key={index} value={school.name}>{school.name}</SelectItem>
-                    ))}
-                    
-                  </SelectContent>
-                </Select>
+                <div className="grid gap-2">
+                  <Label>Last Name</Label>
+                  <Input
+                    value={lastName}
+                    id="last-name"
+                    type="last-name"
+                    placeholder="Midtbo"
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label>Gender</Label>
+                  {/*after choosing a gender the value will be stored in selectedValue */}
+                  <Select
+                    value={selectedGender}
+                    onValueChange={setSelectedGender}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a Gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Gender</SelectLabel>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Non-Binary">Non-Binary</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label>School</Label>
+                  </div>
+                  <Select
+                    value={selectedSchool}
+                    onValueChange={setSelectedSchool}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a School" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {schools.map((school, index) => (
+                        <SelectItem key={index} value={school.name}>
+                          {school.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button onClick={onSubmit} variant="default" className="w-full">
-            Submit
-          </Button>
-        </CardFooter>
-      </Card>
-          
+            </form>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <Button onClick={onSubmit} variant="default" className="w-full">
+              Submit
+            </Button>
+          </CardFooter>
+        </Card>
 
-      <div  className="flex flex-col gap-6 w-full max-w-3xl">
-      <SignupTable rows={rows} ></SignupTable>
-      </div>
+        <div className="flex flex-col gap-6 w-full max-w-3xl">
+          <SignupTable rows={rows}></SignupTable>
+        </div>
       </div>
     </div>
   );
 };
 
-
 export default SignUp;
-
-
