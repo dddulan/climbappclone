@@ -4,6 +4,7 @@ import CompetitionsHome from '../pages/competitions/CompetitionsHome';
 
 import Contestants from '../pages/contestants/ContestantsHome';
 import Leaderboard from '../pages/leaderboard/leaderboard';
+import SignUp from '../pages/signup/SignUp';
 import Login from '../pages/login/login';
 import Layout from '../components/layout/layout';
 
@@ -15,6 +16,7 @@ const App: React.FC = () => {
           <Route path="competitions" element={<CompetitionsHome />} />
           <Route path="contestants" element={<Contestants />} />
           <Route path="leaderboard" element={<Leaderboard />} />
+          <Route path="signup" element={<SignUp />} />
         </Route>
       </Routes>
     </BrowserRouter>

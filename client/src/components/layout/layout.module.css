@@ -1,13 +1,5 @@
-.layout {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #cacaca;
-  font-family: 'Arial', sans-serif;
-}
-
 .header {
-  width: 100%;
+  width: auto;
   background-color: #e6e6e6;
   display: flex;
   color: white;
@@ -32,49 +24,10 @@
   text-decoration: none;
   font-size: large;
   padding: 10px;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 .currentHeader:hover {
   color: rgb(106, 0, 255);
   transform: font-size(xx-large);
-}
-
-.body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-}
-
-.header li {
-  padding: 5px 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.header li a {
-  color: #000000;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-
-.footer {
-  height: 1dvh;
-  background-color: grey;
-  color: white;
-  padding: 1dvh;
-
-}
-
-.footerRight {
-  text-align: right;
-  float: right;
-}
-
-.footerLeft {
-  text-align: left;
 }

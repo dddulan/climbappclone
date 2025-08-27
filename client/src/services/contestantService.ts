@@ -1,5 +1,5 @@
 import axios from "./axios";
-import { Contestant } from "../models/contestant";
+import type { Contestant } from "../models/contestant";
 
 // Get all contestants for contestants home page
 export const getAllContestants = async (): Promise<Contestant[]> => {

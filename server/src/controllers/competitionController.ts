@@ -7,7 +7,7 @@ export const getAllCompetitions = async (req: Request, res: Response): Promise<v
       SELECT
         id, 
         type,
-        date_of
+        TO_CHAR(date_of, 'MM/DD/YYYY') AS date_of
       FROM competitions 
       ORDER BY date_of
       `);
@@ -27,7 +27,7 @@ export const saveCompetitions = async (req: Request, res: Response): Promise<voi
   competitions.forEach((comp, i) => {
     values.push(comp.id, comp.date_of, comp.type);
     const idx = i * 3;
-    batch.push(`($${idx + 1}, $${idx + 2}, $${idx + 3})`);
+    batch.push(`($${idx + 1}, TO_TIMESTAMP($${idx + 2}, 'MM/DD/YYYY'), $${idx + 3})`);
   });
 
   try {
