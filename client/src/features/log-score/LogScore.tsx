@@ -24,23 +24,20 @@ export const LogScore: React.FC<LogScoreProps> = ({ className }) => {
   const onSubmit = () => console.log("submitted");
 
   return (
-    <div className={`flex flex-col items-center gap-4 ${className}`}>
-
-      <Card className="w-full max-w-lg  text-lg"> {/* increase text and spacing */}
+    <div className={`flex flex-col items-center gap-4 mt-10 ${className}`}>
+      <Card className="w-full max-w-lg  text-lg">
         <CardHeader>
           <CardTitle>Score Sheet</CardTitle>
-          <CardDescription >
-            Select the completed routes
-          </CardDescription>
+          <CardDescription>Select the completed routes</CardDescription>
         </CardHeader>
 
         <CardContent>
           <form className="flex flex-col gap-6">
             {/* School */}
-            <div className="grid gap-2">
-              <Label >School</Label>
+            <div className="grid gap-2 ">
+              <Label>School</Label>
               <Select>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a School" />
                 </SelectTrigger>
                 <SelectContent>
@@ -51,9 +48,9 @@ export const LogScore: React.FC<LogScoreProps> = ({ className }) => {
 
             {/* Name */}
             <div className="grid gap-2">
-              <Label >Name</Label>
+              <Label>Name</Label>
               <Select>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select your Name" />
                 </SelectTrigger>
                 <SelectContent>
@@ -64,9 +61,9 @@ export const LogScore: React.FC<LogScoreProps> = ({ className }) => {
 
             {/* Route */}
             <div className="grid gap-2">
-              <Label >Route</Label>
+              <Label>Route</Label>
               <Select>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a Route" />
                 </SelectTrigger>
                 <SelectContent>
@@ -79,7 +76,7 @@ export const LogScore: React.FC<LogScoreProps> = ({ className }) => {
             <div className="grid gap-2">
               <Label>Attempt</Label>
               <Select>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Attempt" />
                 </SelectTrigger>
                 <SelectContent>

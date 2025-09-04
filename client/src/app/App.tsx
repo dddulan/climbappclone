@@ -7,6 +7,7 @@ import Leaderboard from '../pages/leaderboard/leaderboard';
 import SignUp from '../pages/signup/SignUp';
 import Login from '../pages/login/login';
 import Layout from '../components/layout/layout';
+import ScoresHome from '@/pages/scores/ScoresHome';
 
 
 const App: React.FC = () => {
@@ -18,6 +19,7 @@ const App: React.FC = () => {
           <Route path="contestants" element={<Contestants />} />
           <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="signup" element={<SignUp />} />
+          <Route path="scoreshome" element ={<ScoresHome />} />
           
         </Route>
       </Routes>
