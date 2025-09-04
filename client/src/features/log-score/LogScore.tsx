@@ -28,7 +28,7 @@ export const LogScore: React.FC<LogScoreProps> = ({ className }) => {
       <Card className="w-full max-w-lg  text-lg">
         <CardHeader>
           <CardTitle>Score Sheet</CardTitle>
-          <CardDescription>Select the completed routes</CardDescription>
+          <CardDescription>Log your route in</CardDescription>
         </CardHeader>
 
         <CardContent>
