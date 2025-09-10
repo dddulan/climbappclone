@@ -32,11 +32,13 @@ const SignUp: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<string>("");
   const [rows, setRows] = useState<Contestant[]>([]);
+
   const schoolObj = schools.find((school) => school.name === selectedSchool);
 
   useEffect(() => {
     loadData();
   }, []);
+
 
   const loadData = () => {
     getAllSchools()
@@ -85,7 +87,7 @@ const SignUp: React.FC = () => {
 
   return (
     <div className="flex items-start justify-start gap-6 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-20">
-      <Toaster></Toaster>
+      <Toaster position="top-center"></Toaster>
       <div className="flex flex-row justify-center  gap-6 w-full  max-w-screen">
         <Card className=" bg-white shadow-md rounded-lg p-8 w-full max-w-xl">
           <CardHeader>

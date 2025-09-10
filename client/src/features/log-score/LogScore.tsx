@@ -1,3 +1,4 @@
+import React, { useEffect,useState} from "react";
 import {
   Card,
   CardContent,
@@ -15,16 +16,59 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
+import { getAllContestants, getAllSchools } from "@/services/contestantService";
+import type { School } from "@/models/school";
+import type { Contestant } from "@/models/contestant";
+import { toast, Toaster } from "sonner";
+
 
 interface LogScoreProps {
   className?: string;
 }
 
 export const LogScore: React.FC<LogScoreProps> = ({ className }) => {
-  const onSubmit = () => console.log("submitted");
+  const onSubmit = () => {
+        // Check if all fields are filled
+    if (
+
+      !selectedSchool ||!contestants
+    ) {
+      toast("Please fill in all fields");
+      return;
+    }
+        // Show success message
+        toast("Registration Complete", {
+          description: "Score Logged",
+          className: "!bg-emerald-400 !text-neutral-800 !border-neutral-400",
+        });
+        
+  };
+
+    useEffect(() => {
+    loadData();
+  }, []);
+  
+  const loadData = () => {
+    getAllSchools()
+      .then((res: School[]) => {
+        setSchools(res);
+      })
+      .catch(console.error);
+    getAllContestants()
+      .then((res: Contestant[]) => {
+        setContestants(res);
+      })
+      
+  };
+
+  const [schools, setSchools] = useState<School[]>([]);
+  const [selectedSchool, setSelectedSchool] = useState<string>("");
+  const [contestants, setContestants] = useState<Contestant[]>([]);
 
   return (
     <div className={`flex flex-col items-center gap-4 mt-10 ${className}`}>
+      <Toaster position="top-center" />
+
       <Card className="w-full max-w-lg  text-lg">
         <CardHeader>
           <CardTitle>Score Sheet</CardTitle>
@@ -36,25 +80,38 @@ export const LogScore: React.FC<LogScoreProps> = ({ className }) => {
             {/* School */}
             <div className="grid gap-2 ">
               <Label>School</Label>
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a School" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="sac">SacState</SelectItem>
-                </SelectContent>
-              </Select>
+                  <Select
+                    value={selectedSchool}
+                    onValueChange={setSelectedSchool}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a School" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {schools.map((school, index) => (
+                        <SelectItem key={index} value={school.name}>
+                          {school.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
             </div>
 
             {/* Name */}
             <div className="grid gap-2">
               <Label>Name</Label>
-              <Select>
+              <Select
+                  
+                    >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select your Name" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="magnus">Magnus</SelectItem>
+                       {contestants.map((contestants, index) => (
+                        <SelectItem key={index} value={contestants.name}>
+                          {contestants.name}
+                        </SelectItem>
+                      ))}
                 </SelectContent>
               </Select>
             </div>
