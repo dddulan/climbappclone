@@ -17,6 +17,16 @@ export const getAllContestants = async (req: Request, res: Response): Promise<vo
   }
 };
 
+export const getAllSchools = async (req: Request, res: Response): Promise<void> => {
+  try{
+    const result = await pool.query('SELECT * FROM schools');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Query error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
 export const saveContestants = async (req: Request, res: Response): Promise<void> => {
   const contestants = req.body;
   const values: any[] = [];

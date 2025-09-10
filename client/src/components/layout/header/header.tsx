@@ -11,13 +11,13 @@ const Header = () => {
   };
 
   return (
-    <div className={classes.header}>
+    <div className={"bg-white border-2 text-black flex rounded-md py-2"}>
       <img src={logo} className={classes.headerLogo} alt="logo"></img>
-      <div className={classes.headerLinks}>
+      <div className={"justify-start flex "}>
         <Link
           style={{
             color: currentTab == "competitions" ? "white" : "",
-            background: currentTab == "competitions" ? "grey" : "",
+            background: currentTab == "competitions" ? "black" : "",
           }}
           className={classes.currentHeader}
           onClick={() => handleClick("competitions")}
@@ -29,7 +29,7 @@ const Header = () => {
         <Link
           style={{
             color: currentTab == "contestants" ? "white" : "",
-            background: currentTab == "contestants" ? "grey" : "",
+            background: currentTab == "contestants" ? "black" : "",
           }}
           className={classes.currentHeader}
           onClick={() => handleClick("contestants")}
@@ -41,7 +41,7 @@ const Header = () => {
         <Link
           style={{
             color: currentTab == "leaderboard" ? "white" : "",
-            background: currentTab == "leaderboard" ? "grey" : "",
+            background: currentTab == "leaderboard" ? "black" : "",
           }}
           className={classes.currentHeader}
           onClick={() => handleClick("leaderboard")}
@@ -53,7 +53,7 @@ const Header = () => {
         <Link
           style={{
             color: currentTab == "signup" ? "white" : "",
-            background: currentTab == "signup" ? "grey" : "",
+            background: currentTab == "signup" ? "black" : "",
           }}
           className={classes.currentHeader}
           onClick={() => handleClick("signup")}
