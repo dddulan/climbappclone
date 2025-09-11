@@ -53,3 +53,20 @@ export const saveContestants = async (req: Request, res: Response): Promise<void
     res.status(500).json({ error: err });
   }
 };
+
+//
+export const saveSchool = async (req: Request, res: Response): Promise<void> => {
+  const school = req.body;
+
+  try {
+    const query = `
+      INSERT INTO schools (name)
+      VALUES ${school.name}
+    `;
+
+    await pool.query(query);
+    res.json({ message: 'Success' });
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+};
