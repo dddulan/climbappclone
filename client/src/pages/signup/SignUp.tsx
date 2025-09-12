@@ -20,10 +20,7 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { toast, Toaster } from "sonner";
-import {
-  getAllSchools,
-  signUpContestant,
-} from "@/services/contestantService";
+import { getAllSchools, signUpContestant } from "@/services/contestantService";
 import { SignupTable } from "@/features/signup-table/SignupTable";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
@@ -75,7 +72,7 @@ const SignUp: React.FC = () => {
 
     console.log("Updated Rows", newContestant);
     signUpContestant(newContestant);
-    
+
     setFirstName("");
     setLastName("");
     setSelectedGender("");
@@ -90,8 +87,12 @@ const SignUp: React.FC = () => {
 
   return (
     <>
-      <div className="pt-20 font-bold">
-        <span>For competition on {ctx.comp.date_of}</span>
+      <div className="pt-20 text-center font-bold">
+        {(ctx?.comp.id) ? (
+          <h2>For competition on {ctx.comp.date_of}</h2>
+        ) : (
+          <h2>No active competition</h2>
+        )}
       </div>
       <div className="flex items-start justify-start min-h-screen">
         <Toaster></Toaster>
