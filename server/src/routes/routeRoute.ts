@@ -1,9 +1,11 @@
 import express from 'express';
-import { getRoutesById, saveRoutes } from '../controllers/routeController';
+import { createRoute, getRoutesById, saveRoutes, updateRoute } from '../controllers/routeController';
 
 const router = express.Router();
 
 router.get("/:id", getRoutesById);
-router.post("/", saveRoutes)
+router.post("/save", saveRoutes)
+router.post("/createRoute", createRoute)
+router.post("/updateRoute", updateRoute)
 
 export default router;

@@ -11,7 +11,7 @@ export const signupColumns: ColumnDef<Contestant>[] = [
     header: "Gender"
   },
     {
-    accessorKey: "school",
+    accessorKey: "school_name",
     header: "School"
   },
 
