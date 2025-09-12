@@ -1,8 +1,8 @@
 import axios from "./axios";
 import type { Contestant } from "../models/contestant";
-import type { School } from "@/models/school";
+import type { School } from "../models/school";
 
-// Get all contestants for contestants home page
+// Gets all contestants for contestants home page
 export const getAllContestants = async (): Promise<Contestant[]> => {
   const res = await axios.get("/contestants");
   return res.data;
@@ -10,7 +10,7 @@ export const getAllContestants = async (): Promise<Contestant[]> => {
 
 // Upsert contestants
 export const saveContestants = async (contestants: Contestant[]) => {
-  const res = await axios.post("/contestants/save", contestants);
+  const res = await axios.post("/contestants/saveContestants", contestants);
   return res.data;
 };
 
@@ -31,4 +31,10 @@ export const getAllContestantsForComp = async (
 export const getAllSchools = async (): Promise<School[]> => {
   const res = await axios.get("/contestants/getAllSchools");
   return res.data;
-};
+}
+
+//
+export const saveSchool = async (school: School[]) => {
+  const res = await axios.post('/contestants/saveSchool', school);
+  return res.data;
+}
