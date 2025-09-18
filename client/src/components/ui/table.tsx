@@ -7,7 +7,17 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+  getPaginationRowModel,
+} from "@tanstack/react-table";
+import { Button } from "./button";
+
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends unknown> {
+    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+    onDeselect: (rowIndex: number, isSave: boolean) => void;
+    isEdit: boolean;
+  }
+}
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
@@ -88,7 +98,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "px-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className
       )}
       {...props}
@@ -112,26 +122,63 @@ function TableCaption({
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isEdit?: boolean;
+  isRouteSelected?: boolean;
+  editId?: number;
+  emptyMessage?: string;
+  onRowClick?: (row: TData, isSelected: boolean) => void;
+  onUpdate?: (rowIndex: number, columnId: string, value: unknown) => void;
+  onDeselect?: (rowIndex: number, isSave: boolean) => void;
 }
 
 function DataTable<TData, TValue>({
   columns,
   data,
+  onUpdate,
+  onDeselect,
+  onRowClick,
+  emptyMessage = "No data available.",
+  isRouteSelected = false,
+  isEdit = false,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 20,
+      },
+    },
+    autoResetPageIndex: false,
+    meta: {
+      updateData: (rowIndex: number, columnId: string, value: unknown) => {
+        onUpdate?.(rowIndex, columnId, value);
+      },
+      onDeselect: (rowIndex: number, isSave: boolean) => {
+        onDeselect?.(rowIndex, isSave);
+      },
+      isEdit,
+    },
   });
 
+  //when a new row is added to the table, jump to the last page
+  React.useEffect(() => {
+    table.setPageIndex(table.getPageCount() - 1);
+  }, [data.length]);
+
   return (
-    <div className="overflow-hidden rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
+    <div>
+      <div className="flex overflow-hidden rounded-md border overflow-x-auto">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
@@ -140,40 +187,134 @@ function DataTable<TData, TValue>({
                           header.getContext()
                         )}
                   </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  onClick={() => {
+
+                    if (!isRouteSelected) {
+                      row.toggleSelected();
+                      onRowClick?.(row.original, table.getIsSomeRowsSelected());
+                    }
+                  }}
+                  className="cursor-pointer data-[state=selected]:bg-muted"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className="py-2"
+                      onClick={(e) => {
+                        row.getIsSelected() ? e.stopPropagation() : null;
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  {emptyMessage}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+
+        <span className="border-1 w-7 text-center rounded-sm">
+          {table.getState().pagination.pageIndex + 1}
+        </span>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function DataRow<TData, TValue>({
+  columns,
+  data,
+  onUpdate,
+  isEdit = false,
+}: DataTableProps<TData, TValue>) {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+
+    autoResetPageIndex: false,
+    meta: {
+      updateData: (rowIndex: number, columnId: string, value: unknown) => {
+        onUpdate?.(rowIndex, columnId, value);
+      },
+      onDeselect: () => {},
+      isEdit,
+    },
+  });
+
+  return (
+    <div>
+      <div className="flex overflow-hidden rounded-md border overflow-x-auto">
+        <Table>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                onClick={() => {
+                  row.toggleSelected();
+                }}
+                className="cursor-pointer data-[state=selected]:bg-muted"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="py-2">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
 
 export {
   DataTable,
+  DataRow,
   Table,
   TableHeader,
   TableBody,

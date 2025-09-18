@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -20,10 +20,11 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { toast, Toaster } from "sonner";
-import { getAllSchools } from "@/services/contestantService";
+import { getAllSchools, signUpContestant } from "@/services/contestantService";
 import { SignupTable } from "@/features/signup-table/SignupTable";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
+import { CompContext } from "@/components/layout/layout";
 
 const SignUp: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<string>("");
@@ -31,9 +32,8 @@ const SignUp: React.FC = () => {
   const [lastName, setLastName] = useState<string>("");
   const [schools, setSchools] = useState<School[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<string>("");
-  const [rows, setRows] = useState<Contestant[]>([]);
-
   const schoolObj = schools.find((school) => school.name === selectedSchool);
+  const ctx = useContext(CompContext)!;
 
   useEffect(() => {
     loadData();
@@ -63,15 +63,16 @@ const SignUp: React.FC = () => {
     }
 
     // Create a new contestant object
-    const newRow: Contestant = {
+    const newContestant: Contestant = {
       name: `${firstName} ${lastName}`,
+      competition_id: ctx.comp.id,
       school_id: schoolObj.id || 0, // Assuming school_id is auto-incremented based on the current length of rows
       gender: selectedGender || "",
-      id: null,
+      id: 0,
     };
-    //updatedRows contains the updated array of contestant objects
-    const updatedRows = [...rows, newRow];
-    console.log("Updated Rows", updatedRows);
+
+    console.log("Updated Rows", newContestant);
+    signUpContestant(newContestant);
 
     setFirstName("");
     setLastName("");
@@ -86,97 +87,106 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <div className="flex items-start justify-start gap-6 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-20">
-      <Toaster position="top-center"></Toaster>
-      <div className="flex flex-row justify-center  gap-6 w-full  max-w-screen">
-        <Card className=" bg-white shadow-md rounded-lg p-8 w-full max-w-xl">
-          <CardHeader>
-            <CardTitle>Sign Up</CardTitle>
-            <CardDescription>
+    <>
+      <div className="pt-20 text-center font-bold">
+        {(ctx?.comp.id) ? (
+          <h2>For competition on {ctx.comp.date_of}</h2>
+        ) : (
+          <h2>No active competition</h2>
+        )}
+      </div>
+      <div className="flex items-start justify-start min-h-screen">
+        <Toaster></Toaster>
+        <div className="flex flex-row justify-center  gap-6 w-full  max-w-screen">
+          <Card className=" bg-white shadow-md rounded-lg p-8 w-full max-w-xl">
+            <CardHeader>
+              <CardTitle>Sign Up</CardTitle>
+              {/* <CardDescription>
               Enter your information to compete in the competition
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form>
-              <div className="flex flex-col gap-6 ">
-                <div className="grid gap-2">
-                  <Label>First Name</Label>
-                  <Input
-                    value={firstName}
-                    id="first-name"
-                    type="first-name"
-                    placeholder="Magnus"
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Last Name</Label>
-                  <Input
-                    value={lastName}
-                    id="last-name"
-                    type="last-name"
-                    placeholder="Midtbo"
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Gender</Label>
-                  {/*after choosing a gender the value will be stored in selectedValue */}
-                  <Select
-                    value={selectedGender}
-                    onValueChange={setSelectedGender}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select a Gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Gender</SelectLabel>
-                        <SelectItem value="Male">Male</SelectItem>
-                        <SelectItem value="Female">Female</SelectItem>
-                        <SelectItem value="Non-Binary">Non-Binary</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label>School</Label>
+            </CardDescription> */}
+            </CardHeader>
+            <CardContent>
+              <form>
+                <div className="flex flex-col gap-6 ">
+                  <div className="grid gap-2">
+                    <Label>First Name</Label>
+                    <Input
+                      value={firstName}
+                      id="first-name"
+                      type="first-name"
+                      placeholder="Magnus"
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                    />
                   </div>
-                  <Select
-                    value={selectedSchool}
-                    onValueChange={setSelectedSchool}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select a School" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {schools.map((school, index) => (
-                        <SelectItem key={index} value={school.name}>
-                          {school.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="grid gap-2">
+                    <Label>Last Name</Label>
+                    <Input
+                      value={lastName}
+                      id="last-name"
+                      type="last-name"
+                      placeholder="Midtbo"
+                      onChange={(e) => setLastName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Gender</Label>
+                    {/*after choosing a gender the value will be stored in selectedGender */}
+                    <Select
+                      value={selectedGender}
+                      onValueChange={setSelectedGender}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Gender</SelectLabel>
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Female">Female</SelectItem>
+                          <SelectItem value="Non-Binary">Non-Binary</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-2">
+                    <div className="flex items-center">
+                      <Label>School</Label>
+                    </div>
+                    <Select
+                      value={selectedSchool}
+                      onValueChange={setSelectedSchool}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a School" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {schools.map((school, index) => (
+                          <SelectItem key={index} value={school.name}>
+                            {school.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter className="flex-col gap-2">
-            <Button onClick={onSubmit} variant="default" className="w-full">
-              Submit
-            </Button>
-          </CardFooter>
-        </Card>
+              </form>
+            </CardContent>
+            <CardFooter className="flex-col gap-2">
+              <Button onClick={onSubmit} variant="default" className="w-full">
+                Submit
+              </Button>
+            </CardFooter>
+          </Card>
 
-        <div className="flex flex-col gap-6 w-full max-w-3xl">
-          <SignupTable rows={rows}></SignupTable>
+          <div className="flex flex-col gap-6 w-full max-w-3xl">
+            <SignupTable></SignupTable>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
