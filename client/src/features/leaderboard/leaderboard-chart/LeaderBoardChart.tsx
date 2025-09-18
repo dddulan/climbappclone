@@ -1,8 +1,5 @@
-"use client"
-
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
-
+import React, {useContext} from "react";
+import { BarChart, Bar , CartesianGrid, LabelList, XAxis, YAxis, Cell } from "recharts";
 import {
   Card,
   CardContent,
@@ -11,44 +8,55 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
+import type {
+  ChartConfig
 } from "@/components/ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { CompContext } from "@/components/layout/layout";
 
-export const description = "A bar chart with a custom label"
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+export const LeaderBoardChart: React.FC = () => {
+
+  const ctx = useContext(CompContext)!;
+
+
+    const chartData = [
+  { team: "Duncan", score: 52560, mobile: 80 },
+  { team: "Fresno", score: 30005, mobile: 200 },
+  { team: "Design Science", score: 22237, mobile: 120 },
+  { team: "Bullard", score: 73000, mobile: 190 },
+  { team: "Edison", score: 20900, mobile: 130 },
+  { team: "Hoover", score: 21400, mobile: 140 },
 ]
+
+const colors = ["#3b82f6", "#f97316", "#10b981", "#ef4444","#8b5cf6","#eab308","#14b8a6","#f43f5e","#22d3ee"]
+
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
-    color: "var(--chart-2)",
+    label: "score",
   },
   mobile: {
     label: "Mobile",
-    color: "var(--chart-2)",
   },
   label: {
     color: "var(--background)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function ChartBarLabelCustom() {
-  return (
-    <Card>
+
+    return(
+        <div>
+<Card >
       <CardHeader>
-        <CardTitle>Bar Chart - Custom Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Leaderboard</CardTitle>
+        <CardDescription>        
+          {(ctx?.comp.id) ? (
+          <h2>{ctx.comp.date_of}</h2>
+        ) : (
+          <h2>No active competition</h2>
+        )}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -62,34 +70,40 @@ export function ChartBarLabelCustom() {
           >
             <CartesianGrid horizontal={false} />
             <YAxis
-              dataKey="month"
+              dataKey="team"
               type="category"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value: string | any[]) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 3)}
               hide
             />
-            <XAxis dataKey="desktop" type="number" hide />
+            <XAxis dataKey="score" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
             <Bar
-              dataKey="desktop"
+              dataKey="score"
               layout="vertical"
               fill="var(--color-desktop)"
               radius={4}
             >
+                {chartData.map((_, index) => (
+    <Cell
+      key={index}
+      fill={colors[index % colors.length]}
+    />
+  ))}
               <LabelList
-                dataKey="month"
+                dataKey="team"
                 position="insideLeft"
                 offset={8}
                 className="fill-(--color-label)"
                 fontSize={12}
               />
               <LabelList
-                dataKey="desktop"
+                dataKey="score"
                 position="right"
                 offset={8}
                 className="fill-foreground"
@@ -100,13 +114,12 @@ export function ChartBarLabelCustom() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
+
       </CardFooter>
     </Card>
-  )
-}
+    </div>
+    );
+
+
+    
+};
