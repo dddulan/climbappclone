@@ -39,6 +39,7 @@ const SignUp: React.FC = () => {
     loadData();
   }, []);
 
+
   const loadData = () => {
     getAllSchools()
       .then((res: School[]) => {

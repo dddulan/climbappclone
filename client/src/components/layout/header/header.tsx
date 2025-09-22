@@ -61,6 +61,18 @@ const Header = () => {
         >
           Sign Up
         </Link>
+
+        <Link
+          style={{
+            color: currentTab == "scoreshome" ? "white" : "",
+            background: currentTab == "scoreshome" ? "grey" : "",
+          }}
+          className={classes.currentHeader}
+          onClick={() => handleClick("scoreshome")}
+          to="/scoreshome"
+        >
+          Log Score
+        </Link>
       </div>
     </div>
   );

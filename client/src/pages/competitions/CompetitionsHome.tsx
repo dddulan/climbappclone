@@ -13,7 +13,7 @@ const CompetitionsHome: React.FC = () => {
 
   return (
     //Align children center
-    <div className="container flex flex-row pt-15 px-10">
+    <div className="container flex flex-row pt-15 px-10 ">
       <div>
         <CompetitionsTable
           // onCompSelect={(selected: number) => {
