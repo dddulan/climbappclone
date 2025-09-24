@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import { TrendingUp } from "lucide-react";
 import { TopBoulderTable } from "@/features/leaderboard/top-contestants-table/top-bouldering/TopBoulderTable";
-
+import { TopBoulderFemale } from "@/features/leaderboard/top-contestants-table/top-bouldering/TopBoulderFemale";
+import { TopBoulderMale} from "@/features/leaderboard/top-contestants-table/top-bouldering/TopBoulderMale";
+import { TopRopesFemale } from "@/features/leaderboard/top-contestants-table/top-ropes/TopRopesFemale";
+import { TopRopesMale } from "@/features/leaderboard/top-contestants-table/top-ropes/TopRopesMale";
 import { getAllContestants, getAllSchools } from "@/services/contestantService";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
@@ -39,10 +42,12 @@ const Leaderboard: React.FC = () => {
         <TopSchoolsTable />
       </div>
       <div className="  border-1 bg-white rounded-sm p-4 shadow-xl">
-        <TopBoulderTable />
+        <TopBoulderMale />
+        <TopBoulderFemale />
       </div>
       <div className="  border-1 bg-white rounded-sm p-4 shadow-xl">
-        <TopRopesTable />
+        <TopRopesMale />
+        <TopRopesFemale />
       </div>
     </div>
     </div>
