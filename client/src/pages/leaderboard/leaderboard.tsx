@@ -34,17 +34,17 @@ const Leaderboard: React.FC = () => {
       <div className="w-full max-w-3xl mx-auto mt-5">
         <LeaderBoardChart />
       </div>
-<div className="flex flex-row gap-6 justify-center container mx-auto">
-      <div className="  border-1 bg-white rounded-sm p-4 shadow-xl">
-        <TopSchoolsTable />
+      <div className="flex flex-row gap-6 justify-center container mx-auto">
+        <div className="  border-1 bg-white rounded-sm p-4 shadow-xl">
+          <TopSchoolsTable />
+        </div>
+        <div className="  border-1 bg-white rounded-sm p-4 shadow-xl">
+          <TopBoulderTable />
+        </div>
+        <div className="  border-1 bg-white rounded-sm p-4 shadow-xl">
+          <TopRopesTable />
+        </div>
       </div>
-      <div className="  border-1 bg-white rounded-sm p-4 shadow-xl">
-        <TopBoulderTable />
-      </div>
-      <div className="  border-1 bg-white rounded-sm p-4 shadow-xl">
-        <TopRopesTable />
-      </div>
-    </div>
     </div>
   );
 };

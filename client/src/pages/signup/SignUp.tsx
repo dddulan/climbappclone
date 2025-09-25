@@ -20,7 +20,11 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { toast, Toaster } from "sonner";
-import { getAllSchools, signUpContestant } from "@/services/contestantService";
+import {
+  getContestantsForComp,
+  getAllSchools,
+  signUpContestant,
+} from "@/services/contestantService";
 import { SignupTable } from "@/features/signup-table/SignupTable";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
@@ -32,6 +36,7 @@ const SignUp: React.FC = () => {
   const [lastName, setLastName] = useState<string>("");
   const [schools, setSchools] = useState<School[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<string>("");
+  const [rows, setRows] = useState<Contestant[]>([]); // contestants array for sign up sheet
   const schoolObj = schools.find((school) => school.name === selectedSchool);
   const ctx = useContext(CompContext)!;
 
@@ -39,11 +44,22 @@ const SignUp: React.FC = () => {
     loadData();
   }, []);
 
-
   const loadData = () => {
     getAllSchools()
       .then((res: School[]) => {
         setSchools(res);
+      })
+      .catch(console.error);
+
+    if (ctx?.comp.id) {
+      getContestants();
+    }
+  };
+
+  const getContestants = () => {
+    getContestantsForComp(ctx?.comp.id)
+      .then((res: Contestant[]) => {
+        setRows(res);
       })
       .catch(console.error);
   };
@@ -71,8 +87,9 @@ const SignUp: React.FC = () => {
       id: 0,
     };
 
-    console.log("Updated Rows", newContestant);
-    signUpContestant(newContestant);
+    signUpContestant(newContestant).then(() => {
+      getContestants();
+    });
 
     setFirstName("");
     setLastName("");
@@ -89,7 +106,7 @@ const SignUp: React.FC = () => {
   return (
     <>
       <div className="pt-20 text-center font-bold">
-        {(ctx?.comp.id) ? (
+        {ctx?.comp.id ? (
           <h2>For competition on {ctx.comp.date_of}</h2>
         ) : (
           <h2>No active competition</h2>
@@ -175,14 +192,19 @@ const SignUp: React.FC = () => {
               </form>
             </CardContent>
             <CardFooter className="flex-col gap-2">
-              <Button onClick={onSubmit} variant="default" className="w-full">
+              <Button
+                onClick={onSubmit}
+                disabled={ctx?.comp.id == null}
+                variant="default"
+                className="w-full"
+              >
                 Submit
               </Button>
             </CardFooter>
           </Card>
 
           <div className="flex flex-col gap-6 w-full max-w-3xl">
-            <SignupTable></SignupTable>
+            <SignupTable rows={rows}></SignupTable>
           </div>
         </div>
       </div>

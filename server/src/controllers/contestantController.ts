@@ -20,7 +20,7 @@ export const getAllContestants = async (
   }
 };
 
-export const getAllContestantsForComp = async (
+export const getContestantsForComp = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -56,24 +56,28 @@ export const getAllSchools = async (
   }
 };
 
-export const signUpContestants = async (
+export const signUpContestant = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const contestant = req.body;
-  console.log("AYOOOOO", contestant);
 
-  // try {
-  //   const query = `
-  //     INSERT INTO contestants (id, school_id, competition_id, date_of, type)
-  //     VALUES ${batch.join(", ")}`;
+  try {
+    const query = `
+      INSERT INTO contestants (name, gender, school_id, competition_id)
+      VALUES ($1, $2, $3, $4)`;
+    const values = [
+      contestant.name,
+      contestant.gender,
+      contestant.school_id,
+      contestant.competition_id,
+    ];
 
-  //   await pool.query(query, values);
-  //   res.json({ message: "Success" });
-  // } catch (err) {
-  //   res.status(500).json({ error: err });
-  // }
-  res.json("yo");
+    await pool.query(query, values);
+    res.json({ message: "Success" });
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
 };
 
 export const saveContestants = async (
@@ -106,8 +110,27 @@ export const saveContestants = async (
   }
 };
 
+export const logScore = async (req: Request, res: Response): Promise<void> => {
+  const score = req.body;
+
+  try {
+    const query = `
+      INSERT INTO scores (contestant_id, route_id, attempt)
+      VALUES ($1, $2, $3)`;
+    const values = [score.contestant_id, score.route_id, score.attempt];
+
+    await pool.query(query, values);
+    res.json({ message: "Success" });
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+};
+
 //
-export const saveSchool = async (req: Request, res: Response): Promise<void> => {
+export const saveSchool = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const school = req.body;
 
   try {
@@ -117,7 +140,7 @@ export const saveSchool = async (req: Request, res: Response): Promise<void> => 
     `;
 
     await pool.query(query);
-    res.json({ message: 'Success' });
+    res.json({ message: "Success" });
   } catch (err) {
     res.status(500).json({ error: err });
   }

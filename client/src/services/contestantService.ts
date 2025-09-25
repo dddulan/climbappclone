@@ -1,6 +1,7 @@
 import axios from "./axios";
 import type { Contestant } from "../models/contestant";
 import type { School } from "../models/school";
+import type { Score } from "@/models/score";
 
 // Gets all contestants for contestants home page
 export const getAllContestants = async (): Promise<Contestant[]> => {
@@ -15,16 +16,16 @@ export const saveContestants = async (contestants: Contestant[]) => {
 };
 
 // Sign up a contestant to a competition
-export const signUpContestant = async (constestant: Contestant) => {
-  const res = await axios.post("/contestants/signup", constestant);
+export const signUpContestant = async (contestant: Contestant) => {
+  const res = await axios.post("/contestants/signup", contestant);
   return res.data;
 };
 
 // Get all contestants for a specific competition
-export const getAllContestantsForComp = async (
+export const getContestantsForComp = async (
   compId: number
 ): Promise<Contestant[]> => {
-  const res = await axios.get(`/contestants/getAllContestantsForComp/${compId}`);
+  const res = await axios.get(`/contestants/getContestantsForComp/${compId}`);
   return res.data;
 };
 
@@ -36,5 +37,12 @@ export const getAllSchools = async (): Promise<School[]> => {
 //
 export const saveSchool = async (school: School[]) => {
   const res = await axios.post('/contestants/saveSchool', school);
+  return res.data;
+}
+
+
+// Log score for a contestant
+export const logScore = async (score: Score) => {
+  const res = await axios.post("/contestants/logScore", score);
   return res.data;
 }

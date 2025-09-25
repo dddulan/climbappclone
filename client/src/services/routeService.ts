@@ -7,6 +7,14 @@ export const getRoutesById = async (competitionId: number): Promise<Route[]> => 
   return res.data;
 }
 
+// Get all routes for a specific competition
+export const getRoutesForComp = async (
+  compId: number
+): Promise<Route[]> => {
+  const res = await axios.get(`/routes/getRoutesForComp/${compId}`);
+  return res.data;
+};
+
 // Upsert Routes
 export const saveRoutes = async(routes: Route[]) => {
   let res = await axios.post('/routes/save', routes);

@@ -1,8 +1,6 @@
-import type { Route } from "./route";
-
 export interface Competition {
   id: number;
   date_of: string;
   type: string;
-  routes?: Route[];
+  is_active: boolean;
 }
