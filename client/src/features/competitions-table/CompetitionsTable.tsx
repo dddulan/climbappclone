@@ -66,7 +66,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({
       id: 0,
       date_of: "",
       type: "",
-      routes: [],
+      is_active: false
     };
 
     setRows([...rows, blankRow]);
