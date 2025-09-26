@@ -8,6 +8,13 @@ import { getRoutesById, saveRoutes } from "@/services/routeService";
 import { CompContext } from "@/components/layout/layout";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label"
+import { ChevronDownIcon } from "lucide-react"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -31,13 +38,16 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const [selectedGrade, setSelectedGrade] = useState<string>("");
   const [selectedRouteColor, setSelectedRouteColor] = useState<string>("");
   const [scoreValue, setScoreValue] = useState<string>("");
-const [date, setDate] = React.useState<Date | "">(new Date())
+    const [open, setOpen] = React.useState(false) //calendar open state
+  const [date, setDate] = React.useState<Date | undefined>(undefined)
+ //calendar date state
   const ctx = useContext(CompContext);
 
   const temp = routeColumns.slice().splice(1);
 
   useEffect(() => {
     loadData();
+
   }, [ctx?.comp.id]);
 
   const loadData = () => {
@@ -62,6 +72,10 @@ const [date, setDate] = React.useState<Date | "">(new Date())
   };
 
   const addRow = () => {
+    if (!selectedGrade || !selectedRouteColor || !date || !scoreValue) {
+      alert("Please select a grade and color");
+      return;
+    }
     const blankRow: Route = {
       id: 0,
       name: "",
@@ -69,15 +83,22 @@ const [date, setDate] = React.useState<Date | "">(new Date())
       grade: selectedGrade,
       color: selectedRouteColor,
       competition_id: ctx?.comp.id || 0,
-      point_value: 0,
+      point_value: scoreValue ? parseInt(scoreValue) : 0,
       set_date:  date ? date.toISOString().split('T')[0] : "",
     };
 
-    setRows([...rows, blankRow]);
+    console.log("BLANK", blankRow);
+
+
     if (ctx?.comp.id) {
       blankRow.competition_id = ctx.comp.id;
     }
-    console.log("ADD ROW", blankRow);
+        const updated=[...rows, blankRow];
+        saveRoutes(updated).then((res) => {
+          loadData();});
+        console.log("UPDATED",updated)
+        return updated;
+        
     /* 
    saveRoutes([...rows, blankRow]).then((res) => {
       loadData();
@@ -91,10 +112,10 @@ const [date, setDate] = React.useState<Date | "">(new Date())
       <span className="text-2xl font-medium">Routes</span>
 
       <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
-        <div className="flex space-x-2 pt-5">
+        <div className="flex space-x-2 pt-5 ">
           {/* ADD ROW COMPOENENT GOES HERE */}
-          <Select onValueChange={(value) => setSelectedGrade(value)}>
-            <SelectTrigger className="w-[90px]">
+          <Select  onValueChange={(value) => setSelectedGrade(value)}>
+            <SelectTrigger className="w-[90px] bg-blue-800 text-white">
               <SelectValue placeholder="Grade" />
             </SelectTrigger>
             <SelectContent>
@@ -120,7 +141,7 @@ const [date, setDate] = React.useState<Date | "">(new Date())
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
+                <SelectLabel>Colors</SelectLabel>
                 <SelectItem value="red">Red</SelectItem>
                 <SelectItem value="blue">Blue</SelectItem>
                 <SelectItem value="green">Green</SelectItem>
@@ -130,15 +151,31 @@ const [date, setDate] = React.useState<Date | "">(new Date())
             </SelectContent>
           </Select>
           {/* Score*/}
-          <Input placeholder="ex.150" type="number" value={scoreValue} onChange={(e)=>setScoreValue(e.target.value)}className="w-40" />
+          <Input placeholder="ex.150" type="number" value={scoreValue} onChange={(e)=>setScoreValue(e.target.value)}className="w-40 bg-neutral-100 border-neutral-200" />
           {/* Date*/}
-          <Calendar 
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            className="rounded-lg border"
-
-          />
+  <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              id="date-picker"
+              className="w-32 justify-between font-normal"
+            >
+              {date ? date.toLocaleDateString() : "Select date"}
+              <ChevronDownIcon />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              captionLayout="dropdown"
+              onSelect={(date) => {
+                setDate(date)
+                setOpen(false)
+              }}
+            />
+          </PopoverContent>
+        </Popover>
           {/* Add Button */}
           <Button size="sm" onClick={addRow}>
             <Plus />
