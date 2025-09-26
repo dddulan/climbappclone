@@ -3,6 +3,8 @@ import type { Competition } from "@/models/competition";
 import { DropdownCell } from "@/components/cells/dropdownCell";
 import { DateSelectCell } from "@/components/cells/dateSelectCell";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CompContext } from "@/components/layout/layout";
+import { useContext } from "react";
 
 // for type dropdown
 const competitionTypeList: string[] = ["Boulder", "Top Rope", "Both"];
@@ -52,16 +54,25 @@ export const competitionColumns: ColumnDef<Competition>[] = [
       );
     },
   },
-  {
-    id: "select",
-    header: "Active",
-    cell: ({ row }) => {
-
-      return (
-        <Checkbox
-         checked={row.getIsSelected()}
-        />
-      );
-    },
-  },
+  // {
+  //   id: "select",
+  //   accessorKey: "is_active",
+  //   header: "Active",
+  //   cell: ({ row }) => {  
+  //     console.log(row);
+      
+  //     return (
+  //       <Checkbox
+  //         onCheckedChange={(checked) => {
+  //           console.log("AY YOOOO ", checked);
+  //           if (checked) {
+  //             row.toggleSelected();
+  //           }
+           
+  //         }}
+  //         defaultChecked={row.original.is_active}
+  //       />
+  //     );
+  //   },
+  // },
 ];

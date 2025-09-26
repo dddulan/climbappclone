@@ -10,7 +10,8 @@ export const getAllCompetitions = async (
       SELECT
         id, 
         type,
-        TO_CHAR(date_of, 'MM/DD/YYYY') AS date_of
+        TO_CHAR(date_of, 'MM/DD/YYYY') AS date_of,
+        is_active
       FROM competitions
       ORDER BY id
       `);

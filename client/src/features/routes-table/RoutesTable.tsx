@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { se } from "date-fns/locale";
-import { setDate } from "date-fns";
+import { setDate } from "date-fns";;
 interface tableProps {
   isEdit: boolean;
   toggleEditing: (isSelected: boolean) => void;
@@ -112,7 +112,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       <span className="text-2xl font-medium">Routes</span>
 
       <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
-        <div className="flex space-x-2 pt-5 ">
+        <div className="flex space-x-2 pt-5">
           {/* ADD ROW COMPOENENT GOES HERE */}
           <Select  onValueChange={(value) => setSelectedGrade(value)}>
             <SelectTrigger className="w-[90px] bg-blue-800 text-white">

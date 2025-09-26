@@ -3,17 +3,19 @@ import {
   getAllContestants,
   saveContestants,
   getAllSchools,
-  getAllContestantsForComp,
-  signUpContestants,
+  getContestantsForComp,
+  signUpContestant,
   saveSchool,
+  logScore
 } from "../controllers/contestantController";
 
 const router = express.Router();
 
 router.get("", getAllContestants);
-router.get("/getAllContestantsForComp/:id", getAllContestantsForComp);
+router.get("/getContestantsForComp/:id", getContestantsForComp);
 router.post("/save", saveContestants);
-router.post("/signup", signUpContestants);
+router.post("/signup", signUpContestant);
+router.post("/logScore", logScore);
 router.get("/getAllSchools", getAllSchools);
 router.get("/saveSchool", saveSchool);
 
