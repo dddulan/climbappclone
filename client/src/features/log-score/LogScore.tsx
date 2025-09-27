@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext,  useState } from "react";
 import {
   Card,
   CardContent,
@@ -17,9 +17,9 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import {
-  getAllContestants,
   getContestantsForComp,
   getAllSchools,
+  logScore,
 } from "@/services/contestantService";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
@@ -28,17 +28,54 @@ import { CompContext } from "@/components/layout/layout";
 import { getRoutesForComp } from "@/services/routeService";
 import type { Route } from "@/models/route";
 import type { Score } from "@/models/score";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+
+} from "@/components/ui/dialog";
+import { ScoreTable } from "@/features/scores-table/ScoreTable";
+import { Progress } from "@/components/ui/progress"
 
 export const LogScore: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<string>("");
   const [contestants, setContestants] = useState<Contestant[]>([]);
   const [routes, setRoutes] = useState<Route[]>([]);
+  const [selectedAttempt, setSelectedAttempt] = useState<string>("");
+  const [selectedRouteID, setSelectedRouteID] = useState<string>("");
+  const [selectedContestants, setSelectedContestants] = useState<string>("");
   const ctx = useContext(CompContext)!;
 
-  useEffect(() => {
+  //timer for progress bar and dialog
+  const [open, setOpen] = React.useState(false);
+  const timer = React.useRef<NodeJS.Timeout|undefined>(undefined);
+  const [progress, setProgress] = React.useState(13)
+
+
+  React.useEffect(() => {
     loadData();
-  }, []);
+    if (open){
+
+      setProgress(0)
+      let elapsed = 0;
+    timer.current = setInterval(()=>{
+      elapsed += 100;;
+      setProgress((elapsed/5000)*100);
+      if (elapsed >=5000){
+        if (timer.current) clearInterval(timer.current);
+        setOpen(false);
+      }
+    },100);
+    
+    }
+
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
+  }, [open]);
 
   const loadData = () => {
     getAllSchools()
@@ -62,27 +99,38 @@ export const LogScore: React.FC = () => {
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     // Check if all fields are filled
-    if (!selectedSchool || !contestants) {
+    if (!selectedSchool || !contestants || !routes || !selectedAttempt) {
       toast("Please fill in all fields");
       return;
     }
 
     const newScore: Score = {
       id: 0,
-      contestant_id: 0,
-      route_id: 0,
-      attempt: 0,
+      contestant_id: Number(selectedContestants),
+      route_id: Number(selectedRouteID),
+      attempt: Number(selectedAttempt),
     };
+    try {
+      await logScore(newScore);
+      console.log(" Score sent successfully");
+    } catch (err) {
+      console.error(" Failed to send score:", err);
+    }
+    console.log("compid" + ctx?.comp.id);
+    console.log("selected route ID " + selectedRouteID);
+    console.log("contestants" + selectedContestants);
+    console.log("attempt " + selectedAttempt);
 
-    console.log();
+    // Here you would typically send newContestant to your backend API
 
-    // Show success message
-    toast("Registration Complete", {
-      description: "Score Logged",
-      className: "!bg-emerald-400 !text-neutral-800 !border-neutral-400",
-    });
+    console.log(newScore);
+
+
+    setOpen(true);
+        timer.current = setTimeout(() => setOpen(false), 5000);
+
   };
 
   return (
@@ -125,7 +173,10 @@ export const LogScore: React.FC = () => {
             {/* Name */}
             <div className="grid gap-2">
               <Label>Name</Label>
-              <Select>
+              <Select
+                value={selectedContestants}
+                onValueChange={setSelectedContestants}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select your Name" />
                 </SelectTrigger>
@@ -142,12 +193,19 @@ export const LogScore: React.FC = () => {
             {/* Route */}
             <div className="grid gap-2">
               <Label>Route</Label>
-              <Select>
+              <Select
+                value={selectedRouteID}
+                onValueChange={setSelectedRouteID}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a Route" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="sac">1</SelectItem>
+                  {routes.map((route, index) => (
+                    <SelectItem key={index} value={index.toString()}>
+                      {route.number}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -155,7 +213,10 @@ export const LogScore: React.FC = () => {
             {/* Attempt */}
             <div className="grid gap-2">
               <Label>Attempt</Label>
-              <Select>
+              <Select
+                value={selectedAttempt}
+                onValueChange={setSelectedAttempt}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Attempt" />
                 </SelectTrigger>
@@ -170,11 +231,40 @@ export const LogScore: React.FC = () => {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2">
-          <Button onClick={onSubmit} className="w-full">
-            Submit
-          </Button>
+           <Button
+                onClick={onSubmit}
+                disabled={ctx?.comp.id == null || !selectedSchool || !selectedContestants || !selectedRouteID || !selectedAttempt}
+                className="w-full"
+                
+              >
+                Submit
+              </Button>
+          {/* DIALOG */}
+
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent className="sm:max-w-md ">
+
+              <DialogHeader>
+                <DialogTitle>Great Job!</DialogTitle>
+                <DialogDescription>
+                  Your score has been logged.
+                    <ScoreTable />
+                </DialogDescription>
+                              <DialogHeader className="flex items-center justify-center">
+                <Progress value={progress} className="w-[60%]" />
+              </DialogHeader>
+              </DialogHeader>
+              <div className="flex items-center gap-2">
+                <div className="grid flex-1 gap-2">
+
+                </div>
+              </div>
+
+            </DialogContent>
+          </Dialog>
         </CardFooter>
       </Card>
+
     </div>
   );
 };

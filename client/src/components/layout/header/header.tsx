@@ -65,7 +65,7 @@ const Header = () => {
         <Link
           style={{
             color: currentTab == "scoreshome" ? "white" : "",
-            background: currentTab == "scoreshome" ? "grey" : "",
+            background: currentTab == "scoreshome" ? "black" : "",
           }}
           className={classes.currentHeader}
           onClick={() => handleClick("scoreshome")}

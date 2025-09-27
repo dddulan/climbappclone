@@ -194,7 +194,7 @@ const SignUp: React.FC = () => {
             <CardFooter className="flex-col gap-2">
               <Button
                 onClick={onSubmit}
-                disabled={ctx?.comp.id == null}
+                disabled={ctx?.comp.id == null || !selectedSchool || !selectedGender || !firstName || !lastName}
                 variant="default"
                 className="w-full"
               >
