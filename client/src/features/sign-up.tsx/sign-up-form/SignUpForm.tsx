@@ -6,10 +6,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { Button } from "../../components/ui/button";
+} from "../../../components/ui/card";
+import { Input } from "../../../components/ui/input";
+import { Label } from "../../../components/ui/label";
+import { Button } from "../../../components/ui/button";
 import {
   Select,
   SelectContent,
@@ -18,19 +18,19 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
+} from "../../../components/ui/select";
 import { toast, Toaster } from "sonner";
 import {
   getContestantsForComp,
   getAllSchools,
   signUpContestant,
 } from "@/services/contestantService";
-import { SignupTable } from "@/features/signup-table/SignupTable";
+import { SignupTable } from "@/features/sign-up.tsx/signup-table/SignupTable";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
 import { CompContext } from "@/components/layout/layout";
 
-const SignUp: React.FC = () => {
+export const SignUpForm: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -82,7 +82,7 @@ const SignUp: React.FC = () => {
     const newContestant: Contestant = {
       name: `${firstName} ${lastName}`,
       competition_id: ctx.comp.id,
-      school_id: schoolObj.id || 0, // Assuming school_id is auto-incremented based on the current length of rows
+      school_id: schoolObj.id || 0,
       gender: selectedGender || "",
       id: 0,
     };
@@ -104,28 +104,27 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <>
-      <div className="pt-20 text-center font-bold">
-        {ctx?.comp.id ? (
-          <h2>For competition on {ctx.comp.date_of}</h2>
-        ) : (
-          <h2>No active competition</h2>
-        )}
-      </div>
+    <div className="flex flex-col">
       <div className="flex items-start justify-start min-h-screen">
         <Toaster></Toaster>
-        <div className="flex flex-row justify-center  gap-6 w-full  max-w-screen">
-          <Card className=" bg-white shadow-md rounded-lg p-8 w-full max-w-xl">
-            <CardHeader>
+        <div className="flex flex-row justify-center w-full  max-w-screen">
+          <Card className=" bg-white shadow-md rounded-lg p-6 w-screen  pb-10 px-10 ">
+            <CardHeader className="pt-4">
               <CardTitle>Sign Up</CardTitle>
-              {/* <CardDescription>
-              Enter your information to compete in the competition
-            </CardDescription> */}
+              <CardDescription>
+                <div className="text-sm font-medium leading-none">
+                  {ctx?.comp.id ? (
+                    <h2>For competition on {ctx.comp.date_of}</h2>
+                  ) : (
+                    <h2>No active competition</h2>
+                  )}
+                </div>
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <form>
+            <CardContent className="flex flex-row w-max gap-12">
+              <form className="w-80 max-w-80 p-6 md:p-8 rounded-xl  shadow-sm border">
                 <div className="flex flex-col gap-6 ">
-                  <div className="grid gap-2">
+                  <div className="grid gap-3">
                     <Label>First Name</Label>
                     <Input
                       value={firstName}
@@ -136,7 +135,7 @@ const SignUp: React.FC = () => {
                       required
                     />
                   </div>
-                  <div className="grid gap-2">
+                  <div className="grid gap-3">
                     <Label>Last Name</Label>
                     <Input
                       value={lastName}
@@ -147,7 +146,7 @@ const SignUp: React.FC = () => {
                       required
                     />
                   </div>
-                  <div className="grid gap-2">
+                  <div className="grid gap-3">
                     <Label>Gender</Label>
                     {/*after choosing a gender the value will be stored in selectedGender */}
                     <Select
@@ -168,7 +167,7 @@ const SignUp: React.FC = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="grid gap-2">
+                  <div className="grid gap-3">
                     <div className="flex items-center">
                       <Label>School</Label>
                     </div>
@@ -188,28 +187,30 @@ const SignUp: React.FC = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  <Button
+                    onClick={onSubmit}
+                    disabled={
+                      ctx?.comp.id == null ||
+                      !selectedSchool ||
+                      !selectedGender ||
+                      !firstName ||
+                      !lastName
+                    }
+                    variant="default"
+                    className="w-full max-w-full"
+                  >
+                    Submit
+                  </Button>
                 </div>
               </form>
+              <div className="h-full min-w-100">
+                <SignupTable rows={rows}></SignupTable>
+              </div>
             </CardContent>
-            <CardFooter className="flex-col gap-2">
-              <Button
-                onClick={onSubmit}
-                disabled={ctx?.comp.id == null || !selectedSchool || !selectedGender || !firstName || !lastName}
-                variant="default"
-                className="w-full"
-              >
-                Submit
-              </Button>
-            </CardFooter>
+            <CardFooter className="flex-col gap-2"></CardFooter>
           </Card>
-
-          <div className="flex flex-col gap-6 w-full max-w-3xl">
-            <SignupTable rows={rows}></SignupTable>
-          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
-
-export default SignUp;

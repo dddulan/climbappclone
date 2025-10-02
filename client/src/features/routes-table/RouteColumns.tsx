@@ -131,7 +131,6 @@ export const routeColumns: ColumnDef<Route>[] = [
       };
 
       const handleSaveClick = () => {
-
         console.log("SAVE", row.original);
         updateRoute(row.original as Route);
 

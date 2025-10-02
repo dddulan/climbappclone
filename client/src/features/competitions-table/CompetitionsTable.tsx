@@ -17,7 +17,7 @@ interface tableProps {
 }
 
 export const CompetitionsTable: React.FC<tableProps> = ({
-  isSelected
+  isSelected,
   //toggleEditing
   //onCompSelect,
 }) => {
@@ -66,7 +66,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({
       id: 0,
       date_of: "",
       type: "",
-      is_active: false
+      is_active: false,
     };
 
     setRows([...rows, blankRow]);
@@ -122,10 +122,9 @@ export const CompetitionsTable: React.FC<tableProps> = ({
             data={rows}
             onUpdate={handleUpdate}
             onRowClick={(row) => {
-
               if (!isSelected) {
                 //onCompSelect(row.id);
-                
+
                 ctx?.setComp(row);
               }
             }}
@@ -134,8 +133,6 @@ export const CompetitionsTable: React.FC<tableProps> = ({
           />
         </div>
       </div>
-
-
     </>
   );
 };

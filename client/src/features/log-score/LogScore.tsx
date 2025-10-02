@@ -1,4 +1,4 @@
-import React, { useContext,  useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardContent,
@@ -34,10 +34,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-
 } from "@/components/ui/dialog";
 import { ScoreTable } from "@/features/scores-table/ScoreTable";
-import { Progress } from "@/components/ui/progress"
+import { Progress } from "@/components/ui/progress";
 
 export const LogScore: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);
@@ -51,25 +50,22 @@ export const LogScore: React.FC = () => {
 
   //timer for progress bar and dialog
   const [open, setOpen] = React.useState(false);
-  const timer = React.useRef<NodeJS.Timeout|undefined>(undefined);
-  const [progress, setProgress] = React.useState(13)
-
+  const timer = React.useRef<NodeJS.Timeout | undefined>(undefined);
+  const [progress, setProgress] = React.useState(13);
 
   React.useEffect(() => {
     loadData();
-    if (open){
-
-      setProgress(0)
+    if (open) {
+      setProgress(0);
       let elapsed = 0;
-    timer.current = setInterval(()=>{
-      elapsed += 100;;
-      setProgress((elapsed/5000)*100);
-      if (elapsed >=5000){
-        if (timer.current) clearInterval(timer.current);
-        setOpen(false);
-      }
-    },100);
-    
+      timer.current = setInterval(() => {
+        elapsed += 100;
+        setProgress((elapsed / 5000) * 100);
+        if (elapsed >= 5000) {
+          if (timer.current) clearInterval(timer.current);
+          setOpen(false);
+        }
+      }, 100);
     }
 
     return () => {
@@ -127,10 +123,8 @@ export const LogScore: React.FC = () => {
 
     console.log(newScore);
 
-
     setOpen(true);
-        timer.current = setTimeout(() => setOpen(false), 5000);
-
+    timer.current = setTimeout(() => setOpen(false), 5000);
   };
 
   return (
@@ -231,40 +225,40 @@ export const LogScore: React.FC = () => {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2">
-           <Button
-                onClick={onSubmit}
-                disabled={ctx?.comp.id == null || !selectedSchool || !selectedContestants || !selectedRouteID || !selectedAttempt}
-                className="w-full"
-                
-              >
-                Submit
-              </Button>
+          <Button
+            onClick={onSubmit}
+            disabled={
+              ctx?.comp.id == null ||
+              !selectedSchool ||
+              !selectedContestants ||
+              !selectedRouteID ||
+              !selectedAttempt
+            }
+            className="w-full"
+          >
+            Submit
+          </Button>
           {/* DIALOG */}
 
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-md ">
-
               <DialogHeader>
                 <DialogTitle>Great Job!</DialogTitle>
                 <DialogDescription>
                   Your score has been logged.
-                    <ScoreTable />
+                  <ScoreTable />
                 </DialogDescription>
-                              <DialogHeader className="flex items-center justify-center">
-                <Progress value={progress} className="w-[60%]" />
-              </DialogHeader>
+                <DialogHeader className="flex items-center justify-center">
+                  <Progress value={progress} className="w-[60%]" />
+                </DialogHeader>
               </DialogHeader>
               <div className="flex items-center gap-2">
-                <div className="grid flex-1 gap-2">
-
-                </div>
+                <div className="grid flex-1 gap-2"></div>
               </div>
-
             </DialogContent>
           </Dialog>
         </CardFooter>
       </Card>
-
     </div>
   );
 };

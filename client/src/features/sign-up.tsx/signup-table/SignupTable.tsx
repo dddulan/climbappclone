@@ -8,7 +8,7 @@ interface SignupTableProps {
 
 export const SignupTable: React.FC<SignupTableProps> = ({ rows }) => {
   return (
-    <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl  shadow-sm  ">
+    <div className="bg-card text-card-foreground flex flex-col w-full h-full gap-6 rounded-xl border shadow-sm p-8">
       <DataTable columns={signupColumns} data={rows} />
     </div>
   );

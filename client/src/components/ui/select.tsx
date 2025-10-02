@@ -19,14 +19,20 @@ function SelectGroup({
 function SelectValue({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Value>) {
-  return <SelectPrimitive.Value data-slot="select-value" {...props} className={cn()} />;
+  return (
+    <SelectPrimitive.Value
+      data-slot="select-value"
+      {...props}
+      className={cn()}
+    />
+  );
 }
 
 function SelectTrigger({
   className,
   size = "default",
   children,
-  
+
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "default";

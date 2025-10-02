@@ -58,9 +58,9 @@ export const competitionColumns: ColumnDef<Competition>[] = [
   //   id: "select",
   //   accessorKey: "is_active",
   //   header: "Active",
-  //   cell: ({ row }) => {  
+  //   cell: ({ row }) => {
   //     console.log(row);
-      
+
   //     return (
   //       <Checkbox
   //         onCheckedChange={(checked) => {
@@ -68,7 +68,7 @@ export const competitionColumns: ColumnDef<Competition>[] = [
   //           if (checked) {
   //             row.toggleSelected();
   //           }
-           
+
   //         }}
   //         defaultChecked={row.original.is_active}
   //       />

@@ -32,17 +32,16 @@ export const getContestantsForComp = async (
 export const getAllSchools = async (): Promise<School[]> => {
   const res = await axios.get("/contestants/getAllSchools");
   return res.data;
-}
+};
 
 //
 export const saveSchool = async (school: School[]) => {
-  const res = await axios.post('/contestants/saveSchool', school);
+  const res = await axios.post("/contestants/saveSchool", school);
   return res.data;
-}
-
+};
 
 // Log score for a contestant
 export const logScore = async (score: Score) => {
   const res = await axios.post("/contestants/logScore", score);
   return res.data;
-}
+};
