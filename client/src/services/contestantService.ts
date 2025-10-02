@@ -45,3 +45,13 @@ export const logScore = async (score: Score) => {
   const res = await axios.post("/contestants/logScore", score);
   return res.data;
 };
+
+export const getLeaderboard = async (): Promise<Score[]> => {
+  const res = await axios.get("/contestants/getLeaderboard");
+  return res.data;
+};
+
+export const getContestantScores = async (): Promise<Score[]> => {
+  const res = await axios.get("/contestants/getContestantScores");
+  return res.data;
+};

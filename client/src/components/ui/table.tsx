@@ -103,6 +103,7 @@ interface DataTableProps<TData, TValue> {
   onRowClick?: (row: TData, isSelected: boolean) => void;
   onUpdate?: (rowIndex: number, columnId: string, value: unknown) => void;
   onDeselect?: (rowIndex: number, isSave: boolean) => void;
+  showPagination?: boolean;
 }
 
 function DataTable<TData, TValue>({
@@ -114,6 +115,7 @@ function DataTable<TData, TValue>({
   emptyMessage = "No data available.",
   isRouteSelected = false,
   isEdit = false,
+  showPagination = true,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -173,7 +175,15 @@ function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => {
                     if (!isRouteSelected) {
-                      row.toggleSelected();
+                      if (table.getIsSomeRowsSelected()) {
+                        // another row is selected
+                        row.toggleSelected();
+                        table.options.meta?.onDeselect(row.index, false);
+                      } else {
+                        // another row is not selected
+                        row.toggleSelected();
+                      }
+
                       onRowClick?.(row.original, table.getIsSomeRowsSelected());
                     }
                   }}
@@ -208,29 +218,35 @@ function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
 
-        <span className="border-1 w-7 text-center rounded-sm">
-          {table.getState().pagination.pageIndex + 1}
-        </span>
+      {/* Pagination */}
+      {showPagination ? (
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
+          <span className="border-1 w-7 text-center rounded-sm">
+            {table.getState().pagination.pageIndex + 1}
+          </span>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

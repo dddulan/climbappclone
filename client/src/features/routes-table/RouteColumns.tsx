@@ -150,7 +150,7 @@ export const routeColumns: ColumnDef<Route>[] = [
           >
             <Save />
           </Button>
-          <Button
+          {/* <Button
             size="icon"
             className={`${
               isSelected ? "" : "hidden"
@@ -158,7 +158,7 @@ export const routeColumns: ColumnDef<Route>[] = [
             onClick={handleCancelClick}
           >
             <CircleX />
-          </Button>
+          </Button> */}
         </div>
       );
     },
