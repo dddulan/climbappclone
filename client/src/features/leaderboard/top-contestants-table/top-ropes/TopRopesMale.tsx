@@ -1,10 +1,10 @@
 import type { Contestant } from "@/models/contestant";
-import { LeaderboardContestantRopes } from "./TopRopesColumn";
+import { LeaderboardContestantRopesMale } from "./TopRopesMaleColumn";
 import React, { useState, useEffect } from "react";
 import { DataTable } from "@/components/ui/table";
 import { getAllContestants } from "@/services/contestantService";
 
-export const TopRopesTable: React.FC = () => {
+export const TopRopesMale: React.FC = () => {
   const [contestants, setContestants] = useState<Contestant[]>([]);
   const [rows, setRows] = useState<Contestant[]>([]);
 
@@ -23,7 +23,10 @@ export const TopRopesTable: React.FC = () => {
 
   return (
     <div className="container mx-auto w-90">
-      <DataTable columns={LeaderboardContestantRopes} data={rows} />
+      <DataTable
+        columns={LeaderboardContestantRopesMale}
+        data={rows.slice(0, 5)}
+      />
     </div>
   );
 };

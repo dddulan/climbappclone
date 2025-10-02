@@ -1,17 +1,17 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Contestant } from "@/models/contestant";
 
-export const ContestantColums: ColumnDef<Contestant>[] = [
+export const LeaderboardContestantRopesMale: ColumnDef<Contestant>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: "Top Male Ropes ",
   },
   {
     accessorKey: "gender",
-    header: "Gender",
+    header: "",
   },
   {
     accessorKey: "school",
-    header: "School",
+    header: "",
   },
 ];

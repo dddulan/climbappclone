@@ -4,9 +4,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { DataRow, DataTable } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getRoutesById } from "@/services/routeService";
+import { getRoutesById, saveRoutes } from "@/services/routeService";
 import { CompContext } from "@/components/layout/layout";
 import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
+import { ChevronDownIcon } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -16,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { se } from "date-fns/locale";
+import { setDate } from "date-fns";
 interface tableProps {
   isEdit: boolean;
   toggleEditing: (isSelected: boolean) => void;
@@ -25,9 +35,15 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const [routes, setRoutes] = useState<Route[]>([]); // original copy of routes, update when user saves any edits
   const [rows, setRows] = useState<Route[]>([]); // rows for data table
   const [currentRoute, setCurrentRoute] = useState<Route>(); // orginal copy of currently selected route
+  const [selectedGrade, setSelectedGrade] = useState<string>("");
+  const [selectedRouteColor, setSelectedRouteColor] = useState<string>("");
+  const [scoreValue, setScoreValue] = useState<string>("");
+  const [open, setOpen] = React.useState(false); //calendar open state
+  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  //calendar date state
   const ctx = useContext(CompContext);
 
-  var temp = routeColumns.slice().splice(1);
+  const temp = routeColumns.slice().splice(1);
 
   useEffect(() => {
     loadData();
@@ -55,18 +71,39 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   };
 
   const addRow = () => {
+    if (!selectedGrade || !selectedRouteColor || !date || !scoreValue) {
+      alert("Please select a grade and color");
+      return;
+    }
     const blankRow: Route = {
       id: 0,
       name: "",
       number: 0,
-      grade: "",
-      color: "",
-      competition_id: 0,
-      point_value: 0,
-      set_date: "",
+      grade: selectedGrade,
+      color: selectedRouteColor,
+      competition_id: ctx?.comp.id || 0,
+      point_value: scoreValue ? parseInt(scoreValue) : 0,
+      set_date: date ? date.toISOString().split("T")[0] : "",
     };
 
-    setRows([...rows, blankRow]);
+    console.log("BLANK", blankRow);
+
+    if (ctx?.comp.id) {
+      blankRow.competition_id = ctx.comp.id;
+    }
+    const updated = [...rows, blankRow];
+    saveRoutes(updated).then((res) => {
+      loadData();
+    });
+    console.log("UPDATED", updated);
+    return updated;
+
+    /* 
+   saveRoutes([...rows, blankRow]).then((res) => {
+      loadData();
+      
+    });
+   */
   };
 
   return (
@@ -76,8 +113,8 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
         <div className="flex space-x-2 pt-5">
           {/* ADD ROW COMPOENENT GOES HERE */}
-          <Select>
-            <SelectTrigger className="w-[90px]">
+          <Select onValueChange={(value) => setSelectedGrade(value)}>
+            <SelectTrigger className="w-[90px] bg-blue-800 text-white">
               <SelectValue placeholder="Grade" />
             </SelectTrigger>
             <SelectContent>
@@ -97,13 +134,13 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
             </SelectContent>
           </Select>
 
-          <Select>
+          <Select onValueChange={(value) => setSelectedRouteColor(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Color" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
+                <SelectLabel>Colors</SelectLabel>
                 <SelectItem value="red">Red</SelectItem>
                 <SelectItem value="blue">Blue</SelectItem>
                 <SelectItem value="green">Green</SelectItem>
@@ -112,10 +149,42 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
               </SelectGroup>
             </SelectContent>
           </Select>
-
-          <Input placeholder="ex.150" className="w-40" />
-          <Input placeholder="Date" className="w-40" />
-
+          {/* Score*/}
+          <Input
+            placeholder="ex.150"
+            type="number"
+            value={scoreValue}
+            onChange={(e) => setScoreValue(e.target.value)}
+            className="w-40 bg-neutral-100 border-neutral-200"
+          />
+          {/* Date*/}
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                id="date-picker"
+                className="w-32 justify-between font-normal"
+              >
+                {date ? date.toLocaleDateString() : "Select date"}
+                <ChevronDownIcon />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-auto overflow-hidden p-0"
+              align="start"
+            >
+              <Calendar
+                mode="single"
+                selected={date}
+                captionLayout="dropdown"
+                onSelect={(date) => {
+                  setDate(date);
+                  setOpen(false);
+                }}
+              />
+            </PopoverContent>
+          </Popover>
+          {/* Add Button */}
           <Button size="sm" onClick={addRow}>
             <Plus />
           </Button>

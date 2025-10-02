@@ -36,48 +36,22 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
-    <thead
-      data-slot="table-header"
-      className={cn( className)}
-      {...props}
-    />
+    <thead data-slot="table-header" className={cn(className)} {...props} />
   );
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
-  return (
-    <tbody
-      data-slot="table-body"
-      className={cn( className)}
-      {...props}
-    />
-  );
+  return <tbody data-slot="table-body" className={cn(className)} {...props} />;
 }
 
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
-    <tfoot
-      data-slot="table-footer"
-      className={cn(
-        
-        className
-      )}
-      {...props}
-    />
+    <tfoot data-slot="table-footer" className={cn(className)} {...props} />
   );
 }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
-  return (
-    <tr
-      data-slot="table-row"
-      className={cn(
-      
-        className
-      )}
-      {...props}
-    />
-  );
+  return <tr data-slot="table-row" className={cn(className)} {...props} />;
 }
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
@@ -198,7 +172,6 @@ function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => {
-
                     if (!isRouteSelected) {
                       row.toggleSelected();
                       onRowClick?.(row.original, table.getIsSomeRowsSelected());
@@ -235,7 +208,6 @@ function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
@@ -296,7 +268,7 @@ function DataRow<TData, TValue>({
                 onClick={() => {
                   row.toggleSelected();
                 }}
-                className="cursor-pointer data-[state=selected]:bg-muted"
+                className="cursor-pointer data-[state=selected]:bg-muted "
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="py-2">

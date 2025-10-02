@@ -1,18 +1,16 @@
-import type { ColumnDef } from "@tanstack/react-table"
+import type { ColumnDef } from "@tanstack/react-table";
 import type { Contestant } from "@/models/contestant";
 export const signupColumns: ColumnDef<Contestant>[] = [
-
   {
     accessorKey: "name",
-    header: "Name"
+    header: "Name",
   },
-    {
+  {
     accessorKey: "gender",
-    header: "Gender"
+    header: "Gender",
   },
-    {
+  {
     accessorKey: "school_name",
-    header: "School"
+    header: "School",
   },
-
-]
+];
