@@ -196,6 +196,9 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
             data={rows}
             onUpdate={handleUpdate}
             onDeselect={(rowIndex, isSave) => {
+              // edit row was just canceled, revert row back to pre-edit state
+              
+              
               setRows((old) =>
                 old.map((row, index) =>
                   index === rowIndex && !isSave ? routes[index] : row
