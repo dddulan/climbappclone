@@ -1,4 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
+import { RankBadge } from "./RankBadge";
 
 // Interface for leaderboard data
 interface LeaderboardEntry {
@@ -13,7 +14,7 @@ export const LeaderboardContestants: ColumnDef<LeaderboardEntry>[] = [
     {
         accessorKey: "rank",
         header: "Rank",
-        cell: ({ row }) => <div className="font-semibold">#{row.getValue("rank")}</div>,
+        cell: ({ row }) => <RankBadge rank={row.getValue("rank")} />,
     },
     {
         accessorKey: "contestant_name",
