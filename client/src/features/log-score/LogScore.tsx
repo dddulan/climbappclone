@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
+import { School as SchoolIcon, User, Mountain, Hash } from "lucide-react";
 import {
   getContestantsForComp,
   getAllSchools,
@@ -128,28 +129,35 @@ export const LogScore: React.FC = () => {
   };
 
   return (
-    <div className={`flex flex-col items-center gap-4 mt-10}`}>
+    <div className="w-full">
       <Toaster position="top-center" />
 
-      <div className="pt-20 text-center font-bold">
-        {ctx?.comp.id ? (
-          <h2>For competition on {ctx.comp.date_of}</h2>
-        ) : (
-          <h2>No active competition</h2>
-        )}
-      </div>
-
-      <Card className="w-full max-w-lg  text-lg">
-        <CardHeader>
-          <CardTitle>Score Sheet</CardTitle>
-          <CardDescription>Log your route in</CardDescription>
+      <Card className="w-full text-lg bg-white shadow-lg rounded-xl border border-gray-100">
+        <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
+          <CardTitle className="text-2xl font-bold text-gray-900">
+            Score Sheet
+          </CardTitle>
+          <CardDescription className="text-base mt-2">
+            {ctx?.comp.id ? (
+              <span className="text-gray-700 font-medium">
+                Competition on {ctx.comp.date_of}
+              </span>
+            ) : (
+              <span className="text-amber-600 font-medium">
+                No active competition
+              </span>
+            )}
+          </CardDescription>
         </CardHeader>
 
         <CardContent>
           <form className="flex flex-col gap-6">
             {/* School */}
             <div className="grid gap-2 ">
-              <Label>School</Label>
+              <Label className="flex items-center gap-2">
+                <SchoolIcon className="h-4 w-4 text-blue-600" />
+                School
+              </Label>
               <Select value={selectedSchool} onValueChange={setSelectedSchool}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a School" />
@@ -166,7 +174,10 @@ export const LogScore: React.FC = () => {
 
             {/* Name */}
             <div className="grid gap-2">
-              <Label>Name</Label>
+              <Label className="flex items-center gap-2">
+                <User className="h-4 w-4 text-purple-600" />
+                Name
+              </Label>
               <Select
                 value={selectedContestants}
                 onValueChange={setSelectedContestants}
@@ -186,7 +197,10 @@ export const LogScore: React.FC = () => {
 
             {/* Route */}
             <div className="grid gap-2">
-              <Label>Route</Label>
+              <Label className="flex items-center gap-2">
+                <Mountain className="h-4 w-4 text-green-600" />
+                Route
+              </Label>
               <Select
                 value={selectedRouteID}
                 onValueChange={setSelectedRouteID}
@@ -206,7 +220,10 @@ export const LogScore: React.FC = () => {
 
             {/* Attempt */}
             <div className="grid gap-2">
-              <Label>Attempt</Label>
+              <Label className="flex items-center gap-2">
+                <Hash className="h-4 w-4 text-orange-600" />
+                Attempt
+              </Label>
               <Select
                 value={selectedAttempt}
                 onValueChange={setSelectedAttempt}

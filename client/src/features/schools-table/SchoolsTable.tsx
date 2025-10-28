@@ -23,7 +23,7 @@ export const SchoolsTable: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-10 w-90">
+    <div className="container mx-auto py-10 w-full">
       <DataTable columns={SchoolColums} data={rows} />
     </div>
   );

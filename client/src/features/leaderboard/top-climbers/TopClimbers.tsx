@@ -4,12 +4,7 @@ import { DataTable } from "@/components/ui/table";
 import { LeaderboardContestants } from "./TopClimbersColumns";
 import { getContestantScores } from "@/services/contestantService";
 import type { Score } from "@/models/score";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CompContext } from "@/components/layout/layout";
 
 // Interface for leaderboard data with rank
@@ -23,8 +18,12 @@ interface LeaderboardEntry {
 
 export const TopClimbers: React.FC = () => {
   const ctx = useContext(CompContext);
-  const [maleLeaderboard, setMaleLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [femaleLeaderboard, setFemaleLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [maleLeaderboard, setMaleLeaderboard] = useState<LeaderboardEntry[]>(
+    []
+  );
+  const [femaleLeaderboard, setFemaleLeaderboard] = useState<
+    LeaderboardEntry[]
+  >([]);
 
   // Get competition type from context (e.g., "Boulder", "Top Rope", "Both")
   const competitionType = ctx?.comp?.type || "";
@@ -64,18 +63,47 @@ export const TopClimbers: React.FC = () => {
             score: score.score || 0,
           }));
 
-        // ============== DUMMY DATA - DELETE THIS SECTION WHEN READY ==============
+        // DUMMY DATA
         const dummyFemaleData: LeaderboardEntry[] = [
-          { rank: 1, contestant_name: "Sarah Johnson", gender: "Female", school_name: "Duncan High", score: 950 },
-          { rank: 2, contestant_name: "Emily Chen", gender: "Female", school_name: "Fresno High", score: 880 },
-          { rank: 3, contestant_name: "Maria Garcia", gender: "Female", school_name: "Edison High", score: 820 },
-          { rank: 4, contestant_name: "Jessica Brown", gender: "Female", school_name: "Bullard High", score: 775 },
-          { rank: 5, contestant_name: "Amanda Lee", gender: "Female", school_name: "Hoover High", score: 720 },
+          {
+            rank: 1,
+            contestant_name: "Sarah Johnson",
+            gender: "Female",
+            school_name: "Duncan High",
+            score: 950,
+          },
+          {
+            rank: 2,
+            contestant_name: "Emily Chen",
+            gender: "Female",
+            school_name: "Fresno High",
+            score: 880,
+          },
+          {
+            rank: 3,
+            contestant_name: "Maria Garcia",
+            gender: "Female",
+            school_name: "Edison High",
+            score: 820,
+          },
+          {
+            rank: 4,
+            contestant_name: "Jessica Brown",
+            gender: "Female",
+            school_name: "Bullard High",
+            score: 775,
+          },
+          {
+            rank: 5,
+            contestant_name: "Amanda Lee",
+            gender: "Female",
+            school_name: "Hoover High",
+            score: 720,
+          },
         ];
-        // ============== END DUMMY DATA ==============
 
         setMaleLeaderboard(maleContestants);
-        setFemaleLeaderboard(dummyFemaleData); // CHANGE THIS BACK TO: femaleContestants
+        setFemaleLeaderboard(dummyFemaleData); // change back to femaleContestants
       })
       .catch(console.error);
   };
