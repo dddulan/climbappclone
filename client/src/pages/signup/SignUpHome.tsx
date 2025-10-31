@@ -8,7 +8,7 @@ const SignUpHome: React.FC = () => {
         <div className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-lg p-6 mb-6 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold mb-1">Join the Competition! 🎯</h1>
+              <h1 className="text-2xl font-bold mb-1">Join the Competition! </h1>
               <p className="text-green-100 text-sm">Register now and start climbing</p>
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm">
