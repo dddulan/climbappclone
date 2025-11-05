@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { HoverSlideIcon } from "../hoverslide/hoverslide";
+
 export const CompContext = createContext<{
   comp: Competition;
   setComp: React.Dispatch<React.SetStateAction<Competition>>;
@@ -61,11 +62,11 @@ export const Layout = () => {
       <div>
         <HoverSlideIcon onClick={handleToggle} />
       </div>
-      <CompContext value={{ comp, setComp }}>
+      <CompContext.Provider value={{ comp, setComp }}>
         <main className="flex-1">
           <Outlet />
         </main>
-      </CompContext>
+      </CompContext.Provider>
 
       {!showNavbar && (
         <Dialog open={openDialogue} onOpenChange={setOpenDialogue}>
