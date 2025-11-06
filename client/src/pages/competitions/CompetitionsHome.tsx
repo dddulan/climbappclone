@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { CompetitionsTable } from "@/features/competitions-table/CompetitionsTable";
 import { RoutesTable } from "@/features/routes-table/RoutesTable";
 import { Calendar } from "lucide-react";
-
 const CompetitionsHome: React.FC = () => {
   // represents the currently selected comp
   //const [compId, setCompId] = useState(0);

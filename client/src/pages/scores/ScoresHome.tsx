@@ -14,14 +14,7 @@ const ScoresHome: React.FC = () => {
               </p>
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm">
-              <div className="text-center">
-                <p className="text-xl font-bold">12</p>
-                <p className="text-xs text-cyan-100">Today</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl font-bold">950</p>
-                <p className="text-xs text-cyan-100">Top</p>
-              </div>
+
               <div className="text-center">
                 <p className="text-xl font-bold">45</p>
                 <p className="text-xs text-cyan-100">Climbers</p>

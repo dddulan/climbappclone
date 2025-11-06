@@ -9,7 +9,7 @@ interface HoverSlideIconProps {
 export const HoverSlideIcon:React.FC<HoverSlideIconProps> =({onClick}) =>{
   return (
        <div
-      className="fixed top-20 left-0 transform -translate-y-1/2 flex items-center"
+      className="fixed top-40 left-0 transform -translate-y-1/2 flex items-center"
     >
       <button
         onClick={onClick}

@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { HoverSlideIcon } from "../hoverslide/hoverslide";
-
+import { ActiveCompetitionBanner } from "../../features/active-comp-banner/ActiveCompetitionBanner";
 export const CompContext = createContext<{
   comp: Competition;
   setComp: React.Dispatch<React.SetStateAction<Competition>>;
@@ -58,16 +58,25 @@ export const Layout = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      {showNavbar && <Header />}
+      {showNavbar && (
+        <>
+        <Header />   
+            <ActiveCompetitionBanner competition={comp} />
+            </>
+            )
+          
+      }
       <div>
         <HoverSlideIcon onClick={handleToggle} />
       </div>
       <CompContext.Provider value={{ comp, setComp }}>
         <main className="flex-1">
+
           <Outlet />
+
+
         </main>
       </CompContext.Provider>
-
       {!showNavbar && (
         <Dialog open={openDialogue} onOpenChange={setOpenDialogue}>
           <form>
