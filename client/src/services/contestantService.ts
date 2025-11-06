@@ -29,13 +29,14 @@ export const getContestantsForComp = async (
   return res.data;
 };
 
+//
 export const getAllSchools = async (): Promise<School[]> => {
   const res = await axios.get("/contestants/getAllSchools");
   return res.data;
 };
 
-//
-export const saveSchool = async (school: School[]) => {
+// Saves School 
+ export const saveSchool = async (school: School) => {
   const res = await axios.post("/contestants/saveSchool", school);
   return res.data;
 };
@@ -46,11 +47,13 @@ export const logScore = async (score: Score) => {
   return res.data;
 };
 
+//
 export const getLeaderboard = async (): Promise<Score[]> => {
   const res = await axios.get("/contestants/getLeaderboard");
   return res.data;
 };
 
+//
 export const getContestantScores = async (): Promise<Score[]> => {
   const res = await axios.get("/contestants/getContestantScores");
   return res.data;

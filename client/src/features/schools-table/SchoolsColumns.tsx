@@ -1,24 +1,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { School } from "@/models/school";
+// import { InputCell } from "@/components/cells/inputCell";
+// import { Button } from "@/components/ui/button";
+// // import {} from;
 
 export const SchoolColums: ColumnDef<School>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({row}) => {
-        const isSelected = row.getIsSelected();
-        const value = row.getValue("name") as School["name"];
-
-        return (
-            <InputCell
-                rowIndex={row.index}
-                columnName="name"
-                value={value}
-                table={table}
-                isEdit={isSelected}
-                width="w-15"
-            />
-        );
+    {
+        accessorKey: "name",
+        header: "Name",
     },
-  },
 ];

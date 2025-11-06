@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScoreTable } from "@/features/scores-table/ScoreTable";
 import { Progress } from "@/components/ui/progress";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 export const LogScore: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);
@@ -47,6 +48,7 @@ export const LogScore: React.FC = () => {
   const [selectedRouteID, setSelectedRouteID] = useState<string>("");
   const [selectedContestants, setSelectedContestants] = useState<string>("");
   const ctx = useContext(CompContext)!;
+  const [loading, setLoading] = useState<boolean>(false);
 
   //timer for progress bar and dialog
   const [open, setOpen] = React.useState(false);
@@ -74,11 +76,17 @@ export const LogScore: React.FC = () => {
   }, [open]);
 
   const loadData = () => {
+    setLoading(true);
     getAllSchools()
       .then((res: School[]) => {
         setSchools(res);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
 
     if (ctx?.comp.id) {
       getContestantsForComp(ctx?.comp.id)
@@ -127,138 +135,213 @@ export const LogScore: React.FC = () => {
     timer.current = setTimeout(() => setOpen(false), 5000);
   };
 
-  return (
-    <div className={`flex flex-col items-center gap-4 mt-10}`}>
-      <Toaster position="top-center" />
 
-      <div className="pt-20 text-center font-bold">
-        {ctx?.comp.id ? (
-          <h2>For competition on {ctx.comp.date_of}</h2>
-        ) : (
-          <h2>No active competition</h2>
-        )}
-      </div>
+  const loadContent = () => {
+    if (loading) {
+      return (
+        <>
+          <div className={`flex flex-col items-center gap-4 mt-10}`}>
+            <Toaster position="top-center" />
 
-      <Card className="w-full max-w-lg  text-lg">
-        <CardHeader>
-          <CardTitle>Score Sheet</CardTitle>
-          <CardDescription>Log your route in</CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <form className="flex flex-col gap-6">
-            {/* School */}
-            <div className="grid gap-2 ">
-              <Label>School</Label>
-              <Select value={selectedSchool} onValueChange={setSelectedSchool}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a School" />
-                </SelectTrigger>
-                <SelectContent>
-                  {schools.map((school, index) => (
-                    <SelectItem key={index} value={school.name}>
-                      {school.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="pt-20 text-center font-bold">
+              {ctx?.comp.id ? (
+                <h2>For competition on {ctx.comp.date_of}</h2>
+              ) : (
+                <h2>No active competition</h2>
+              )}
             </div>
 
-            {/* Name */}
-            <div className="grid gap-2">
-              <Label>Name</Label>
-              <Select
-                value={selectedContestants}
-                onValueChange={setSelectedContestants}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select your Name" />
-                </SelectTrigger>
-                <SelectContent>
-                  {contestants.map((contestant, index) => (
-                    <SelectItem key={index} value={index.toString()}>
-                      {contestant.name} {contestant.id}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Card className="w-full max-w-lg  text-lg">
+              <CardHeader>
+                <CardTitle>Score Sheet</CardTitle>
+                <CardDescription>Log your route in</CardDescription>
+              </CardHeader>
 
-            {/* Route */}
-            <div className="grid gap-2">
-              <Label>Route</Label>
-              <Select
-                value={selectedRouteID}
-                onValueChange={setSelectedRouteID}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a Route" />
-                </SelectTrigger>
-                <SelectContent>
-                  {routes.map((route, index) => (
-                    <SelectItem key={index} value={index.toString()}>
-                      {route.number}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+              <CardContent>
+                <form className="flex flex-col gap-6 justify-center items-center">
+                  <Spinner variant="default" className="w-8 h-8 text-primary" />
+                </form>
+              </CardContent>
 
-            {/* Attempt */}
-            <div className="grid gap-2">
-              <Label>Attempt</Label>
-              <Select
-                value={selectedAttempt}
-                onValueChange={setSelectedAttempt}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Attempt" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3+</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </form>
-        </CardContent>
+              <CardFooter className="flex flex-col gap-2">
+                <Button
+                  onClick={onSubmit}
+                  disabled={
+                    ctx?.comp.id == null ||
+                    !selectedSchool ||
+                    !selectedContestants ||
+                    !selectedRouteID ||
+                    !selectedAttempt
+                  }
+                  className="w-full"
+                >
+                  Submit
+                </Button>
+                {/* DIALOG */}
 
-        <CardFooter className="flex flex-col gap-2">
-          <Button
-            onClick={onSubmit}
-            disabled={
-              ctx?.comp.id == null ||
-              !selectedSchool ||
-              !selectedContestants ||
-              !selectedRouteID ||
-              !selectedAttempt
-            }
-            className="w-full"
-          >
-            Submit
-          </Button>
-          {/* DIALOG */}
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogContent className="sm:max-w-md ">
+                    <DialogHeader>
+                      <DialogTitle>Great Job!</DialogTitle>
+                      <DialogDescription>
+                        Your score has been logged.
+                        <ScoreTable />
+                      </DialogDescription>
+                      <DialogHeader className="flex items-center justify-center">
+                        <Progress value={progress} className="w-[60%]" />
+                      </DialogHeader>
+                    </DialogHeader>
+                    <div className="flex items-center gap-2">
+                      <div className="grid flex-1 gap-2"></div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </CardFooter>
+            </Card>
+          </div>
+        </>
+      )
 
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-md ">
-              <DialogHeader>
-                <DialogTitle>Great Job!</DialogTitle>
-                <DialogDescription>
-                  Your score has been logged.
-                  <ScoreTable />
-                </DialogDescription>
-                <DialogHeader className="flex items-center justify-center">
-                  <Progress value={progress} className="w-[60%]" />
-                </DialogHeader>
-              </DialogHeader>
-              <div className="flex items-center gap-2">
-                <div className="grid flex-1 gap-2"></div>
+    }
+
+    return (
+      <div className={`flex flex-col items-center gap-4 mt-10}`}>
+        <Toaster position="top-center" />
+
+        <div className="pt-20 text-center font-bold">
+          {ctx?.comp.id ? (
+            <h2>For competition on {ctx.comp.date_of}</h2>
+          ) : (
+            <h2>No active competition</h2>
+          )}
+        </div>
+
+        <Card className="w-full max-w-lg  text-lg">
+          <CardHeader>
+            <CardTitle>Score Sheet</CardTitle>
+            <CardDescription>Log your route in</CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <form className="flex flex-col gap-6">
+              {/* School */}
+              <div className="grid gap-2 ">
+                <Label>School</Label>
+                <Select value={selectedSchool} onValueChange={setSelectedSchool}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a School" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {schools.map((school, index) => (
+                      <SelectItem key={index} value={school.name}>
+                        {school.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            </DialogContent>
-          </Dialog>
-        </CardFooter>
-      </Card>
-    </div>
-  );
+
+              {/* Name */}
+              <div className="grid gap-2">
+                <Label>Name</Label>
+                <Select
+                  value={selectedContestants}
+                  onValueChange={setSelectedContestants}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select your Name" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {contestants.map((contestant, index) => (
+                      <SelectItem key={index} value={index.toString()}>
+                        {contestant.name} {contestant.id}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Route */}
+              <div className="grid gap-2">
+                <Label>Route</Label>
+                <Select
+                  value={selectedRouteID}
+                  onValueChange={setSelectedRouteID}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a Route" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {routes.map((route, index) => (
+                      <SelectItem key={index} value={index.toString()}>
+                        {route.number}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Attempt */}
+              <div className="grid gap-2">
+                <Label>Attempt</Label>
+                <Select
+                  value={selectedAttempt}
+                  onValueChange={setSelectedAttempt}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Attempt" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3+</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </form>
+          </CardContent>
+
+          <CardFooter className="flex flex-col gap-2">
+            <Button
+              onClick={onSubmit}
+              disabled={
+                ctx?.comp.id == null ||
+                !selectedSchool ||
+                !selectedContestants ||
+                !selectedRouteID ||
+                !selectedAttempt
+              }
+              className="w-full"
+            >
+              Submit
+            </Button>
+            {/* DIALOG */}
+
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogContent className="sm:max-w-md ">
+                <DialogHeader>
+                  <DialogTitle>Great Job!</DialogTitle>
+                  <DialogDescription>
+                    Your score has been logged.
+                    <ScoreTable />
+                  </DialogDescription>
+                  <DialogHeader className="flex items-center justify-center">
+                    <Progress value={progress} className="w-[60%]" />
+                  </DialogHeader>
+                </DialogHeader>
+                <div className="flex items-center gap-2">
+                  <div className="grid flex-1 gap-2"></div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
+  return (
+    < div>
+      {loadContent()}
+    </div >
+  )
 };

@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/select";
 import { se } from "date-fns/locale";
 import { setDate } from "date-fns";
+import { Spinner } from "@/components/ui/loadingWheel";
+
 interface tableProps {
   isEdit: boolean;
   toggleEditing: (isSelected: boolean) => void;
@@ -35,6 +37,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const [routes, setRoutes] = useState<Route[]>([]); // original copy of routes, update when user saves any edits
   const [rows, setRows] = useState<Route[]>([]); // rows for data table
   const [currentRoute, setCurrentRoute] = useState<Route>(); // orginal copy of currently selected route
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectedGrade, setSelectedGrade] = useState<string>("");
   const [selectedRouteColor, setSelectedRouteColor] = useState<string>("");
   const [scoreValue, setScoreValue] = useState<string>("");
@@ -50,13 +53,19 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   }, [ctx?.comp.id]);
 
   const loadData = () => {
+    setLoading(true);
     if (ctx?.comp.id) {
       getRoutesById(ctx?.comp.id)
         .then((res) => {
           setRoutes(res);
           setRows(res);
         })
-        .catch(console.error);
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
@@ -105,116 +114,135 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
     });
    */
   };
+  const loadContent = () => {
+    if (loading) {
+      return (
+        <>
+         <span className="text-2xl font-medium">Routes</span>
 
-  return (
-    <>
-      <span className="text-2xl font-medium">Routes</span>
+          <div className="px-5 border-1 rounded-sm bg-white shadow-xl " >
+            <div className="mx-auto w-175 flex justify-center items-center min-h-[400px]">
+              <Spinner variant="default" className="w-8 h-8 text-primary" />
+            </div>
+          </div>
+        </>
+      );
+    }
+    return (
+      <>
+        <span className="text-2xl font-medium">Routes</span>
 
-      <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
-        <div className="flex space-x-2 pt-5">
-          {/* ADD ROW COMPOENENT GOES HERE */}
-          <Select onValueChange={(value) => setSelectedGrade(value)}>
-            <SelectTrigger className="w-[90px] bg-blue-800 text-white">
-              <SelectValue placeholder="Grade" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Grade</SelectLabel>
-                <SelectItem value="v1">v1</SelectItem>
-                <SelectItem value="v2">v2</SelectItem>
-                <SelectItem value="v3">v3</SelectItem>
-                <SelectItem value="v4">v4</SelectItem>
-                <SelectItem value="v5">v5</SelectItem>
-                <SelectItem value="v6">v6</SelectItem>
-                <SelectItem value="v7">v7</SelectItem>
-                <SelectItem value="v8">v8</SelectItem>
-                <SelectItem value="v9">v9</SelectItem>
-                <SelectItem value="v10">v10+</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+        <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
+          <div className="flex space-x-2 pt-5">
+            {/* ADD ROW COMPOENENT GOES HERE */}
+            <Select onValueChange={(value) => setSelectedGrade(value)}>
+              <SelectTrigger className="w-[90px] bg-blue-800 text-white">
+                <SelectValue placeholder="Grade" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Grade</SelectLabel>
+                  <SelectItem value="v1">v1</SelectItem>
+                  <SelectItem value="v2">v2</SelectItem>
+                  <SelectItem value="v3">v3</SelectItem>
+                  <SelectItem value="v4">v4</SelectItem>
+                  <SelectItem value="v5">v5</SelectItem>
+                  <SelectItem value="v6">v6</SelectItem>
+                  <SelectItem value="v7">v7</SelectItem>
+                  <SelectItem value="v8">v8</SelectItem>
+                  <SelectItem value="v9">v9</SelectItem>
+                  <SelectItem value="v10">v10+</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
-          <Select onValueChange={(value) => setSelectedRouteColor(value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Color" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Colors</SelectLabel>
-                <SelectItem value="red">Red</SelectItem>
-                <SelectItem value="blue">Blue</SelectItem>
-                <SelectItem value="green">Green</SelectItem>
-                <SelectItem value="yellow">Yellow</SelectItem>
-                <SelectItem value="pink">Pink</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          {/* Score*/}
-          <Input
-            placeholder="ex.150"
-            type="number"
-            value={scoreValue}
-            onChange={(e) => setScoreValue(e.target.value)}
-            className="w-40 bg-neutral-100 border-neutral-200"
-          />
-          {/* Date*/}
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                id="date-picker"
-                className="w-32 justify-between font-normal"
+            <Select onValueChange={(value) => setSelectedRouteColor(value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Color" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Colors</SelectLabel>
+                  <SelectItem value="red">Red</SelectItem>
+                  <SelectItem value="blue">Blue</SelectItem>
+                  <SelectItem value="green">Green</SelectItem>
+                  <SelectItem value="yellow">Yellow</SelectItem>
+                  <SelectItem value="pink">Pink</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {/* Score*/}
+            <Input
+              placeholder="ex.150"
+              type="number"
+              value={scoreValue}
+              onChange={(e) => setScoreValue(e.target.value)}
+              className="w-40 bg-neutral-100 border-neutral-200"
+            />
+            {/* Date*/}
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="date-picker"
+                  className="w-32 justify-between font-normal"
+                >
+                  {date ? date.toLocaleDateString() : "Select date"}
+                  <ChevronDownIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto overflow-hidden p-0"
+                align="start"
               >
-                {date ? date.toLocaleDateString() : "Select date"}
-                <ChevronDownIcon />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent
-              className="w-auto overflow-hidden p-0"
-              align="start"
-            >
-              <Calendar
-                mode="single"
-                selected={date}
-                captionLayout="dropdown"
-                onSelect={(date) => {
-                  setDate(date);
-                  setOpen(false);
-                }}
-              />
-            </PopoverContent>
-          </Popover>
-          {/* Add Button */}
-          <Button size="sm" onClick={addRow}>
-            <Plus />
-          </Button>
-        </div>
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  captionLayout="dropdown"
+                  onSelect={(date) => {
+                    setDate(date);
+                    setOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+            {/* Add Button */}
+            <Button size="sm" onClick={addRow}>
+              <Plus />
+            </Button>
+          </div>
 
-        <div className="mx-auto pt-5 w-175">
-          <DataTable
-            columns={routeColumns}
-            data={rows}
-            onUpdate={handleUpdate}
-            onDeselect={(rowIndex, isSave) => {
-              // edit row was just canceled, revert row back to pre-edit state
-              
-              
-              setRows((old) =>
-                old.map((row, index) =>
-                  index === rowIndex && !isSave ? routes[index] : row
-                )
-              );
+          <div className="mx-auto pt-5 w-175">
+            <DataTable
+              columns={routeColumns}
+              data={rows}
+              onUpdate={handleUpdate}
+              onDeselect={(rowIndex, isSave) => {
+                // edit row was just canceled, revert row back to pre-edit state
 
-              toggleEditing(false);
-            }}
-            onRowClick={(row) => {
-              setCurrentRoute(row);
-              toggleEditing(true);
-            }}
-            emptyMessage="Please select a competition."
-          />
+
+                setRows((old) =>
+                  old.map((row, index) =>
+                    index === rowIndex && !isSave ? routes[index] : row
+                  )
+                );
+
+                toggleEditing(false);
+              }}
+              onRowClick={(row) => {
+                setCurrentRoute(row);
+                toggleEditing(true);
+              }}
+              emptyMessage="Please select a competition."
+            />
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
+  return (
+    < div>
+      {loadContent()}
+    </div >
+  )
 };

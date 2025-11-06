@@ -1,4 +1,3 @@
-
 import { LogScore } from "@/features/log-score/LogScore";
 
 const ScoresHome: React.FC = () => {

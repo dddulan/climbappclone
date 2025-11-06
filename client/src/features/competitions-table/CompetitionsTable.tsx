@@ -9,10 +9,13 @@ import {
 import { CircleX, Plus, Save, SquarePen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CompContext } from "@/components/layout/layout";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
+
+
 
 interface tableProps {
   isSelected: boolean;
-  //toggleEditing: (isSelected: boolean) => void;
+  toggleEditing: (isSelected: boolean) => void;
   //onCompSelect: (selected: number) => void;
 }
 
@@ -24,18 +27,25 @@ export const CompetitionsTable: React.FC<tableProps> = ({
   const [competitions, setCompetitions] = useState<Competition[]>([]); // original copy of competitions, update when user saves any edits
   const [rows, setRows] = useState<Competition[]>([]); // rows for data table
   const ctx = useContext(CompContext);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = () => {
+    setLoading(true);
     getAllCompetitions()
       .then((res: Competition[]) => {
         setCompetitions(res);
         setRows(res);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleUpdate = (rowIndex: number, columnId: string, value: unknown) => {
@@ -72,11 +82,27 @@ export const CompetitionsTable: React.FC<tableProps> = ({
     setRows([...rows, blankRow]);
   };
 
-  return (
-    <>
-      <span className="text-2xl font-medium">Competitions</span>
-      <div className="px-5 border-1 rounded-sm bg-white shadow-xl">
-        {/* <div className="space-x-2 pt-5">
+
+  const loadContent = () => {
+    if (loading) {
+      return (
+        <>
+          <span className="text-2xl font-medium">Competitions</span>
+
+          <div className="px-5 border-1 rounded-sm bg-white shadow-xl" >
+            <div className="mx-auto w-175 flex justify-center items-center min-h-[400px]">
+              <Spinner variant="default" className="w-8 h-8 text-primary" />
+            </div>
+          </div>
+        </>
+
+      );
+    }
+    return (
+      <>
+        <span className="text-2xl font-medium">Competitions</span>
+        <div className="px-5 pb-6 border-1 rounded-sm bg-white shadow-xl">
+          {/* <div className="space-x-2 pt-5">
           <Button
             onClick={toggleEditing}
             className={`${isEdit ? "hidden" : ""}`}
@@ -116,23 +142,29 @@ export const CompetitionsTable: React.FC<tableProps> = ({
           </Button>
         </div> */}
 
-        <div className="container mx-auto pt-2 w-80 ">
-          <DataTable
-            columns={competitionColumns}
-            data={rows}
-            onUpdate={handleUpdate}
-            onRowClick={(row) => {
-              if (!isSelected) {
-                //onCompSelect(row.id);
+          <div className="mx-auto pt-5 w-175">
+            <DataTable
+              columns={competitionColumns}
+              data={rows}
+              onUpdate={handleUpdate}
+              onRowClick={(row) => {
+                if (!isSelected) {
+                  //onCompSelect(row.id);
 
-                ctx?.setComp(row);
-              }
-            }}
-            isEdit={false}
-            isRouteSelected={isSelected}
-          />
+                  ctx?.setComp(row);
+                }
+              }}
+              isEdit={false}
+              isRouteSelected={isSelected}
+            />
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
+  return (
+    < div>
+      {loadContent()}
+    </div >
+  )
 };
