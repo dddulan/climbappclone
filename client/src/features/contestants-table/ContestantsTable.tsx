@@ -22,9 +22,13 @@ export const ContestantsTable: React.FC = () => {
       .catch(console.error);
   };
 
-    return (
-        <div className="container mx-auto py-10 w-90">
-            <DataTable columns={ContestantColums} data={rows} showPagination={false}/>
-        </div>
-    );
-}
+  return (
+    <div className="container mx-auto py-10 w-full">
+      <DataTable
+        columns={ContestantColums}
+        data={rows}
+        showPagination={false}
+      />
+    </div>
+  );
+};
