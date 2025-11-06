@@ -1,7 +1,7 @@
 import Header from "./header/header";
 import { Outlet } from "react-router-dom";
 import Footer from "./footer/footer";
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import type { Competition } from "@/models/competition";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,12 +23,56 @@ export const CompContext = createContext<{
   setComp: React.Dispatch<React.SetStateAction<Competition>>;
 } | null>(null);
 
+// Default empty competition when nothing is selected
+const EMPTY_COMPETITION: Competition = {
+  id: 0,
+  date_of: "",
+  type: "",
+  is_active: false,
+};
+
 export const Layout = () => {
-  const [comp, setComp] = useState({} as Competition);
   const [showNavbar, setShowNavbar] = useState(true);
   const [openDialogue, setOpenDialogue] = useState(false);
   const [password, setPassword] = useState<string>("");
   const [alertOpen, setAlertOpen] = useState(false);
+  const [comp, setComp] = useState<Competition>(() => {
+    const saved = localStorage.getItem("selectedCompetition");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Return parsed competition if it has a valid id, otherwise return empty
+        return parsed.id ? parsed : EMPTY_COMPETITION;
+      } catch (error) {
+        console.error(
+          "Error parsing saved competition from localStorage:",
+          error
+        );
+        localStorage.removeItem("selectedCompetition");
+        return EMPTY_COMPETITION;
+      }
+    }
+    return EMPTY_COMPETITION;
+  });
+
+  useEffect(() => {
+    if (comp && comp.id) {
+      try{
+        
+        //attempt to save comp when selected
+        localStorage.setItem("selectedCompetition", JSON.stringify(comp));
+        console.log("Saved competition to localStorage:", comp);
+      }catch(error){
+        console.error("Error saving competition to localStorage:", error);
+      }
+    }else{
+      //remove item if no comp selected
+      localStorage.removeItem("selectedCompetition");
+      console.log("Removed competition from localStorage");
+    }
+
+  }, [comp]);
+
   const handleToggle = () => {
     //if navbar showing then hide it
     if (showNavbar) {
@@ -57,26 +101,32 @@ export const Layout = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      {showNavbar && (
-        <>
-        <Header />   
-            <ActiveCompetitionBanner competition={comp} />
-            </>
-            )
-          
-      }
-      <div>
-        <HoverSlideIcon onClick={handleToggle} />
+    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
+
+      {/*show header only if showNavbar is true*/}
+      <div className="flex-shrink-0">
+        {showNavbar && <Header />}
       </div>
+
+      {/*competition banner*/}
+      <div className="flex-shrink-0">
+        <ActiveCompetitionBanner competition={comp} />
+      </div>
+
+      {/*hover icon - fixed position, no wrapper needed*/}
+      <HoverSlideIcon onClick={handleToggle} />
+
+      {/*competition context*/}
+
       <CompContext.Provider value={{ comp, setComp }}>
-        <main className="flex-1">
-
-          <Outlet />
-
-
+        <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
+          <div className="h-full">
+            <Outlet />
+          </div>
         </main>
       </CompContext.Provider>
+      {/*dialog to open navbar*/}
+
       {!showNavbar && (
         <Dialog open={openDialogue} onOpenChange={setOpenDialogue}>
           <form>
@@ -120,7 +170,9 @@ export const Layout = () => {
         </Dialog>
       )}
 
-      <Footer />
+      <div className="flex-shrink-0">
+        <Footer />
+      </div>
     </div>
   );
 };

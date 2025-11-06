@@ -7,7 +7,7 @@ interface ActiveCompetitionBannerProps {
   competition: Competition;
 }
 
-const hasSelection = (competition: Competition) => Boolean(competition?.id);
+const hasSelection = (competition: Competition) => Boolean(competition?.id && competition.id !== 0);
 
 export const ActiveCompetitionBanner = ({
   competition,
@@ -16,12 +16,12 @@ export const ActiveCompetitionBanner = ({
 
   const badgeLabel = selected ? "Selected" : "None";
   const competitionLabel = selected
-    ? competition.type || "Untitled competition"
+    ? competition?.id || "Untitled competition"
     : "No competition selected";
 
   return (
-    <Card className="border-none bg-transparent shadow-none !gap-0 px-3 !py-0 sm:px-6 lg:px-8">
-      <CardContent className="flex items-center justify-between gap-2 !px-0 !py-1 text-[11px] sm:!py-1 sm:text-xs">
+    <Card className="border-none bg-transparent shadow-none !gap-0 !p-0 !m-0">
+      <CardContent className="flex items-center justify-between gap-2 px-3 py-1 text-[11px] sm:px-6 sm:text-xs lg:px-8">
         <div className="flex flex-wrap items-center gap-2">
           <Trophy className="h-4 w-4 text-muted-foreground" />
           <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
