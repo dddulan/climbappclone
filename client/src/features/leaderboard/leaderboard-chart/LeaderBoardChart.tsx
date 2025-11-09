@@ -32,14 +32,13 @@ interface LeaderBoardChartProps {
 export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
   const ctx = useContext(CompContext)!;
 
-  const chartData = [
-    { team: "Duncan", score: 52560, mobile: 80 },
-    { team: "Fresno", score: 30005, mobile: 200 },
-    { team: "Design Science", score: 22237, mobile: 120 },
-    { team: "Bullard", score: 73000, mobile: 190 },
-    { team: "Edison", score: 20900, mobile: 130 },
-    { team: "Hoover", score: 21400, mobile: 140 },
-  ];
+  // Transform the API data to chart format
+  const chartData = data
+    .map((item) => ({
+      team: item.school_name || "",
+      score: item.score || 0,
+    }))
+    .sort((a, b) => b.score - a.score); // Sort by score descending
 
   const colors = [
     "#3b82f6",

@@ -1,6 +1,7 @@
 import { signupColumns } from "./SignupColumn";
 import { DataTable } from "@/components/ui/table";
 import type { Contestant } from "@/models/contestant";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface SignupTableProps {
   rows: Contestant[];
@@ -8,8 +9,15 @@ interface SignupTableProps {
 
 export const SignupTable: React.FC<SignupTableProps> = ({ rows }) => {
   return (
-    <div className="bg-card text-card-foreground flex flex-col w-full h-full gap-6 rounded-xl border shadow-sm p-8">
-      <DataTable columns={signupColumns} data={rows} />
-    </div>
+    <Card className="bg-white shadow-lg rounded-xl border border-gray-100">
+      <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
+        <CardTitle className="text-2xl font-bold text-gray-900">
+          Contestants
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6">
+        <DataTable columns={signupColumns} data={rows} showPagination={false} />
+      </CardContent>
+    </Card>
   );
 };

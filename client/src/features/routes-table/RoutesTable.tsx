@@ -120,6 +120,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
         <>
          <span className="text-2xl font-medium">Routes</span>
 
+<<<<<<< HEAD
           <div className="px-5 border-1 rounded-sm bg-white shadow-xl " >
             <div className="mx-auto w-175 flex justify-center items-center min-h-[400px]">
               <Spinner variant="default" className="w-8 h-8 text-primary" />
@@ -131,6 +132,13 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
     return (
       <>
         <span className="text-2xl font-medium">Routes</span>
+=======
+  return (
+    <>
+      <span className="text-2xl font-medium px-4 py-2 block border-1">
+        Routes
+      </span>
+>>>>>>> sprint
 
         <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
           <div className="flex space-x-2 pt-5">
@@ -212,6 +220,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
             </Button>
           </div>
 
+<<<<<<< HEAD
           <div className="mx-auto pt-5 w-175">
             <DataTable
               columns={routeColumns}
@@ -219,6 +228,21 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
               onUpdate={handleUpdate}
               onDeselect={(rowIndex, isSave) => {
                 // edit row was just canceled, revert row back to pre-edit state
+=======
+        <div className="mx-auto pt-5 w-175">
+          <DataTable
+            columns={routeColumns}
+            data={rows}
+            onUpdate={handleUpdate}
+            onDeselect={(rowIndex, isSave) => {
+              // edit row was just canceled, revert row back to pre-edit state
+
+              setRows((old) =>
+                old.map((row, index) =>
+                  index === rowIndex && !isSave ? routes[index] : row
+                )
+              );
+>>>>>>> sprint
 
 
                 setRows((old) =>

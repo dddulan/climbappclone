@@ -30,6 +30,7 @@ export const ContestantsTable: React.FC = () => {
             });
     };
 
+<<<<<<< HEAD
 
     const loadContent = () => {
         if (loading) {
@@ -63,3 +64,15 @@ export const ContestantsTable: React.FC = () => {
         </div >
     )
 }
+=======
+  return (
+    <div className="container mx-auto py-10 w-full">
+      <DataTable
+        columns={ContestantColums}
+        data={rows}
+        showPagination={false}
+      />
+    </div>
+  );
+};
+>>>>>>> sprint

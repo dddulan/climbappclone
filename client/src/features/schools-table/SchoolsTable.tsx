@@ -37,6 +37,7 @@ export const SchoolsTable: React.FC = () => {
             });
     };
 
+<<<<<<< HEAD
 
     // Button function to handle submission of a new school
     const onSubmit = async () => {
@@ -145,3 +146,11 @@ export const SchoolsTable: React.FC = () => {
         </div >
     )
 }
+=======
+  return (
+    <div className="container mx-auto py-10 w-full">
+      <DataTable columns={SchoolColums} data={rows} />
+    </div>
+  );
+};
+>>>>>>> sprint
