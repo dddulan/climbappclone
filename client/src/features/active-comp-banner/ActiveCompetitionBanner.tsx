@@ -14,7 +14,7 @@ export const ActiveCompetitionBanner = ({
 }: ActiveCompetitionBannerProps) => {
   const selected = hasSelection(competition);
 
-  const badgeLabel = selected ? "Selected" : "None";
+  const badgeLabel = selected ? "Selected" : "Please Select a Competition";
   const competitionLabel = selected
     ? competition?.id || "Untitled competition"
     : "No competition selected";
