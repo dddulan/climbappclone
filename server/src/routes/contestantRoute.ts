@@ -9,6 +9,7 @@ import {
   logScore,
   getLeaderboard,
   getContestantScores,
+  getSchoolsforComp,
 } from "../controllers/contestantController";
 
 const router = express.Router();
@@ -25,4 +26,5 @@ router.post("/logScore", logScore);
 router.get("/getLeaderboard", getLeaderboard);
 router.get("/getContestantScores", getContestantScores);
 
+router.get("/getSchoolsforComp/:id", getSchoolsforComp);
 export default router;

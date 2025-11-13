@@ -19,13 +19,12 @@ import {
 import { School as SchoolIcon, User, Mountain, Hash } from "lucide-react";
 import {
   getContestantsForComp,
-  getAllSchools,
   logScore,
+  getSchoolsForComp,
 } from "@/services/contestantService";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
 import { toast, Toaster } from "sonner";
-import { CompContext } from "@/components/layout/layout";
 import { getRoutesForComp } from "@/services/routeService";
 import type { Route } from "@/models/route";
 import type { Score } from "@/models/score";
@@ -38,7 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScoreTable } from "@/features/scores-table/ScoreTable";
 import { Progress } from "@/components/ui/progress";
-
+import { useCompetition } from "@/hooks/useCompetition";
 export const LogScore: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<string>("");
@@ -47,15 +46,42 @@ export const LogScore: React.FC = () => {
   const [selectedAttempt, setSelectedAttempt] = useState<string>("");
   const [selectedRouteID, setSelectedRouteID] = useState<string>("");
   const [selectedContestants, setSelectedContestants] = useState<string>("");
-  const ctx = useContext(CompContext)!;
 
+  const { comp } = useCompetition();
   //timer for progress bar and dialog
   const [open, setOpen] = React.useState(false);
   const timer = React.useRef<NodeJS.Timeout | undefined>(undefined);
   const [progress, setProgress] = React.useState(13);
 
   React.useEffect(() => {
+    const loadData = () => {
+      if (comp.id) {
+        getSchoolsForComp(comp.id)
+          .then((res: School[]) => {
+            setSchools(res);
+          })
+          .catch(console.error);
+      }
+
+      if (comp.id) {
+        getContestantsForComp(comp.id)
+          .then((res: Contestant[]) => {
+            setContestants(res);
+          })
+          .catch(console.error);
+
+        getRoutesForComp(comp.id)
+          .then((res: Route[]) => {
+            setRoutes(res);
+          })
+          .catch(console.error);
+      }
+    };
+
     loadData();
+  }, [comp.id]);
+
+  React.useEffect(() => {
     if (open) {
       setProgress(0);
       let elapsed = 0;
@@ -74,31 +100,14 @@ export const LogScore: React.FC = () => {
     };
   }, [open]);
 
-  const loadData = () => {
-    getAllSchools()
-      .then((res: School[]) => {
-        setSchools(res);
-      })
-      .catch(console.error);
-
-    if (ctx?.comp.id) {
-      getContestantsForComp(ctx?.comp.id)
-        .then((res: Contestant[]) => {
-          setContestants(res);
-        })
-        .catch(console.error);
-
-      getRoutesForComp(ctx?.comp.id)
-        .then((res: Route[]) => {
-          setRoutes(res);
-        })
-        .catch(console.error);
-    }
-  };
-
   const onSubmit = async () => {
     // Check if all fields are filled
-    if (!selectedSchool || !contestants || !routes || !selectedAttempt) {
+    if (
+      !selectedSchool ||
+      !selectedContestants ||
+      !selectedRouteID ||
+      !selectedAttempt
+    ) {
       toast("Please fill in all fields");
       return;
     }
@@ -115,7 +124,7 @@ export const LogScore: React.FC = () => {
     } catch (err) {
       console.error(" Failed to send score:", err);
     }
-    console.log("compid" + ctx?.comp.id);
+    console.log("compid" + comp.id);
     console.log("selected route ID " + selectedRouteID);
     console.log("contestants" + selectedContestants);
     console.log("attempt " + selectedAttempt);
@@ -138,9 +147,9 @@ export const LogScore: React.FC = () => {
             Score Sheet
           </CardTitle>
           <CardDescription className="text-base mt-2">
-            {ctx?.comp.id ? (
+            {comp.id ? (
               <span className="text-gray-700 font-medium">
-                Competition on {ctx.comp.date_of}
+                Competition on {comp.date_of}
               </span>
             ) : (
               <span className="text-amber-600 font-medium">
@@ -164,7 +173,7 @@ export const LogScore: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {schools.map((school, index) => (
-                    <SelectItem key={index} value={school.name}>
+                    <SelectItem key={index} value={school.id.toString()}>
                       {school.name}
                     </SelectItem>
                   ))}
@@ -186,11 +195,23 @@ export const LogScore: React.FC = () => {
                   <SelectValue placeholder="Select your Name" />
                 </SelectTrigger>
                 <SelectContent>
-                  {contestants.map((contestant, index) => (
-                    <SelectItem key={index} value={index.toString()}>
-                      {contestant.name} {contestant.id}
-                    </SelectItem>
-                  ))}
+                  {selectedSchool &&
+                    contestants
+                      .filter(
+                        (contestant) =>
+                          contestant.school_id === Number(selectedSchool)
+                      )
+                      .map(
+                        (contestant, index) =>
+                          contestant.id !== null && (
+                            <SelectItem
+                              key={index}
+                              value={contestant.id.toString()}
+                            >
+                              {contestant.name}
+                            </SelectItem>
+                          )
+                      )}
                 </SelectContent>
               </Select>
             </div>
@@ -210,7 +231,7 @@ export const LogScore: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {routes.map((route, index) => (
-                    <SelectItem key={index} value={index.toString()}>
+                    <SelectItem key={index} value={route.id.toString()}>
                       {route.number}
                     </SelectItem>
                   ))}
@@ -245,7 +266,7 @@ export const LogScore: React.FC = () => {
           <Button
             onClick={onSubmit}
             disabled={
-              ctx?.comp.id == null ||
+              comp.id == null ||
               !selectedSchool ||
               !selectedContestants ||
               !selectedRouteID ||

@@ -29,6 +29,11 @@ export const getContestantsForComp = async (
   return res.data;
 };
 
+export const getSchoolsForComp = async (compId: number): Promise<School[]> => {
+  const res = await axios.get(`/contestants/getSchoolsForComp/${compId}`);
+  return res.data;
+};
+
 export const getAllSchools = async (): Promise<School[]> => {
   const res = await axios.get("/contestants/getAllSchools");
   return res.data;
