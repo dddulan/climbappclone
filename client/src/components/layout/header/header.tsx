@@ -1,87 +1,86 @@
 import { Link } from "react-router-dom";
-import classes from "../layout.module.css";
 import logo from "../../../assets/mount.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Header = () => {
-  const [currentTab, setCurrentTab] = useState<string>("");
+  const [currentTab, setCurrentTab] = useState<string>(() => {
+    const saved = localStorage.getItem("currentTab");
+    return saved || "";
+  });
 
   const handleClick = (pageName: string) => {
     setCurrentTab(pageName);
   };
 
+  useEffect(() => {
+    localStorage.setItem("currentTab", currentTab);
+  }, [currentTab]);
+
   return (
-    <div>
-      <div
-        className={
-          "bg-white border-2 text-black flex rounded-md px-4 items-center justify-center"
-        }
-      >
-        <div>
-          {" "}
-          <img src={logo} className={classes.headerLogo} alt="logo"></img>
-        </div>
-        <div className={"justify-start flex "}>
-          <Link
-            style={{
-              color: currentTab == "competitions" ? "white" : "",
-              background: currentTab == "competitions" ? "black" : "",
-            }}
-            className={classes.currentHeader}
-            onClick={() => handleClick("competitions")}
-            to="/competitions"
-          >
-            Competitions
-          </Link>
+    <div className="bg-white  text-black flex items-center justify-center">
+      <div>
+        <img src={logo} className="h-12 pr-1" alt="logo" />
+      </div>
+      <div className="flex justify-start">
+        <Link
+          style={{
+            color: currentTab == "competitions" ? "white" : "",
+            background: currentTab == "competitions" ? "black" : "",
+          }}
+          className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
+          onClick={() => handleClick("competitions")}
+          to="/competitions"
+        >
+          Competitions
+        </Link>
 
-          <Link
-            style={{
-              color: currentTab == "contestants" ? "white" : "",
-              background: currentTab == "contestants" ? "black" : "",
-            }}
-            className={classes.currentHeader}
-            onClick={() => handleClick("contestants")}
-            to="/contestants"
-          >
-            Contestants
-          </Link>
+        <Link
+          style={{
+            color: currentTab == "contestants" ? "white" : "",
+            background: currentTab == "contestants" ? "black" : "",
+          }}
+          className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
+          onClick={() => handleClick("contestants")}
+          to="/contestants"
+        >
+          Contestants
+        </Link>
 
-          <Link
-            style={{
-              color: currentTab == "leaderboard" ? "white" : "",
-              background: currentTab == "leaderboard" ? "black" : "",
-            }}
-            className={classes.currentHeader}
-            onClick={() => handleClick("leaderboard")}
-            to="/leaderboard"
-          >
-            Leaderboard
-          </Link>
+        <Link
+          style={{
+            color: currentTab == "leaderboard" ? "white" : "",
+            background: currentTab == "leaderboard" ? "black" : "",
+          }}
+          className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
+          onClick={() => handleClick("leaderboard")}
+          to="/leaderboard"
+        >
+          Leaderboard
+        </Link>
 
-          <Link
-            style={{
-              color: currentTab == "signup" ? "white" : "",
-              background: currentTab == "signup" ? "black" : "",
-            }}
-            className={classes.currentHeader}
-            onClick={() => handleClick("signup")}
-            to="/signup"
-          >
-            Sign Up
-          </Link>
+        <Link
+          style={{
+            color: currentTab == "signup" ? "white" : "",
+            background: currentTab == "signup" ? "black" : "",
+          }}
+          className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
+          onClick={() => handleClick("signup")}
+          to="/signup"
+        >
+          Sign Up
+        </Link>
 
-          <Link
-            style={{
-              color: currentTab == "scoreshome" ? "white" : "",
-              background: currentTab == "scoreshome" ? "black" : "",
-            }}
-            className={classes.currentHeader}
-            onClick={() => handleClick("scoreshome")}
-            to="/scoreshome"
-          >
-            Log Score
-          </Link>
-        </div>
+        <Link
+          style={{
+            color: currentTab == "scoreshome" ? "white" : "",
+            background: currentTab == "scoreshome" ? "black" : "",
+          }}
+          className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
+          onClick={() => handleClick("scoreshome")}
+          to="/scoreshome"
+        >
+          Log Score
+        </Link>
       </div>
     </div>
   );

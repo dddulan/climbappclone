@@ -1,48 +1,54 @@
+import type { set } from "date-fns";
 import { Home } from "lucide-react";
-import {SquareArrowDown} from "lucide-react"
+import { SquareArrowDown, SquareArrowUp } from "lucide-react";
 import React from "react";
 interface HoverSlideIconProps {
   onClick?: () => void; // optional click handler
 }
 
+export const HoverSlideIcon: React.FC<HoverSlideIconProps> = ({ onClick }) => {
+  const [isOpen, setIsOpen] = React.useState(true);
 
-export const HoverSlideIcon:React.FC<HoverSlideIconProps> =({onClick}) =>{
   return (
-       <div
-      className="fixed top-20 left-0 transform -translate-y-1/2 flex items-center"
-    >
+    <div className="fixed left-0 pointer-events-none">
       <button
-        onClick={onClick}
+        onClick={() => {
+          onClick?.();
+          setIsOpen(!isOpen);
+        }}
         className="
-          flex items-center justify-center
-          h-8 w-5
+          flex flex-col items-center justify-center
+          h-4 w-8
           bg-black text-white
-          rounded-r-md
+          rounded-b-md
           shadow-lg
           relative
           group
           overflow-hidden
-          hover:w-16
+          hover:h-10
           transition-all duration-300 ease-in-out
+          pointer-events-auto
         "
       >
-
+        {/* Icon */}
+        {isOpen ? (
+          <SquareArrowUp className="w-6 h-6 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out" />
+        ) : (
+          <SquareArrowDown className="w-6 h-6 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out" />
+        )}
 
         {/* Sliding label */}
         <span
           className="
-            absolute left-5
+            absolute top-2
             text-white font-medium
             whitespace-nowrap
             opacity-0
             group-hover:opacity-100
             transition-opacity duration-300 ease-in-out
           "
-        >
-                    {/* Icon */}
-        <SquareArrowDown className="w-6 h-6 z-10" />
-        </span>
+        ></span>
       </button>
     </div>
   );
-}
+};
