@@ -57,20 +57,18 @@ export const Layout = () => {
 
   useEffect(() => {
     if (comp && comp.id) {
-      try{
-        
+      try {
         //attempt to save comp when selected
         localStorage.setItem("selectedCompetition", JSON.stringify(comp));
         console.log("Saved competition to localStorage:", comp);
-      }catch(error){
+      } catch (error) {
         console.error("Error saving competition to localStorage:", error);
       }
-    }else{
+    } else {
       //remove item if no comp selected
       localStorage.removeItem("selectedCompetition");
       console.log("Removed competition from localStorage");
     }
-
   }, [comp]);
 
   const handleToggle = () => {
@@ -102,29 +100,34 @@ export const Layout = () => {
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
-
-      {/*show header only if showNavbar is true*/}
-      <div className="flex-shrink-0">
-        {showNavbar && <Header />}
-      </div>
-
-      {/*competition banner*/}
-      <div className="flex-shrink-0">
-        <ActiveCompetitionBanner competition={comp} />
-      </div>
-
-      {/*hover icon - fixed position, no wrapper needed*/}
-      <HoverSlideIcon onClick={handleToggle} />
-
       {/*competition context*/}
-
       <CompContext.Provider value={{ comp, setComp }}>
+        {/*competition banner*/}
+        {/*show header only if showNavbar is true*/}
+        <div
+          className="flex-shrink-0 transition-all duration-500 ease-in-out"
+          style={{
+            maxHeight: showNavbar ? "100px" : "0",
+            overflow: "hidden",
+          }}
+        >
+          <Header />
+          <div className="flex-shrink-0">
+            <ActiveCompetitionBanner competition={comp} />
+          </div>
+        </div>
+
         <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
+          {/*hover icon - fixed position, no wrapper needed*/}
+          <div className="bg-neutral-0">
+            <HoverSlideIcon onClick={handleToggle} />
+          </div>
           <div className="h-full">
             <Outlet />
           </div>
         </main>
       </CompContext.Provider>
+
       {/*dialog to open navbar*/}
 
       {!showNavbar && (

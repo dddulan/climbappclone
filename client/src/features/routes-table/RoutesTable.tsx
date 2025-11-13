@@ -44,7 +44,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   //calendar date state
   const ctx = useContext(CompContext);
   //clickable header
-  const [showAddForm, setShowAddForm] = useState<boolean>(false);
+  const [showRouteForm, setShowAddForm] = useState<boolean>(false);
 
   const temp = routeColumns.slice().splice(1);
 
@@ -64,7 +64,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   };
 
   const handleShowAddForm = () => {
-    setShowAddForm(!showAddForm);
+    setShowAddForm(!showRouteForm);
   };
 
   const handleUpdate = (rowIndex: number, columnId: string, value: unknown) => {
@@ -120,10 +120,15 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
         onClick={handleShowAddForm}
       >
         Routes
-        {showAddForm ? <ArrowUp></ArrowUp> : <ArrowDown></ArrowDown>}
+        {showRouteForm ? <ArrowUp></ArrowUp> : <ArrowDown></ArrowDown>}
       </span>
 
-      {showAddForm && (
+      <div
+        className="overflow-hidden transition-all duration-500 ease-in-out"
+        style={{
+          maxHeight: showRouteForm ? "100px" : "0",
+        }}
+      >
         <div className=" border-1 rounded-sm bg-white shadow-xl ">
           <div className="flex space-x-2 p-5 bg-neutral-200">
             {/* ADD ROW COMPOENENT GOES HERE */}
@@ -204,7 +209,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
             </Button>
           </div>
         </div>
-      )}
+      </div>
 
       <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
         <div className="mx-auto pt-5 w-175">
