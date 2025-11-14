@@ -155,6 +155,32 @@ export const logScore = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+export const getContestantRoutes = async (req: Request, res: Response): Promise<void>=>{
+  const {compId,contestantId} = req.params;
+  try{
+    const result = await pool.query(
+      `
+      SELECT
+        r.id,
+        r.name,
+        r.number,
+        s.attempt,
+        (r.point_value - ((s.attempt - 1) * 50)) AS points_earned
+      FROM scores s
+      INNER JOIN routes r ON r.id = s.route_id
+      WHERE s.contestant_id = $1
+        AND r.competition_id = $2
+      ORDER BY s.id DESC
+      `,
+      [contestantId, compId]
+    );
+    res.json(result.rows);
+  }catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export const getLeaderboard = async (
   req: Request,
   res: Response

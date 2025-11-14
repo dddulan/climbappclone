@@ -51,6 +51,16 @@ export const logScore = async (score: Score) => {
   return res.data;
 };
 
+export const getContestantRoutes = async (
+  compId: number,
+  contestantId: number
+): Promise<Score[]> => {
+  const res = await axios.get(`/contestants/getContestantRoutes/${compId}/${contestantId}`);
+  return res.data;
+};
+
+
+
 export const getLeaderboard = async (): Promise<Score[]> => {
   const res = await axios.get("/contestants/getLeaderboard");
   return res.data;

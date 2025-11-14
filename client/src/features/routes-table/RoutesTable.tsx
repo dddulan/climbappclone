@@ -2,7 +2,7 @@ import type { Route } from "@/models/route";
 import { routeColumns } from "./RouteColumns";
 import React, { useContext, useEffect, useState } from "react";
 import { DataRow, DataTable } from "@/components/ui/table";
-import { Plus, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, SquareChevronDown,SquareChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getRoutesById, saveRoutes } from "@/services/routeService";
 import { CompContext } from "@/components/layout/layout";
@@ -116,11 +116,12 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   return (
     <>
       <span
-        className={`flex text-2xl font-medium px-4 py-2 block border-1 cursor-pointer gap-2 hover:bg-neutral-200`}
+        className={`flex text-2xl font-medium px-4 py-2 block cursor-pointer gap-2 hover:bg-neutral-200`}
         onClick={handleShowAddForm}
       >
         Routes
-        {showRouteForm ? <ArrowUp></ArrowUp> : <ArrowDown></ArrowDown>}
+        <div className={'pt-1'}>        {showRouteForm ? <SquareChevronUp /> : <SquareChevronDown />}
+</div>
       </span>
 
       <div
@@ -129,7 +130,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
           maxHeight: showRouteForm ? "100px" : "0",
         }}
       >
-        <div className=" border-1 rounded-sm bg-white shadow-xl ">
+        <div className=" bg-white shadow-xl ">
           <div className="flex space-x-2 p-5 bg-neutral-200">
             {/* ADD ROW COMPOENENT GOES HERE */}
             <Select onValueChange={(value) => setSelectedGrade(value)}>
@@ -211,7 +212,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
         </div>
       </div>
 
-      <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
+      <div className="px-5 bg-white shadow-xl ">
         <div className="mx-auto pt-5 w-175">
           <DataTable
             columns={routeColumns}

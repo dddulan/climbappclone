@@ -10,6 +10,7 @@ import {
   getLeaderboard,
   getContestantScores,
   getSchoolsforComp,
+  getContestantRoutes,
 } from "../controllers/contestantController";
 
 const router = express.Router();
@@ -27,4 +28,5 @@ router.get("/getLeaderboard", getLeaderboard);
 router.get("/getContestantScores", getContestantScores);
 
 router.get("/getSchoolsforComp/:id", getSchoolsforComp);
+router.get("/getContestantRoutes/:compId/:contestantId", getContestantRoutes);
 export default router;

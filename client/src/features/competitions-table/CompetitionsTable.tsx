@@ -74,10 +74,10 @@ export const CompetitionsTable: React.FC<tableProps> = ({
 
   return (
     <>
-      <span className="text-2xl font-medium px-4 py-2 block border-1">
+      <span className="text-2xl font-medium px-4 py-2 block ">
         Competitions
       </span>
-      <div className="px-5 border-1 rounded-sm bg-white shadow-xl">
+      <div className="px-5 bg-white shadow-xl">
         {/* <div className="space-x-2 pt-5">
           <Button
             onClick={toggleEditing}

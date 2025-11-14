@@ -191,7 +191,11 @@ export const LogScore: React.FC = () => {
                 value={selectedContestants}
                 onValueChange={setSelectedContestants}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full" disabled={
+                  comp.id==null || !selectedSchool 
+                  
+                  
+                }>
                   <SelectValue placeholder="Select your Name" />
                 </SelectTrigger>
                 <SelectContent>
@@ -226,7 +230,11 @@ export const LogScore: React.FC = () => {
                 value={selectedRouteID}
                 onValueChange={setSelectedRouteID}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full"    disabled={
+                  comp.id==null || !selectedSchool ||
+                  !selectedContestants 
+                  
+                }>
                   <SelectValue placeholder="Select a Route" />
                 </SelectTrigger>
                 <SelectContent>
@@ -249,7 +257,12 @@ export const LogScore: React.FC = () => {
                 value={selectedAttempt}
                 onValueChange={setSelectedAttempt}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full" 
+                disabled={
+                  comp.id==null || !selectedSchool ||
+                  !selectedContestants ||
+                  !selectedRouteID
+                }>
                   <SelectValue placeholder="Attempt" />
                 </SelectTrigger>
                 <SelectContent>
@@ -284,7 +297,7 @@ export const LogScore: React.FC = () => {
                 <DialogTitle>Great Job!</DialogTitle>
                 <DialogDescription>
                   Your score has been logged.
-                  <ScoreTable />
+                  <ScoreTable compId={comp.id} contestantId={Number(selectedContestants)} />
                 </DialogDescription>
                 <DialogHeader className="flex items-center justify-center">
                   <Progress value={progress} className="w-[60%]" />
