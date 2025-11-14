@@ -6,10 +6,6 @@ export const ScoreColumn: ColumnDef<Score>[] = [
     accessorKey: "number",
     header: "Route",
   },
-    {
-    accessorKey: "name",
-    header: "Name",
-  },
   {
     accessorKey: "attempt",
     header: "Attempt",
