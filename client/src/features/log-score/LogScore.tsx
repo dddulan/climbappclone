@@ -141,6 +141,24 @@ export const LogScore: React.FC = () => {
     <div className="w-full">
       <Toaster position="top-center" />
 
+      {/* Hero Banner */}
+      <div className="bg-gradient-to-r from-orange-600 to-purple-500 rounded-lg p-6 mb-6 text-white shadow-lg">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold mb-1">Ready to Score? </h1>
+            <p className="text-cyan-100 text-sm">
+              Log your routes and track your progress
+            </p>
+          </div>
+          <div className="hidden md:flex items-center gap-6 text-sm">
+            <div className="text-center">
+              <p className="text-xl font-bold">{contestants.length}</p>
+              <p className="text-xs text-cyan-100">Climbers</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <Card className="w-full text-lg bg-white shadow-lg rounded-xl border border-gray-100">
         <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
           <CardTitle className="text-2xl font-bold text-gray-900">
@@ -191,11 +209,10 @@ export const LogScore: React.FC = () => {
                 value={selectedContestants}
                 onValueChange={setSelectedContestants}
               >
-                <SelectTrigger className="w-full" disabled={
-                  comp.id==null || !selectedSchool 
-                  
-                  
-                }>
+                <SelectTrigger
+                  className="w-full"
+                  disabled={comp.id == null || !selectedSchool}
+                >
                   <SelectValue placeholder="Select your Name" />
                 </SelectTrigger>
                 <SelectContent>
@@ -230,17 +247,18 @@ export const LogScore: React.FC = () => {
                 value={selectedRouteID}
                 onValueChange={setSelectedRouteID}
               >
-                <SelectTrigger className="w-full"    disabled={
-                  comp.id==null || !selectedSchool ||
-                  !selectedContestants 
-                  
-                }>
+                <SelectTrigger
+                  className="w-full"
+                  disabled={
+                    comp.id == null || !selectedSchool || !selectedContestants
+                  }
+                >
                   <SelectValue placeholder="Select a Route" />
                 </SelectTrigger>
                 <SelectContent>
                   {routes.map((route, index) => (
                     <SelectItem key={index} value={route.id.toString()}>
-                      {route.number}
+                      #{route.number}-{route.color} {route.grade}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -257,12 +275,15 @@ export const LogScore: React.FC = () => {
                 value={selectedAttempt}
                 onValueChange={setSelectedAttempt}
               >
-                <SelectTrigger className="w-full" 
-                disabled={
-                  comp.id==null || !selectedSchool ||
-                  !selectedContestants ||
-                  !selectedRouteID
-                }>
+                <SelectTrigger
+                  className="w-full"
+                  disabled={
+                    comp.id == null ||
+                    !selectedSchool ||
+                    !selectedContestants ||
+                    !selectedRouteID
+                  }
+                >
                   <SelectValue placeholder="Attempt" />
                 </SelectTrigger>
                 <SelectContent>
@@ -292,16 +313,19 @@ export const LogScore: React.FC = () => {
           {/* DIALOG */}
 
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-md ">
+            <DialogContent className="sm:max-w-md bg-white">
               <DialogHeader>
-                <DialogTitle>Great Job!</DialogTitle>
+                <DialogTitle>Logged Successfully! </DialogTitle>
                 <DialogDescription>
-                  Your score has been logged.
-                  <ScoreTable compId={comp.id} contestantId={Number(selectedContestants)} />
+                  Here are your top climbs so far:
                 </DialogDescription>
-                <DialogHeader className="flex items-center justify-center">
-                  <Progress value={progress} className="w-[60%]" />
-                </DialogHeader>
+              </DialogHeader>
+              <ScoreTable
+                compId={comp.id}
+                contestantId={Number(selectedContestants)}
+              />
+              <DialogHeader className="flex items-center justify-center">
+                <Progress value={progress} className="w-[60%]" />
               </DialogHeader>
               <div className="flex items-center gap-2">
                 <div className="grid flex-1 gap-2"></div>
