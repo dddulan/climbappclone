@@ -329,31 +329,33 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
           </div>
         </div>
 
-        <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
-          <div className="mx-auto pt-5 w-175 min-h-[300px]">
-            <DataTable
-              columns={routeColumns}
-              data={rows}
-              onUpdate={handleUpdate}
-              onDeselect={(rowIndex, isSave) => {
-                // edit row was just canceled, revert row back to pre-edit state
 
-                setRows((old) =>
-                  old.map((row, index) =>
-                    index === rowIndex && !isSave ? routes[index] : row
-                  )
-                );
+        <div className="mx-auto pt-5 w-175">
+          <DataTable
+            columns={routeColumns}
+            data={rows}
+            onUpdate={handleUpdate}
+            onDeselect={(rowIndex, isSave) => {
+              // edit row was just canceled, revert row back to pre-edit state
 
-                toggleEditing(false);
-              }}
-              onRowClick={(row) => {
-                setCurrentRoute(row);
-                toggleEditing(true);
-              }}
-              emptyMessage="Please select a competition."
-            />
-          </div>
+
+
+              setRows((old) =>
+                old.map((row, index) =>
+                  index === rowIndex && !isSave ? routes[index] : row
+                )
+              );
+
+              toggleEditing(false);
+            }}
+            onRowClick={(row) => {
+              setCurrentRoute(row);
+              toggleEditing(true);
+            }}
+            emptyMessage="Please select a competition."
+          />
         </div>
+
       </>
     );
   }
