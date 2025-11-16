@@ -98,8 +98,8 @@ export const SchoolsTable: React.FC = () => {
                 <>
                     <span className="text-2xl font-medium">Schools</span>
 
-                    <div className="px-5 border-1 rounded-sm bg-white shadow-xl" >
-                        <div className="container mx-auto pt-2 w-80 mx-auto flex justify-center items-center min-h-[200px]">
+                    <div className="py-5">
+                        <div className="flex container space-x-2 pt-5 justify-center items-center min-h-[260px]">
                             <Spinner variant="default" className="w-8 h-8 text-primary" />
                         </div>
                     </div>
@@ -110,7 +110,7 @@ export const SchoolsTable: React.FC = () => {
             <>
                 <span className="text-2xl font-medium">Schools</span>
 
-                <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
+                <div className="py-5 container bg-white">
                     <div className="flex space-x-2 pt-5">
                         {/* <Label>Add School:</Label> */}
                         <Input
@@ -132,13 +132,14 @@ export const SchoolsTable: React.FC = () => {
                             <Plus />
                         </Button>
                     </div>
-                    <div className="container mx-auto pt-2 w-80 min-h-[200px]">
+                    <div className="container mx-auto py-5 w-full">
                         <DataTable columns={SchoolColums} data={rows} />
                     </div>
                 </div>
             </>
         );
     }
+    
     return (
         < div>
             {loadContent()}

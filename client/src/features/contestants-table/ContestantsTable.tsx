@@ -37,11 +37,9 @@ export const ContestantsTable: React.FC = () => {
                 <>
                     <span className="text-2xl font-medium">Contestants</span>
 
-                    <div className="px-5 border-1 rounded-sm bg-white shadow-xl " >
-                        <div className="container mx-auto pt-2 w-80 mx-auto flex justify-center items-center min-h-[200px]">
-                            <Spinner variant="default" className="w-8 h-8 text-primary" />
-                        </div>
-                    </div >
+                    <div className="flex container space-x-2 mx-auto pt-5 w-full justify-center items-center min-h-[300px]">
+                        <Spinner variant="default" className="w-8 h-8 text-primary" />
+                    </div>
                 </>
             );
         }
@@ -49,10 +47,12 @@ export const ContestantsTable: React.FC = () => {
             <>
                 <span className="text-2xl font-medium">Contestants</span>
 
-                <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
-                    <div className="container mx-auto pt-2 w-80 min-h-[200px]">
-                        <DataTable columns={ContestantColums} data={rows} showPagination={false} />
-                    </div>
+                <div className="container mx-auto py-5 w-full">
+                    <DataTable
+                        columns={ContestantColums}
+                        data={rows}
+                        showPagination={false}
+                    />
                 </div>
             </>
         );
@@ -62,4 +62,4 @@ export const ContestantsTable: React.FC = () => {
             {loadContent()}
         </div >
     )
-}
+};

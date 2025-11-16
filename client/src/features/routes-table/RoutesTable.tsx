@@ -2,7 +2,7 @@ import type { Route } from "@/models/route";
 import { routeColumns } from "./RouteColumns";
 import React, { useContext, useEffect, useState } from "react";
 import { DataRow, DataTable } from "@/components/ui/table";
-import { Plus } from "lucide-react";
+import { Plus, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getRoutesById, saveRoutes } from "@/services/routeService";
 import { CompContext } from "@/components/layout/layout";
@@ -28,6 +28,7 @@ import { se } from "date-fns/locale";
 import { setDate } from "date-fns";
 import { Spinner } from "@/components/ui/loadingWheel";
 
+import { Arrow } from "@radix-ui/react-select";
 interface tableProps {
   isEdit: boolean;
   toggleEditing: (isSelected: boolean) => void;
@@ -45,6 +46,8 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const [date, setDate] = React.useState<Date | undefined>(undefined);
   //calendar date state
   const ctx = useContext(CompContext);
+  //clickable header
+  const [showRouteForm, setShowAddForm] = useState<boolean>(false);
 
   const temp = routeColumns.slice().splice(1);
 
@@ -69,6 +72,11 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
     }
   };
 
+  const handleShowAddForm = () => {
+    setShowAddForm(!showRouteForm);
+  };
+
+
   const handleUpdate = (rowIndex: number, columnId: string, value: unknown) => {
     setRows((old) => {
       const temp = old.map((row, index) =>
@@ -78,7 +86,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       return temp;
     });
   };
-
+  //adding a row function
   const addRow = () => {
     if (!selectedGrade || !selectedRouteColor || !date || !scoreValue) {
       alert("Please select a grade and color");
@@ -114,14 +122,109 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
     });
    */
   };
+
   const loadContent = () => {
     if (loading) {
       return (
         <>
-         <span className="text-2xl font-medium">Routes</span>
+          <span
+            className={`flex text-2xl font-medium px-4 py-2 block border-1 cursor-pointer gap-2 hover:bg-neutral-200`}
+            onClick={handleShowAddForm}
+          >
+            Routes
+            {showRouteForm ? <ArrowUp></ArrowUp> : <ArrowDown></ArrowDown>}
+          </span>
 
-          <div className="px-5 border-1 rounded-sm bg-white shadow-xl " >
-            <div className="mx-auto w-175 flex justify-center items-center min-h-[400px]">
+          <div
+            className="overflow-hidden transition-all duration-500 ease-in-out"
+            style={{
+              maxHeight: showRouteForm ? "100px" : "0",
+            }}
+          >
+            <div className=" border-1 rounded-sm bg-white shadow-xl ">
+              <div className="flex space-x-2 p-5 bg-neutral-200">
+                {/* ADD ROW COMPOENENT GOES HERE */}
+                <Select onValueChange={(value) => setSelectedGrade(value)}>
+                  <SelectTrigger className="w-[90px] bg-blue-800 text-white">
+                    <SelectValue placeholder="Grade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Grade</SelectLabel>
+                      <SelectItem value="v1">v1</SelectItem>
+                      <SelectItem value="v2">v2</SelectItem>
+                      <SelectItem value="v3">v3</SelectItem>
+                      <SelectItem value="v4">v4</SelectItem>
+                      <SelectItem value="v5">v5</SelectItem>
+                      <SelectItem value="v6">v6</SelectItem>
+                      <SelectItem value="v7">v7</SelectItem>
+                      <SelectItem value="v8">v8</SelectItem>
+                      <SelectItem value="v9">v9</SelectItem>
+                      <SelectItem value="v10">v10+</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+
+                <Select onValueChange={(value) => setSelectedRouteColor(value)}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Color" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Colors</SelectLabel>
+                      <SelectItem value="red">Red</SelectItem>
+                      <SelectItem value="blue">Blue</SelectItem>
+                      <SelectItem value="green">Green</SelectItem>
+                      <SelectItem value="yellow">Yellow</SelectItem>
+                      <SelectItem value="pink">Pink</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {/* Score*/}
+                <Input
+                  placeholder="ex.150"
+                  type="number"
+                  value={scoreValue}
+                  onChange={(e) => setScoreValue(e.target.value)}
+                  className="w-40 bg-neutral-100 border-neutral-200"
+                />
+                {/* Date*/}
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      id="date-picker"
+                      className="w-32 justify-between font-normal"
+                    >
+                      {date ? date.toLocaleDateString() : "Select date"}
+                      <ChevronDownIcon />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-auto overflow-hidden p-0"
+                    align="start"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      captionLayout="dropdown"
+                      onSelect={(date) => {
+                        setDate(date);
+                        setOpen(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+                {/* Add Button */}
+                <Button size="sm" onClick={addRow}>
+                  <Plus />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="px-5 border-1 rounded-sm bg-white shadow-xl min-h-[200px] flex justify-center items-center">
+            <div className="mx-auto pt-5 w-175 flex justify-center items-center">
               <Spinner variant="default" className="w-8 h-8 text-primary" />
             </div>
           </div>
@@ -130,96 +233,110 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
     }
     return (
       <>
-        <span className="text-2xl font-medium">Routes</span>
+        <span
+          className={`flex text-2xl font-medium px-4 py-2 block border-1 cursor-pointer gap-2 hover:bg-neutral-200`}
+          onClick={handleShowAddForm}
+        >
+          Routes
+          {showRouteForm ? <ArrowUp></ArrowUp> : <ArrowDown></ArrowDown>}
+        </span>
+
+        <div
+          className="overflow-hidden transition-all duration-500 ease-in-out"
+          style={{
+            maxHeight: showRouteForm ? "100px" : "0",
+          }}
+        >
+          <div className=" border-1 rounded-sm bg-white shadow-xl ">
+            <div className="flex space-x-2 p-5 bg-neutral-200">
+              {/* ADD ROW COMPOENENT GOES HERE */}
+              <Select onValueChange={(value) => setSelectedGrade(value)}>
+                <SelectTrigger className="w-[90px] bg-blue-800 text-white">
+                  <SelectValue placeholder="Grade" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Grade</SelectLabel>
+                    <SelectItem value="v1">v1</SelectItem>
+                    <SelectItem value="v2">v2</SelectItem>
+                    <SelectItem value="v3">v3</SelectItem>
+                    <SelectItem value="v4">v4</SelectItem>
+                    <SelectItem value="v5">v5</SelectItem>
+                    <SelectItem value="v6">v6</SelectItem>
+                    <SelectItem value="v7">v7</SelectItem>
+                    <SelectItem value="v8">v8</SelectItem>
+                    <SelectItem value="v9">v9</SelectItem>
+                    <SelectItem value="v10">v10+</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              <Select onValueChange={(value) => setSelectedRouteColor(value)}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Color" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Colors</SelectLabel>
+                    <SelectItem value="red">Red</SelectItem>
+                    <SelectItem value="blue">Blue</SelectItem>
+                    <SelectItem value="green">Green</SelectItem>
+                    <SelectItem value="yellow">Yellow</SelectItem>
+                    <SelectItem value="pink">Pink</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {/* Score*/}
+              <Input
+                placeholder="ex.150"
+                type="number"
+                value={scoreValue}
+                onChange={(e) => setScoreValue(e.target.value)}
+                className="w-40 bg-neutral-100 border-neutral-200"
+              />
+              {/* Date*/}
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    id="date-picker"
+                    className="w-32 justify-between font-normal"
+                  >
+                    {date ? date.toLocaleDateString() : "Select date"}
+                    <ChevronDownIcon />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto overflow-hidden p-0"
+                  align="start"
+                >
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    captionLayout="dropdown"
+                    onSelect={(date) => {
+                      setDate(date);
+                      setOpen(false);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+              {/* Add Button */}
+              <Button size="sm" onClick={addRow}>
+                <Plus />
+              </Button>
+            </div>
+          </div>
+        </div>
 
         <div className="px-5 border-1 rounded-sm bg-white shadow-xl ">
-          <div className="flex space-x-2 pt-5">
-            {/* ADD ROW COMPOENENT GOES HERE */}
-            <Select onValueChange={(value) => setSelectedGrade(value)}>
-              <SelectTrigger className="w-[90px] bg-blue-800 text-white">
-                <SelectValue placeholder="Grade" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Grade</SelectLabel>
-                  <SelectItem value="v1">v1</SelectItem>
-                  <SelectItem value="v2">v2</SelectItem>
-                  <SelectItem value="v3">v3</SelectItem>
-                  <SelectItem value="v4">v4</SelectItem>
-                  <SelectItem value="v5">v5</SelectItem>
-                  <SelectItem value="v6">v6</SelectItem>
-                  <SelectItem value="v7">v7</SelectItem>
-                  <SelectItem value="v8">v8</SelectItem>
-                  <SelectItem value="v9">v9</SelectItem>
-                  <SelectItem value="v10">v10+</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            <Select onValueChange={(value) => setSelectedRouteColor(value)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Color" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Colors</SelectLabel>
-                  <SelectItem value="red">Red</SelectItem>
-                  <SelectItem value="blue">Blue</SelectItem>
-                  <SelectItem value="green">Green</SelectItem>
-                  <SelectItem value="yellow">Yellow</SelectItem>
-                  <SelectItem value="pink">Pink</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {/* Score*/}
-            <Input
-              placeholder="ex.150"
-              type="number"
-              value={scoreValue}
-              onChange={(e) => setScoreValue(e.target.value)}
-              className="w-40 bg-neutral-100 border-neutral-200"
-            />
-            {/* Date*/}
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  id="date-picker"
-                  className="w-32 justify-between font-normal"
-                >
-                  {date ? date.toLocaleDateString() : "Select date"}
-                  <ChevronDownIcon />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-auto overflow-hidden p-0"
-                align="start"
-              >
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  captionLayout="dropdown"
-                  onSelect={(date) => {
-                    setDate(date);
-                    setOpen(false);
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
-            {/* Add Button */}
-            <Button size="sm" onClick={addRow}>
-              <Plus />
-            </Button>
-          </div>
-
-          <div className="mx-auto pt-5 w-175">
+          <div className="mx-auto pt-5 w-175 min-h-[300px]">
             <DataTable
               columns={routeColumns}
               data={rows}
               onUpdate={handleUpdate}
               onDeselect={(rowIndex, isSave) => {
                 // edit row was just canceled, revert row back to pre-edit state
-
 
                 setRows((old) =>
                   old.map((row, index) =>
@@ -240,6 +357,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       </>
     );
   }
+
   return (
     < div>
       {loadContent()}

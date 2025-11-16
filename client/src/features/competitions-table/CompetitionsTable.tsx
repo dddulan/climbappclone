@@ -87,21 +87,23 @@ export const CompetitionsTable: React.FC<tableProps> = ({
     if (loading) {
       return (
         <>
-          <span className="text-2xl font-medium">Competitions</span>
-
-          <div className="px-5 border-1 rounded-sm bg-white shadow-xl" >
-            <div className="mx-auto w-175 flex justify-center items-center min-h-[400px]">
+          <span className="text-2xl font-medium px-4 py-2 block border-1">
+            Competitions
+          </span>
+          <div className="px-5 border-1 rounded-sm bg-white shadow-xl min-h-[200px] flex justify-center items-center">
+            <div className="w-full pt-2 flex justify-center">
               <Spinner variant="default" className="w-8 h-8 text-primary" />
             </div>
           </div>
         </>
-
       );
     }
     return (
       <>
-        <span className="text-2xl font-medium">Competitions</span>
-        <div className="px-5 pb-6 border-1 rounded-sm bg-white shadow-xl">
+        <span className="text-2xl font-medium px-4 py-2 block border-1">
+          Competitions
+        </span>
+        <div className="px-5 border-1 rounded-sm bg-white shadow-xl">
           {/* <div className="space-x-2 pt-5">
           <Button
             onClick={toggleEditing}
@@ -142,7 +144,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({
           </Button>
         </div> */}
 
-          <div className="mx-auto pt-5 w-175">
+          <div className="w-full pt-2  min-h-[300px] ">
             <DataTable
               columns={competitionColumns}
               data={rows}
@@ -162,6 +164,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({
       </>
     );
   }
+
   return (
     < div>
       {loadContent()}
