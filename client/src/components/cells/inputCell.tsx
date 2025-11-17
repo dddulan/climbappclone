@@ -31,7 +31,6 @@ export function InputCell<TData>({
         onClick={(e) => {
           e.stopPropagation();
         }}
-        type="number"
       />
     );
   }

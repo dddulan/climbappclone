@@ -50,7 +50,6 @@ export function DateSelectCell<TData>({
             <Calendar
               mode="single"
               selected={new Date(value)}
-              disabled={{ before: new Date() }}
               captionLayout="dropdown"
               onSelect={(date) => {
                 table.options.meta?.updateData(

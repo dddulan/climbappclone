@@ -90,6 +90,8 @@ export const LogScore: React.FC = () => {
       });
 
     if (ctx?.comp.id) {
+      console.log(ctx?.comp.id);
+      
       getContestantsForComp(ctx?.comp.id)
         .then((res: Contestant[]) => {
           setContestants(res);

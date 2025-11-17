@@ -9,12 +9,6 @@ export const getAllContestants = async (): Promise<Contestant[]> => {
   return res.data;
 };
 
-// Upsert contestants
-export const saveContestants = async (contestants: Contestant[]) => {
-  const res = await axios.post("/contestants/saveContestants", contestants);
-  return res.data;
-};
-
 // Sign up a contestant to a competition
 export const signUpContestant = async (contestant: Contestant) => {
   const res = await axios.post("/contestants/signup", contestant);

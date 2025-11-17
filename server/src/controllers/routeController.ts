@@ -46,106 +46,34 @@ export const getRoutesForComp = async (
   }
 };
 
-export const saveRoutes = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const routes = req.body;
-  const newItems: any[] = [];
-  const existingItems: any[] = [];
-
-  routes.forEach((i) => {
-    if (i.id == 0) {
-      newItems.push(i);
-    } else {
-      existingItems.push(i);
-    }
-  });
-
-  let idx: number = 1;
-
-  try {
-    await pool.query("BEGIN");
-
-    //Insert new routes
-    if (newItems.length > 0) {
-      const insertValues: any[] = [];
-      const placeholders = newItems
-        .map((i) => {
-          const row = `($${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++})`;
-          insertValues.push(
-            i.name,
-            i.number,
-            i.grade,
-            i.color,
-            i.point_value,
-            i.set_date
-          );
-          return row;
-        })
-        .join(", ");
-
-      console.log(placeholders);
-      console.log(insertValues);
-
-      const insertSql = `
-        INSERT INTO routes (name, number, grade, color, point_value, set_date)
-        VALUES ${placeholders}
-        RETURNING id;
-      `;
-
-      await pool.query(insertSql, insertValues);
-    }
-
-    // Update existing routes
-    idx = 1;
-    if (existingItems.length > 0) {
-      const updateValues: any[] = [];
-      const placeholders = existingItems
-        .map((i) => {
-          const row = `($${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++})`;
-          updateValues.push(
-            i.id,
-            i.name,
-            i.number,
-            i.grade,
-            i.color,
-            i.point_value,
-            i.set_date
-          );
-          return row;
-        })
-        .join(", ");
-
-      const updateSql = `
-        INSERT INTO routes (id, name, number, grade, color, point_value, set_date)
-        VALUES ${placeholders}
-        ON CONFLICT (id) DO UPDATE
-        SET
-          name = EXCLUDED.name,
-          number = EXCLUDED.number,
-          grade = EXCLUDED.grade,
-          color = EXCLUDED.color,
-          point_value = EXCLUDED.point_value,
-          set_date = EXCLUDED.set_date;
-      `;
-
-      await pool.query(updateSql, updateValues);
-    }
-
-    await pool.query("COMMIT");
-    res.json({ message: "Success" });
-  } catch (err) {
-    res.status(500).json({ error: err });
-  }
-};
-
 export const createRoute = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const route = req.body;
-  console.log(route);
+
+  try {
+    const query = `
+        INSERT INTO routes (name, competition_id, number, grade, color, point_value, set_date)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING *;`;
+
+    const values = [
+      route.name,
+      route.competition_id,
+      route.number,
+      route.grade,
+      route.color,
+      route.point_value,
+      route.set_date,
+    ];
+
+    await pool.query(query, values);
+    res.json({ message: "Success" });
+  } catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 export const updateRoute = async (
@@ -169,6 +97,25 @@ export const updateRoute = async (
         route.point_value,
         route.set_date,
       ]
+    );
+
+    res.json({ message: "Success" });
+  } catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const deleteRoute = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+
+  try {
+    await pool.query(
+      `DELETE FROM routes
+       WHERE id = ${id}`
     );
 
     res.json({ message: "Success" });
