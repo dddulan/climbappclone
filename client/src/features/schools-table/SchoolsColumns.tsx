@@ -5,8 +5,8 @@ import type { School } from "@/models/school";
 // // import {} from;
 
 export const SchoolColums: ColumnDef<School>[] = [
-    {
-        accessorKey: "name",
-        header: "Name",
-    },
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
 ];

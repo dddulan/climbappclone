@@ -180,23 +180,24 @@ export const getContestantScores = async (
   }
 };
 
-export const saveSchool = async (
+export const createSchool = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const school = req.body;
-  const values = [school.name];
-  console.log(school);
-  
+
   try {
-    console.log("Look")
+    console.log("Look", school);
     const query = `
       INSERT INTO schools (name)
       VALUES ($1)
       RETURNING *;
     `;
-    const result = await pool.query(query, values);
-    res.json( result.rows[0] || { message: "Already exists" } );
+
+    const values = [school.name];
+
+    await pool.query(query, values);
+    res.json({ message: "Success" });
   } catch (err) {
     console.error("Error saving school:\n", err);
     res.status(500).json({ error: "Internal Server Error" });

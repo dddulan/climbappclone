@@ -29,9 +29,9 @@ export const getAllSchools = async (): Promise<School[]> => {
   return res.data;
 };
 
-// Saves School 
- export const saveSchool = async (school: School) => {
-  const res = await axios.post("/contestants/saveSchool", school);
+// Create a new School
+ export const createSchool = async (school: School) => {
+  let res = await axios.post("/contestants/createSchool", school);
   return res.data;
 };
 

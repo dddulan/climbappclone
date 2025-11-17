@@ -5,7 +5,7 @@ import {
   getAllSchools,
   getContestantsForComp,
   signUpContestant,
-  saveSchool,
+  createSchool,
   logScore,
   getLeaderboard,
   getContestantScores,
@@ -19,7 +19,7 @@ router.post("/save", saveContestants);
 router.post("/signup", signUpContestant);
 
 router.get("/getAllSchools", getAllSchools);
-router.get("/saveSchool", saveSchool);
+router.post("/createSchool", createSchool);
 
 router.post("/logScore", logScore);
 router.get("/getLeaderboard", getLeaderboard);
