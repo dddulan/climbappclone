@@ -1,7 +1,5 @@
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
-
 import {
   type ColumnDef,
   flexRender,
@@ -15,6 +13,8 @@ declare module "@tanstack/react-table" {
   interface TableMeta<TData extends unknown> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
     onDeselect: (rowIndex: number, isSave: boolean) => void;
+    // onCreate: () => void;
+    onDelete: () => void;
     isEdit: boolean;
   }
 }
@@ -103,6 +103,7 @@ interface DataTableProps<TData, TValue> {
   onRowClick?: (row: TData, isSelected: boolean) => void;
   onUpdate?: (rowIndex: number, columnId: string, value: unknown) => void;
   onDeselect?: (rowIndex: number, isSave: boolean) => void;
+  onDelete?: () => void;
   showPagination?: boolean;
 }
 
@@ -111,6 +112,7 @@ function DataTable<TData, TValue>({
   data,
   onUpdate,
   onDeselect,
+  onDelete,
   onRowClick,
   emptyMessage = "No data available.",
   isRouteSelected = false,
@@ -137,6 +139,9 @@ function DataTable<TData, TValue>({
       },
       onDeselect: (rowIndex: number, isSave: boolean) => {
         onDeselect?.(rowIndex, isSave);
+      },
+      onDelete: () => {
+        onDelete?.();
       },
       isEdit,
     },
@@ -178,7 +183,10 @@ function DataTable<TData, TValue>({
                       if (table.getIsSomeRowsSelected()) {
                         // another row is selected
                         row.toggleSelected();
-                        table.options.meta?.onDeselect(row.index, false);
+                        table.options.meta?.onDeselect(
+                          table.getSelectedRowModel().rows[0].index,
+                          false
+                        );
                       } else {
                         // another row is not selected
                         row.toggleSelected();
@@ -251,58 +259,8 @@ function DataTable<TData, TValue>({
   );
 }
 
-function DataRow<TData, TValue>({
-  columns,
-  data,
-  onUpdate,
-  isEdit = false,
-}: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-
-    autoResetPageIndex: false,
-    meta: {
-      updateData: (rowIndex: number, columnId: string, value: unknown) => {
-        onUpdate?.(rowIndex, columnId, value);
-      },
-      onDeselect: () => {},
-      isEdit,
-    },
-  });
-
-  return (
-    <div>
-      <div className="flex overflow-hidden rounded-md overflow-x-auto">
-        <Table>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                onClick={() => {
-                  row.toggleSelected();
-                }}
-                className="cursor-pointer data-[state=selected]:bg-muted "
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-2">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
-  );
-}
-
 export {
   DataTable,
-  DataRow,
   Table,
   TableHeader,
   TableBody,

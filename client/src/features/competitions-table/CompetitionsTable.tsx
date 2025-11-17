@@ -1,17 +1,31 @@
 import type { Competition } from "@/models/competition";
-import { competitionColumns } from "./CompetitionColumns";
+import { competitionColumns, competitionTypeList } from "./CompetitionColumns";
 import React, { useContext, useEffect, useState } from "react";
-import { DataRow, DataTable } from "@/components/ui/table";
+import { DataTable } from "@/components/ui/table";
 import {
+  createCompetition,
   getAllCompetitions,
-  saveCompetitions,
 } from "@/services/competitionService";
-import { CircleX, Plus, Save, SquarePen } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { CompContext } from "@/components/layout/layout";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
-
-
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ChevronDownIcon, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
 
 interface tableProps {
   isSelected: boolean;
@@ -26,6 +40,9 @@ export const CompetitionsTable: React.FC<tableProps> = ({
 }) => {
   const [competitions, setCompetitions] = useState<Competition[]>([]); // original copy of competitions, update when user saves any edits
   const [rows, setRows] = useState<Competition[]>([]); // rows for data table
+  const [compType, setCompType] = useState<string>("");
+  const [open, setOpen] = React.useState(false); //calendar open state
+  const [date, setDate] = React.useState<string>("");
   const ctx = useContext(CompContext);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -35,6 +52,8 @@ export const CompetitionsTable: React.FC<tableProps> = ({
 
   const loadData = () => {
     setLoading(true);
+    console.log("LOOK ", ctx);
+
     getAllCompetitions()
       .then((res: Competition[]) => {
         setCompetitions(res);
@@ -56,32 +75,20 @@ export const CompetitionsTable: React.FC<tableProps> = ({
     );
   };
 
-  // // save changes locally, and save to API
-  // const handleSaveClick = () => {
-  //   setCompetitions(rows);
-  //   toggleEditing();
-  //   console.log("SAVE", rows);
-
-  //   saveCompetitions(rows);
-  // };
-
-  // // reset table rows when user cancels during edit
-  // const handleCancelClick = () => {
-  //   setRows(competitions);
-  //   toggleEditing();
-  // };
-
   const addRow = () => {
-    const blankRow: Competition = {
+    console.log(date);
+    console.log(compType);
+
+    const newComp: Competition = {
       id: 0,
-      date_of: "",
-      type: "",
-      is_active: false,
+      date_of: date,
+      type: compType,
     };
 
-    setRows([...rows, blankRow]);
+    createCompetition(newComp).then(() => {
+      loadData();
+    });
   };
-
 
   const loadContent = () => {
     if (loading) {
@@ -104,55 +111,77 @@ export const CompetitionsTable: React.FC<tableProps> = ({
           Competitions
         </span>
         <div className="px-5 border-1 rounded-sm bg-white shadow-xl">
-          {/* <div className="space-x-2 pt-5">
-          <Button
-            onClick={toggleEditing}
-            className={`${isEdit ? "hidden" : ""}`}
-            size="sm"
-          >
-            <SquarePen />
-            Edit
-          </Button>
+          <div className="flex space-x-2 pt-5">
+            {/* Date */}
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="date-picker"
+                  className="w-32 justify-between font-normal"
+                >
+                  {date ? format(date, "MM/dd/yyyy") : "Select date"}
+                  <ChevronDownIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  // selected={new Date(date)}
+                  captionLayout="dropdown"
+                  onSelect={(date) => {
+                    setDate(format(date as Date, "MM/dd/yyyy"));
+                    setOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
 
-          <Button
-            size="sm"
-            className={`${!isEdit ? "hidden" : ""}`}
-            onClick={addRow}
-          >
-            <Plus />
-            Add
-          </Button>
+            {/* Type */}
+            <Select onValueChange={(value) => setCompType(value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                {competitionTypeList.map((type, index) => (
+                  <SelectItem key={index} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          <Button
-            size="sm"
-            onClick={handleSaveClick}
-            className={`${
-              isEdit ? "bg-green-600" : "hidden"
-            } hover:bg-green-700`}
-          >
-            <Save />
-            Save
-          </Button>
+            {/* Add Button */}
+            <Button size="sm" onClick={addRow}>
+              <Plus />
+            </Button>
+          </div>
 
-          <Button
-            onClick={handleCancelClick}
-            size="sm"
-            className={`${isEdit ? "bg-red-500" : "hidden"} hover:bg-red-800`}
-          >
-            <CircleX />
-            Cancel
-          </Button>
-        </div> */}
-
+          {/* Competitions Table */}
           <div className="w-full pt-2  min-h-[300px] ">
             <DataTable
               columns={competitionColumns}
               data={rows}
+              onDeselect={(rowIndex, isSave) => {
+                // edit row was just canceled, revert row back to pre-edit state
+                setRows((old) =>
+                  old.map((row, index) =>
+                    // search rows until we find rowIndex
+                    index === rowIndex && !isSave ? competitions[index] : row
+                  )
+                );
+
+                // toggleEditing(false);
+              }}
               onUpdate={handleUpdate}
+              onDelete={() => {
+                loadData();
+              }}
               onRowClick={(row) => {
                 if (!isSelected) {
-                  //onCompSelect(row.id);
-
                   ctx?.setComp(row);
                 }
               }}
@@ -163,11 +192,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({
         </div>
       </>
     );
-  }
+  };
 
-  return (
-    < div>
-      {loadContent()}
-    </div >
-  )
+  return <div>{loadContent()}</div>;
 };

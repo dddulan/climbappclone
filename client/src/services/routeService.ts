@@ -15,20 +15,20 @@ export const getRoutesForComp = async (
   return res.data;
 };
 
-// Upsert Routes
-export const saveRoutes = async(routes: Route[]) => {
-  let res = await axios.post('/routes/save', routes);
-  return res.data;
-}
-
 // Create a new route
 export const createRoute = async(route: Route) => {
   let res = await axios.post('/routes/createRoute', route);
   return res.data;
 }
 
-// Update an existing Route by id
+// Update an existing Route
 export const updateRoute = async(route: Route) => {
   let res = await axios.post('/routes/updateRoute', route);
+  return res.data;
+}
+
+// Delete an existing Route by id
+export const deleteRoute = async(route_id: Number) => {
+    let res = await axios.delete('/routes/deleteRoute/' + route_id);
   return res.data;
 }
