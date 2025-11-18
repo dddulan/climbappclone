@@ -3,12 +3,12 @@ import type { Route } from "@/models/route";
 import { DropdownCell } from "@/components/cells/dropdownCell";
 import { DateSelectCell } from "@/components/cells/dateSelectCell";
 import { InputCell } from "@/components/cells/inputCell";
-import { CircleX, Save } from "lucide-react";
+import { CircleX, Trash2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { updateRoute } from "@/services/routeService";
+import { deleteRoute, updateRoute } from "@/services/routeService";
 
 // for all dropdown selects
-const gradeList: string[] = [
+export const gradeList: string[] = [
   "v0",
   "v1",
   "v2",
@@ -23,7 +23,7 @@ const gradeList: string[] = [
   "v11",
   "v12",
 ];
-const colorList: string[] = [
+export const colorList: string[] = [
   "red",
   "green",
   "blue",
@@ -36,11 +36,30 @@ const colorList: string[] = [
 ];
 
 export const routeColumns: ColumnDef<Route>[] = [
+  // {
+  //   id: "routeNum",
+  //   header: "#",
+  //   cell: ({ row }) => {
+  //     return <span>{row.index + 1}</span>;
+  //   },
+  // },
   {
-    id: "routeNum",
-    header: "#",
-    cell: ({ row }) => {
-      return <span>{row.index + 1}</span>;
+    accessorKey: "number",
+    header: "Number",
+    cell: ({ row, table }) => {
+      const isSelected = row.getIsSelected();
+      const value = row.getValue("number") as string;
+
+      return (
+        <InputCell
+          rowIndex={row.index}
+          columnName="number"
+          value={value}
+          table={table}
+          isEdit={isSelected}
+          width="w-15"
+        />
+      );
     },
   },
   {
@@ -131,7 +150,6 @@ export const routeColumns: ColumnDef<Route>[] = [
       };
 
       const handleSaveClick = () => {
-        console.log("SAVE", row.original);
         updateRoute(row.original as Route);
 
         // deselect the row after saving
@@ -139,8 +157,17 @@ export const routeColumns: ColumnDef<Route>[] = [
         table.options.meta?.onDeselect(Number(row.id), true);
       };
 
+      const handleDeleteClick = () => {
+        deleteRoute(row.original.id)
+          .then(() => {
+            handleCancelClick();
+            table.options.meta?.onDelete();
+          })
+          .catch(console.error);
+      };
+
       return (
-        <div className="space-x-3">
+        <div className="space-x-3 ml-2">
           <Button
             size="icon"
             className={`${
@@ -150,15 +177,26 @@ export const routeColumns: ColumnDef<Route>[] = [
           >
             <Save />
           </Button>
-          {/* <Button
+
+          <Button
+            size="icon"
+            className={`${
+              isSelected ? "" : "hidden"
+            } size-6 !p-0 bg-gray-500 hover:bg-gray-800`}
+            onClick={handleCancelClick}
+          >
+            <CircleX />
+          </Button>
+
+          <Button
             size="icon"
             className={`${
               isSelected ? "" : "hidden"
             } size-6 !p-0 bg-red-500 hover:bg-red-800`}
-            onClick={handleCancelClick}
+            onClick={handleDeleteClick}
           >
-            <CircleX />
-          </Button> */}
+            <Trash2 />
+          </Button>
         </div>
       );
     },

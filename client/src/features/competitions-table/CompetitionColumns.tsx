@@ -2,12 +2,15 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Competition } from "@/models/competition";
 import { DropdownCell } from "@/components/cells/dropdownCell";
 import { DateSelectCell } from "@/components/cells/dateSelectCell";
-import { Checkbox } from "@/components/ui/checkbox";
-import { CompContext } from "@/components/layout/layout";
-import { useContext } from "react";
+import { Button } from "@/components/ui/button";
+import { CircleX, Save, Trash2 } from "lucide-react";
+import {
+  deleteCompetition,
+  updateCompetition,
+} from "@/services/competitionService";
 
 // for type dropdown
-const competitionTypeList: string[] = ["Boulder", "Top Rope", "Both"];
+export const competitionTypeList: string[] = ["Boulder", "Top Rope", "Both"];
 
 export const competitionColumns: ColumnDef<Competition>[] = [
   {
@@ -21,7 +24,7 @@ export const competitionColumns: ColumnDef<Competition>[] = [
     accessorKey: "date_of",
     header: "Date",
     cell: ({ row, table }) => {
-      const isEdit = table.options.meta?.isEdit ?? false;
+      const isSelected = row.getIsSelected();
       const value = row.getValue("date_of") as Competition["date_of"];
 
       return (
@@ -30,7 +33,7 @@ export const competitionColumns: ColumnDef<Competition>[] = [
           columnName="date_of"
           value={value}
           table={table}
-          isEdit={isEdit}
+          isEdit={isSelected}
         />
       );
     },
@@ -39,7 +42,7 @@ export const competitionColumns: ColumnDef<Competition>[] = [
     accessorKey: "type",
     header: "Type",
     cell: ({ row, table }) => {
-      const isEdit = table.options.meta?.isEdit ?? false;
+      const isSelected = row.getIsSelected();
       const value = row.getValue("type") as Competition["type"];
 
       return (
@@ -48,31 +51,72 @@ export const competitionColumns: ColumnDef<Competition>[] = [
           columnName="type"
           value={value}
           table={table}
-          isEdit={isEdit}
+          isEdit={isSelected}
           list={competitionTypeList}
         />
       );
     },
   },
-  // {
-  //   id: "select",
-  //   accessorKey: "is_active",
-  //   header: "Active",
-  //   cell: ({ row }) => {
-  //     console.log(row);
+  {
+    id: "actions",
+    cell: ({ row, table }) => {
+      const isSelected = row.getIsSelected();
 
-  //     return (
-  //       <Checkbox
-  //         onCheckedChange={(checked) => {
-  //           console.log("AY YOOOO ", checked);
-  //           if (checked) {
-  //             row.toggleSelected();
-  //           }
+      const handleCancelClick = () => {
+        row.toggleSelected();
+        table.options.meta?.onDeselect(Number(row.id), false);
+      };
 
-  //         }}
-  //         defaultChecked={row.original.is_active}
-  //       />
-  //     );
-  //   },
-  // },
+      const handleSaveClick = () => {
+        updateCompetition(row.original as Competition);
+
+        // deselect the row after saving
+        row.toggleSelected();
+        table.options.meta?.onDeselect(Number(row.id), true);
+      };
+
+      const handleDeleteClick = () => {
+        deleteCompetition(row.original.id)
+          .then(() => {
+            handleCancelClick();
+            table.options.meta?.onDelete();
+          })
+          .catch(console.error);
+      };
+
+      return (
+        <div className="space-x-3 ml-2">
+          <Button
+            size="icon"
+            className={`${
+              isSelected ? "" : "hidden"
+            } size-6 !p-0 bg-green-600 hover:bg-green-700`}
+            onClick={handleSaveClick}
+          >
+            <Save />
+          </Button>
+
+          <Button
+            size="icon"
+            className={`${
+              isSelected ? "" : "hidden"
+            } size-6 !p-0 bg-gray-500 hover:bg-gray-800`}
+            onClick={handleCancelClick}
+          >
+            <CircleX />
+          </Button>
+
+          <Button
+            size="icon"
+            className={`${
+              isSelected ? "" : "hidden"
+            } size-6 !p-0 bg-red-500 hover:bg-red-800`}
+            onClick={handleDeleteClick}
+          >
+            <Trash2 />
+          </Button>
+        </div>
+      );
+    },
+  },
 ];

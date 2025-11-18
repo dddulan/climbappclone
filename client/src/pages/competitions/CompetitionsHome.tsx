@@ -26,7 +26,7 @@ const CompetitionsHome: React.FC = () => {
                 //   setCompId(selected);
                 // }}
                 isSelected={isSelected}
-                //toggleEditing={toggleEditing}
+              //toggleEditing={toggleEditing}
               ></CompetitionsTable>
             </div>
           </div>

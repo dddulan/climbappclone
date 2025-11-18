@@ -7,8 +7,20 @@ export const getAllCompetitions = async (): Promise<Competition[]> => {
   return res.data;
 };
 
-// Upsert competitions
-export const saveCompetitions = async (competitions: Competition[]) => {
-  let res = await axios.post("/competitions/save", competitions);
+// Create a new Competition
+export const createCompetition = async (competition: Competition) => {
+  let res = await axios.post("/competitions/createCompetition", competition);
   return res.data;
 };
+
+// Update an existing Competition
+export const updateCompetition = async(competition: Competition) => {
+  let res = await axios.post('/competitions/updateCompetition', competition);
+  return res.data;
+}
+
+// Delete an existing Competition by id
+export const deleteCompetition = async(comp_id: Number) => {
+  let res = await axios.delete('/competitions/deleteCompetition/' + comp_id);
+  return res.data;
+}
