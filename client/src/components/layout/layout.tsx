@@ -138,7 +138,7 @@ export const Layout = () => {
                 <Alert variant="destructive">
                   <AlertTitle>Wrong Password</AlertTitle>
                   <AlertDescription>
-                    <p>Youve been a really bad boy</p>
+                    <p>Please Try Again</p>
                     <ul className="list-inside list-disc text-sm"></ul>
                   </AlertDescription>
                 </Alert>

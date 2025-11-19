@@ -23,6 +23,7 @@ export const ScoreTable: React.FC<ScoreTableProps> = ({
           setRows(sortedByPoints);
         })
         .catch(console.error);
+        
     }
   }, [contestantId, compId]);
 
@@ -30,7 +31,7 @@ export const ScoreTable: React.FC<ScoreTableProps> = ({
     <div className="container mx-auto  w-90 ">
       <DataTable
         columns={ScoreColumn}
-        data={rows.slice(0, 3)}
+        data={rows}
         showPagination={false}
       />
     </div>

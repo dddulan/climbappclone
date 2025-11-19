@@ -115,8 +115,10 @@ export const SignUpForm: React.FC = () => {
     if (loading) {
       return (
         <>
+        
           <Toaster />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
             {/* Registration Form - LEFT SIDE */}
             <Card className="bg-white shadow-lg rounded-xl border border-gray-100">
               <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
@@ -242,6 +244,25 @@ export const SignUpForm: React.FC = () => {
     }
     return (
       <>
+        {/* Hero Banner */}
+        <div className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-lg p-6 mb-6 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold mb-1">Join the Competition! </h1>
+              <p className="text-green-100 text-sm">Register now and start climbing</p>
+            </div>
+            <div className="hidden md:flex items-center gap-6 text-sm">
+              <div className="text-center">
+                <p className="text-xl font-bold">{rows.length}</p>
+                <p className="text-xs text-green-100">Registered</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-bold">{schools.length}</p>
+                <p className="text-xs text-green-100">Schools</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <Toaster />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Registration Form - LEFT SIDE */}

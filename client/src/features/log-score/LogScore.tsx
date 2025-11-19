@@ -57,6 +57,13 @@ export const LogScore: React.FC = () => {
 
   React.useEffect(() => {
     const loadData = () => {
+
+      //when the comp changes reset all selections
+      setSelectedSchool("");
+      setSelectedContestants("");
+      setSelectedRouteID("");
+      setSelectedAttempt("");
+
       if (comp.id) {
         getSchoolsForComp(comp.id)
           .then((res: School[]) => {
@@ -77,6 +84,8 @@ export const LogScore: React.FC = () => {
             setRoutes(res);
           })
           .catch(console.error);
+        
+
       }
     };
 
@@ -115,7 +124,7 @@ export const LogScore: React.FC = () => {
     }
 
     const newScore: Score = {
-      id: 0,
+      id: Number(route.color),
       contestant_id: Number(selectedContestants),
       route_id: Number(selectedRouteID),
       attempt: Number(selectedAttempt),
@@ -143,6 +152,30 @@ export const LogScore: React.FC = () => {
     return (
       <div className="w-full">
         <Toaster position="top-center" />
+
+        {/* Hero Banner */}
+        <div className="bg-gradient-to-r from-emerald-600 to-blue-600 rounded-lg p-6 mb-6 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold mb-1">Log your Score </h1>
+              <p className="text-green-100 text-sm">Enter your route information</p>
+            </div>
+            <div className="hidden md:flex items-center gap-6 text-sm">
+              <div className="text-center">
+                <p className="text-xl font-bold">{contestants.length}</p>
+                <p className="text-xs text-green-100">Climbers</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-bold">{schools.length}</p>
+                <p className="text-xs text-green-100">Schools</p>
+              </div>
+                            <div className="text-center">
+                <p className="text-xl font-bold">{routes.length}</p>
+                <p className="text-xs text-green-100">Routes</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <Card className="w-full text-lg bg-white shadow-lg rounded-xl border border-gray-100">
           <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
@@ -247,7 +280,7 @@ export const LogScore: React.FC = () => {
                   <SelectContent>
                     {routes.map((route, index) => (
                       <SelectItem key={index} value={route.id.toString()}>
-                        {route.id} - {route.color} - {route.grade}
+                        {route.number} - {route.color} - {route.grade}
                       </SelectItem>
                     ))}
                   </SelectContent>

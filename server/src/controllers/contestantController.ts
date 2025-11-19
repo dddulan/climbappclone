@@ -164,6 +164,8 @@ export const getContestantRoutes = async (req: Request, res: Response): Promise<
         r.id,
         r.name,
         r.number,
+        r.color,
+        r.grade,
         s.attempt,
         (r.point_value - ((s.attempt - 1) * 50)) AS points_earned
       FROM scores s
