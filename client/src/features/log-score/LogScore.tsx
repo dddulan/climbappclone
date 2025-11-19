@@ -137,7 +137,6 @@ export const LogScore: React.FC = () => {
     };
     try {
       await logScore(newScore);
-      console.log(" Score sent successfully");
       //fetch updated scores for the contestant
       const updatedScores = await getContestantRoutes(comp.id,Number(selectedContestants));
       //set score table display

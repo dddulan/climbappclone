@@ -12,11 +12,7 @@ export const ScoreColumn: ColumnDef<Score>[] = [
   },
     {
     accessorKey: "grade",
-    header: "Grade",
-  },
-  {
-    accessorKey: "attempt",
-    header: "Attempt",
+    header: "Grade"
   },
   {
     accessorKey: "points_earned",

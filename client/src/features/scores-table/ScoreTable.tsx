@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { DataTable } from "@/components/ui/table";
 import { ScoreColumn } from "./ScoreColumn";
 import type { Score } from "@/models/score";
-import { getContestantRoutes } from "@/services/contestantService";
 interface ScoreTableProps {
   data: Score[];
   contestantId?: number;
@@ -21,7 +20,7 @@ export const ScoreTable: React.FC<ScoreTableProps> = ({
   }, [data]);
 
   return (
-    <div className="container mx-auto  w-90 ">
+    <div>
       <DataTable columns={ScoreColumn} data={rows.slice(0,3)} showPagination={false} />
     </div>
   );

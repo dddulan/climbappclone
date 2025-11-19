@@ -27,7 +27,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm bg-white", className)}
+        className={cn("w-full caption-bottom text-sm bg-transparent", className)}
         {...props}
       />
     </div>
