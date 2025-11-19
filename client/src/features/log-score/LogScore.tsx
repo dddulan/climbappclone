@@ -21,6 +21,7 @@ import {
   getContestantsForComp,
   logScore,
   getSchoolsForComp,
+  getContestantRoutes,
 } from "@/services/contestantService";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
@@ -48,13 +49,14 @@ export const LogScore: React.FC = () => {
   const [selectedAttempt, setSelectedAttempt] = useState<string>("");
   const [selectedRouteID, setSelectedRouteID] = useState<string>("");
   const [selectedContestants, setSelectedContestants] = useState<string>("");
-
+  const [displayScores, setDisplayScores] = useState<Score[]>([]);
   const { comp } = useCompetition();
   //timer for progress bar and dialog
   const [open, setOpen] = React.useState(false);
   const timer = React.useRef<NodeJS.Timeout | undefined>(undefined);
   const [progress, setProgress] = React.useState(13);
 
+  //load schools, contestants, routes when comp changes
   React.useEffect(() => {
     const loadData = () => {
 
@@ -92,6 +94,7 @@ export const LogScore: React.FC = () => {
     loadData();
   }, [comp.id]);
 
+  //progress bar and dialog effect
   React.useEffect(() => {
     if (open) {
       setProgress(0);
@@ -104,13 +107,16 @@ export const LogScore: React.FC = () => {
           setOpen(false);
         }
       }, 100);
-    }
 
+    }
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
   }, [open]);
 
+
+
+//submit handler
   const onSubmit = async () => {
     // Check if all fields are filled
     if (
@@ -122,9 +128,9 @@ export const LogScore: React.FC = () => {
       toast("Please fill in all fields");
       return;
     }
-
+  //construct score object
     const newScore: Score = {
-      id: Number(route.color),
+      id: Number(0),
       contestant_id: Number(selectedContestants),
       route_id: Number(selectedRouteID),
       attempt: Number(selectedAttempt),
@@ -132,18 +138,18 @@ export const LogScore: React.FC = () => {
     try {
       await logScore(newScore);
       console.log(" Score sent successfully");
+      //fetch updated scores for the contestant
+      const updatedScores = await getContestantRoutes(comp.id,Number(selectedContestants));
+      //set score table display
+      setDisplayScores(updatedScores);
     } catch (err) {
       console.error(" Failed to send score:", err);
     }
-    console.log("compid" + comp.id);
-    console.log("selected route ID " + selectedRouteID);
-    console.log("contestants" + selectedContestants);
-    console.log("attempt " + selectedAttempt);
+ 
 
     // Here you would typically send newContestant to your backend API
 
     console.log(newScore);
-
     setOpen(true);
     timer.current = setTimeout(() => setOpen(false), 5000);
   };
@@ -207,10 +213,10 @@ export const LogScore: React.FC = () => {
                   value={selectedSchool}
                   onValueChange={setSelectedSchool}
                 >
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a School" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent >
                     {schools.map((school, index) => (
                       <SelectItem key={index} value={school.id.toString()}>
                         {school.name}
@@ -341,6 +347,7 @@ export const LogScore: React.FC = () => {
                     Here are your top 3 scores:
                     <div className="mt-4">
                       <ScoreTable
+                        data={displayScores}
                         compId={comp?.id}
                         contestantId={Number(selectedContestants)}
                       />
