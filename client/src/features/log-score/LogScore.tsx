@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -19,13 +19,13 @@ import {
 import { School as SchoolIcon, User, Mountain, Hash } from "lucide-react";
 import {
   getContestantsForComp,
-  getAllSchools,
   logScore,
+  getSchoolsForComp,
+  getContestantRoutes,
 } from "@/services/contestantService";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
 import { toast, Toaster } from "sonner";
-import { CompContext } from "@/components/layout/layout";
 import { getRoutesForComp } from "@/services/routeService";
 import type { Route } from "@/models/route";
 import type { Score } from "@/models/score";
@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScoreTable } from "@/features/scores-table/ScoreTable";
 import { Progress } from "@/components/ui/progress";
+import { useCompetition } from "@/hooks/useCompetition";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 export const LogScore: React.FC = () => {
@@ -48,16 +49,53 @@ export const LogScore: React.FC = () => {
   const [selectedAttempt, setSelectedAttempt] = useState<string>("");
   const [selectedRouteID, setSelectedRouteID] = useState<string>("");
   const [selectedContestants, setSelectedContestants] = useState<string>("");
-  const ctx = useContext(CompContext)!;
-  const [loading, setLoading] = useState<boolean>(false);
-
+  const [displayScores, setDisplayScores] = useState<Score[]>([]);
+  const { comp } = useCompetition();
   //timer for progress bar and dialog
   const [open, setOpen] = React.useState(false);
   const timer = React.useRef<NodeJS.Timeout | undefined>(undefined);
   const [progress, setProgress] = React.useState(13);
 
+  //load schools, contestants, routes when comp changes
   React.useEffect(() => {
+    const loadData = () => {
+
+      //when the comp changes reset all selections
+      setSelectedSchool("");
+      setSelectedContestants("");
+      setSelectedRouteID("");
+      setSelectedAttempt("");
+
+      if (comp.id) {
+        getSchoolsForComp(comp.id)
+          .then((res: School[]) => {
+            setSchools(res);
+          })
+          .catch(console.error);
+      }
+
+      if (comp.id) {
+        getContestantsForComp(comp.id)
+          .then((res: Contestant[]) => {
+            setContestants(res);
+          })
+          .catch(console.error);
+
+        getRoutesForComp(comp.id)
+          .then((res: Route[]) => {
+            setRoutes(res);
+          })
+          .catch(console.error);
+        
+
+      }
+    };
+
     loadData();
+  }, [comp.id]);
+
+  //progress bar and dialog effect
+  React.useEffect(() => {
     if (open) {
       setProgress(0);
       let elapsed = 0;
@@ -69,231 +107,80 @@ export const LogScore: React.FC = () => {
           setOpen(false);
         }
       }, 100);
-    }
 
+    }
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
   }, [open]);
 
-  const loadData = () => {
-    setLoading(true);
-    getAllSchools()
-      .then((res: School[]) => {
-        setSchools(res);
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
 
-    if (ctx?.comp.id) {
-      console.log(ctx?.comp.id);
-      
-      getContestantsForComp(ctx?.comp.id)
-        .then((res: Contestant[]) => {
-          setContestants(res);
-        })
-        .catch(console.error);
 
-      getRoutesForComp(ctx?.comp.id)
-        .then((res: Route[]) => {
-          setRoutes(res);
-        })
-        .catch(console.error);
-    }
-  };
-
+//submit handler
   const onSubmit = async () => {
     // Check if all fields are filled
-    if (!selectedSchool || !contestants || !routes || !selectedAttempt) {
+    if (
+      !selectedSchool ||
+      !selectedContestants ||
+      !selectedRouteID ||
+      !selectedAttempt
+    ) {
       toast("Please fill in all fields");
       return;
     }
-
+  //construct score object
     const newScore: Score = {
-      id: 0,
+      id: Number(0),
       contestant_id: Number(selectedContestants),
       route_id: Number(selectedRouteID),
       attempt: Number(selectedAttempt),
     };
     try {
       await logScore(newScore);
-      console.log(" Score sent successfully");
+      //fetch updated scores for the contestant
+      const updatedScores = await getContestantRoutes(comp.id,Number(selectedContestants));
+      //set score table display
+      setDisplayScores(updatedScores);
     } catch (err) {
       console.error(" Failed to send score:", err);
     }
-    console.log("compid" + ctx?.comp.id);
-    console.log("selected route ID " + selectedRouteID);
-    console.log("contestants" + selectedContestants);
-    console.log("attempt " + selectedAttempt);
+ 
 
     // Here you would typically send newContestant to your backend API
 
     console.log(newScore);
-
     setOpen(true);
     timer.current = setTimeout(() => setOpen(false), 5000);
   };
 
   const loadContent = () => {
-    if (loading) {
-      return (
-        <div className="w-full">
-          <Toaster position="top-center" />
-
-          <Card className="w-full text-lg bg-white shadow-lg rounded-xl border border-gray-100">
-            <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
-              <CardTitle className="text-2xl font-bold text-gray-900">
-                Score Sheet
-              </CardTitle>
-              <CardDescription className="text-base mt-2">
-                {ctx?.comp.id ? (
-                  <span className="text-gray-700 font-medium">
-                    Competition on {ctx.comp.date_of}
-                  </span>
-                ) : (
-                  <span className="text-amber-600 font-medium">
-                    No active competition
-                  </span>
-                )}
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent>
-              <form className="flex flex-col gap-6">
-                {/* School */}
-                <div className="grid gap-2 ">
-                  <Label className="flex items-center gap-2">
-                    <SchoolIcon className="h-4 w-4 text-blue-600" />
-                    School
-                  </Label>
-                  <Select value={selectedSchool} onValueChange={setSelectedSchool}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select a School" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {schools.map((school, index) => (
-                        <SelectItem key={index} value={school.name}>
-                          {school.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Name */}
-                <div className="grid gap-2">
-                  <Label className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-purple-600" />
-                    Name
-                  </Label>
-                  <Select
-                    value={selectedContestants}
-                    onValueChange={setSelectedContestants}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select your Name" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {contestants.map((contestant, index) => (
-                        <SelectItem key={index} value={index.toString()}>
-                          {contestant.name} {contestant.id}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Route */}
-                <div className="grid gap-2">
-                  <Label className="flex items-center gap-2">
-                    <Mountain className="h-4 w-4 text-green-600" />
-                    Route
-                  </Label>
-                  <Select
-                    value={selectedRouteID}
-                    onValueChange={setSelectedRouteID}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a Route" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {routes.map((route, index) => (
-                        <SelectItem key={index} value={index.toString()}>
-                          {route.number}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Attempt */}
-                <div className="grid gap-2">
-                  <Label className="flex items-center gap-2">
-                    <Hash className="h-4 w-4 text-orange-600" />
-                    Attempt
-                  </Label>
-                  <Select
-                    value={selectedAttempt}
-                    onValueChange={setSelectedAttempt}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Attempt" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1</SelectItem>
-                      <SelectItem value="2">2</SelectItem>
-                      <SelectItem value="3">3+</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </form>
-            </CardContent>
-
-            <CardFooter className="flex flex-col gap-2">
-              <Button
-                onClick={onSubmit}
-                disabled={
-                  ctx?.comp.id == null ||
-                  !selectedSchool ||
-                  !selectedContestants ||
-                  !selectedRouteID ||
-                  !selectedAttempt
-                }
-                className="w-full"
-              >
-                Submit
-              </Button>
-              {/* DIALOG */}
-
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="sm:max-w-md ">
-                  <DialogHeader>
-                    <DialogTitle>Great Job!</DialogTitle>
-                    <DialogDescription>
-                      Your score has been logged.
-                      <ScoreTable />
-                    </DialogDescription>
-                    <DialogHeader className="flex items-center justify-center">
-                      <Progress value={progress} className="w-[60%]" />
-                    </DialogHeader>
-                  </DialogHeader>
-                  <div className="flex items-center gap-2">
-                    <div className="grid flex-1 gap-2"></div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </CardFooter>
-          </Card>
-        </div>
-      );
-    }
     return (
       <div className="w-full">
         <Toaster position="top-center" />
+
+        {/* Hero Banner */}
+        <div className="bg-gradient-to-r from-emerald-600 to-blue-600 rounded-lg p-6 mb-6 text-white shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold mb-1">Log your Score </h1>
+              <p className="text-green-100 text-sm">Enter your route information</p>
+            </div>
+            <div className="hidden md:flex items-center gap-6 text-sm">
+              <div className="text-center">
+                <p className="text-xl font-bold">{contestants.length}</p>
+                <p className="text-xs text-green-100">Climbers</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-bold">{schools.length}</p>
+                <p className="text-xs text-green-100">Schools</p>
+              </div>
+                            <div className="text-center">
+                <p className="text-xl font-bold">{routes.length}</p>
+                <p className="text-xs text-green-100">Routes</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <Card className="w-full text-lg bg-white shadow-lg rounded-xl border border-gray-100">
           <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
@@ -301,9 +188,9 @@ export const LogScore: React.FC = () => {
               Score Sheet
             </CardTitle>
             <CardDescription className="text-base mt-2">
-              {ctx?.comp.id ? (
+              {comp?.id ? (
                 <span className="text-gray-700 font-medium">
-                  Competition on {ctx.comp.date_of}
+                  Competition on {comp?.date_of}
                 </span>
               ) : (
                 <span className="text-amber-600 font-medium">
@@ -321,13 +208,16 @@ export const LogScore: React.FC = () => {
                   <SchoolIcon className="h-4 w-4 text-blue-600" />
                   School
                 </Label>
-                <Select value={selectedSchool} onValueChange={setSelectedSchool}>
-                  <SelectTrigger className="w-[180px]">
+                <Select
+                  value={selectedSchool}
+                  onValueChange={setSelectedSchool}
+                >
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a School" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent >
                     {schools.map((school, index) => (
-                      <SelectItem key={index} value={school.name}>
+                      <SelectItem key={index} value={school.id.toString()}>
                         {school.name}
                       </SelectItem>
                     ))}
@@ -344,16 +234,32 @@ export const LogScore: React.FC = () => {
                 <Select
                   value={selectedContestants}
                   onValueChange={setSelectedContestants}
+                  disabled={!selectedSchool}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your Name" />
+                    <SelectValue
+                      placeholder={
+                        selectedSchool ? "Name" : "Select a School first"
+                      }
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    {contestants.map((contestant, index) => (
-                      <SelectItem key={index} value={index.toString()}>
-                        {contestant.name} {contestant.id}
-                      </SelectItem>
-                    ))}
+                    {contestants
+                      .filter(
+                        (contestant) =>
+                          contestant.school_id === Number(selectedSchool)
+                      )
+                      .map(
+                        (contestant, index) =>
+                          contestant.id !== null && (
+                            <SelectItem
+                              key={index}
+                              value={contestant.id.toString()}
+                            >
+                              {contestant.name}
+                            </SelectItem>
+                          )
+                      )}
                   </SelectContent>
                 </Select>
               </div>
@@ -367,14 +273,19 @@ export const LogScore: React.FC = () => {
                 <Select
                   value={selectedRouteID}
                   onValueChange={setSelectedRouteID}
+                  disabled={!selectedSchool || !selectedContestants}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a Route" />
+                    <SelectValue
+                      placeholder={
+                        selectedContestants ? "Route" : "Select a Name first"
+                      }
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {routes.map((route, index) => (
-                      <SelectItem key={index} value={index.toString()}>
-                        {route.number}
+                      <SelectItem key={index} value={route.id.toString()}>
+                        {route.number} - {route.color} - {route.grade}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -390,9 +301,16 @@ export const LogScore: React.FC = () => {
                 <Select
                   value={selectedAttempt}
                   onValueChange={setSelectedAttempt}
+                  disabled={
+                    !selectedSchool || !selectedContestants || !selectedRouteID
+                  }
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Attempt" />
+                    <SelectValue
+                      placeholder={
+                        selectedRouteID ? "Attempt" : "Select a Route first"
+                      }
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="1">1</SelectItem>
@@ -408,7 +326,7 @@ export const LogScore: React.FC = () => {
             <Button
               onClick={onSubmit}
               disabled={
-                ctx?.comp.id == null ||
+                comp?.id == null ||
                 !selectedSchool ||
                 !selectedContestants ||
                 !selectedRouteID ||
@@ -423,12 +341,18 @@ export const LogScore: React.FC = () => {
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogContent className="sm:max-w-md ">
                 <DialogHeader>
-                  <DialogTitle>Great Job!</DialogTitle>
+                  <DialogTitle>Great Job! Your Score is Logged!</DialogTitle>
                   <DialogDescription>
-                    Your score has been logged.
-                    <ScoreTable />
+                    Here are your top 3 scores:
+                    <div className="mt-4">
+                      <ScoreTable
+                        data={displayScores}
+                        compId={comp?.id}
+                        contestantId={Number(selectedContestants)}
+                      />
+                    </div>
                   </DialogDescription>
-                  <DialogHeader className="flex items-center justify-center">
+                  <DialogHeader className="flex items-center justify-center mb-4 mt-6">
                     <Progress value={progress} className="w-[60%]" />
                   </DialogHeader>
                 </DialogHeader>
@@ -441,11 +365,7 @@ export const LogScore: React.FC = () => {
         </Card>
       </div>
     );
-  }
+  };
 
-  return (
-    < div>
-      {loadContent()}
-    </div >
-  )
+  return <div>{loadContent()}</div>;
 };

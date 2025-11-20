@@ -27,15 +27,20 @@ export const getContestantsForComp = async (
   const compId = req.params.id;
 
   try {
-    const result = await pool.query(`
-      SELECT 
-        c.name, 
-        c.gender, 
-        s.name AS school_name 
-      FROM contestants c 
+    const result = await pool.query(
+      `
+      SELECT
+        c.id,
+        c.name,
+        c.gender,
+        c.school_id,
+        s.name AS school_name
+      FROM contestants c
         INNER JOIN schools s ON s.id = c.school_id
-        INNER JOIN competitions co ON co.id = c.competition_id
-      WHERE co.id = ${compId}`);
+      WHERE c.competition_id = $1
+      ORDER BY c.name`,
+      [compId]
+    );
     res.json(result.rows);
   } catch (err) {
     console.error("Query error:", err);
@@ -49,6 +54,30 @@ export const getAllSchools = async (
 ): Promise<void> => {
   try {
     const result = await pool.query("SELECT * FROM schools");
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getSchoolsforComp = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const compId = req.params.id;
+
+  try {
+    const result = await pool.query(
+      ` 
+      SELECT DISTINCT s.id, s.name
+      FROM schools s
+      INNER JOIN contestants c ON c.school_id = s.id
+      WHERE c.competition_id = $1
+      ORDER BY s.name
+      `,
+      [compId]
+    );
     res.json(result.rows);
   } catch (err) {
     console.error("Query error:", err);
@@ -123,6 +152,34 @@ export const logScore = async (req: Request, res: Response): Promise<void> => {
     res.json({ message: "Success" });
   } catch (err) {
     res.status(500).json({ error: err });
+  }
+};
+
+export const getContestantRoutes = async (req: Request, res: Response): Promise<void>=>{
+  const {compId,contestantId} = req.params;
+  try{
+    const result = await pool.query(
+      `
+      SELECT
+        r.id,
+        r.name,
+        r.number,
+        r.color,
+        r.grade,
+        s.attempt,
+        (r.point_value - ((s.attempt - 1) * 50)) AS points_earned
+      FROM scores s
+      INNER JOIN routes r ON r.id = s.route_id
+      WHERE s.contestant_id = $1
+        AND r.competition_id = $2
+      ORDER BY s.id DESC
+      `,
+      [contestantId, compId]
+    );
+    res.json(result.rows);
+  }catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

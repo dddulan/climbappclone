@@ -20,7 +20,7 @@ const CompetitionsHome: React.FC = () => {
         </h1>
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <CompetitionsTable
                 // onCompSelect={(selected: number) => {
                 //   setCompId(selected);
@@ -31,7 +31,7 @@ const CompetitionsHome: React.FC = () => {
             </div>
           </div>
           <div>
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <RoutesTable
                 //compId={compId}
                 isEdit={false}

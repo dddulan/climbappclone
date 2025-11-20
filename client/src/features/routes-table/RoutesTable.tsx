@@ -2,14 +2,13 @@ import type { Route } from "@/models/route";
 import { gradeList, colorList, routeColumns } from "./RouteColumns";
 import React, { useContext, useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/table";
-import { Plus, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, SquareArrowUp, SquareArrowDown,ChevronDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createRoute, getRoutesById } from "@/services/routeService";
 import { CompContext } from "@/components/layout/layout";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { ChevronDownIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -110,11 +109,13 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
     return (
       <>
         <span
-          className={`flex text-2xl font-medium px-4 py-2 block border-1 cursor-pointer gap-2 hover:bg-neutral-200`}
+          className={`flex items-center text-2xl font-medium px-4 py-2  cursor-pointer gap-2 hover:bg-neutral-200 `}
           onClick={handleShowAddForm}
         >
           Routes
-          {showRouteForm ? <ArrowUp></ArrowUp> : <ArrowDown></ArrowDown>}
+          <div className="flex items-center">
+            {showRouteForm ? <SquareArrowUp /> : <SquareArrowDown />}
+          </div>
         </span>
 
         <div
@@ -123,7 +124,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
             maxHeight: showRouteForm ? "100px" : "0",
           }}
         >
-          <div className=" border-1 rounded-sm bg-white shadow-xl ">
+          <div className="  rounded-sm bg-white shadow-xl ">
             <div className="flex space-x-2 p-5 bg-neutral-200">
               {/* ADD ROW COMPOENENT GOES HERE */}
               <Select onValueChange={(value) => setSelectedGrade(value)}>
@@ -201,7 +202,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
         </div>
 
         {/* Routes Table */}
-        <div className="mx-auto pt-5 w-175">
+        <div className="mx-auto pt-5 w-175 ">
           <DataTable
             columns={routeColumns}
             data={rows}
