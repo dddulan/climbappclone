@@ -54,8 +54,6 @@ export const SchoolsTable: React.FC = () => {
       name: schoolName,
     };
 
-    console.log("LOOOK", newSchool);
-    
     createSchool(newSchool).then(() => {
       loadData();
     });

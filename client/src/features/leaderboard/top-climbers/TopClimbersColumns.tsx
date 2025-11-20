@@ -1,28 +1,26 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { RankBadge } from "./RankBadge";
+import type { Score } from "@/models/score";
 
-// Interface for leaderboard data
-interface LeaderboardEntry {
-  rank: number;
-  contestant_name: string;
-  gender: string;
-  school_name: string;
-  score: number;
-}
-
-export const LeaderboardContestants: ColumnDef<LeaderboardEntry>[] = [
-    {
-        accessorKey: "rank",
-        header: "Rank",
-        cell: ({ row }) => <RankBadge rank={row.getValue("rank")} />,
-    },
-    {
-        accessorKey: "contestant_name",
-        header: "Contestant",
-    },
-    {
-        accessorKey: "score",
-        header: "Score",
-        cell: ({ row }) => <div className="font-semibold">{row.getValue("score")}</div>,
-    },
+export const LeaderboardContestants: ColumnDef<Score>[] = [
+  {
+    accessorKey: "rank",
+    header: "",
+    cell: ({ row }) => <RankBadge rank={row.index + 1} />,
+  },
+  {
+    accessorKey: "contestant_name",
+    header: "Contestant",
+  },
+  {
+    accessorKey: "school_name",
+    header: "",
+  },
+  {
+    accessorKey: "score",
+    header: "Score",
+    cell: ({ row }) => (
+      <div className="font-semibold">{row.getValue("score")}</div>
+    ),
+  },
 ];

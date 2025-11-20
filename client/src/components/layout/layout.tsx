@@ -28,7 +28,6 @@ const EMPTY_COMPETITION: Competition = {
   id: 0,
   date_of: "",
   type: "",
-  is_active: false,
 };
 
 export const Layout = () => {
@@ -60,14 +59,12 @@ export const Layout = () => {
       try {
         //attempt to save comp when selected
         localStorage.setItem("selectedCompetition", JSON.stringify(comp));
-        console.log("Saved competition to localStorage:", comp);
       } catch (error) {
-        console.error("Error saving competition to localStorage:", error);
+
       }
     } else {
       //remove item if no comp selected
       localStorage.removeItem("selectedCompetition");
-      console.log("Removed competition from localStorage");
     }
   }, [comp]);
 
@@ -75,7 +72,6 @@ export const Layout = () => {
     //if navbar showing then hide it
     if (showNavbar) {
       setShowNavbar(false);
-      console.log(showNavbar);
     } else {
       //if navbar hidden ask for admin code
       setOpenDialogue(true);

@@ -34,7 +34,7 @@ export const getAllSchools = async (): Promise<School[]> => {
 };
 
 // Create a new School
- export const createSchool = async (school: School) => {
+export const createSchool = async (school: School) => {
   let res = await axios.post("/contestants/createSchool", school);
   return res.data;
 };
@@ -53,15 +53,14 @@ export const getContestantRoutes = async (
   return res.data;
 };
 
-
-
-export const getLeaderboard = async (): Promise<Score[]> => {
-  const res = await axios.get("/contestants/getLeaderboard");
+// Get school scores for leaderboard
+export const getLeaderboard = async (compId: number): Promise<Score[]> => {
+  const res = await axios.get(`/contestants/getLeaderboard/${compId}`);
   return res.data;
 };
 
-//
-export const getContestantScores = async (): Promise<Score[]> => {
-  const res = await axios.get("/contestants/getContestantScores");
+// Get top 5 contestant scores for each gender in descending order by score (Male, Female, Non-binary).
+export const getContestantScores = async (compId: number): Promise<Score[]> => {
+  const res = await axios.get(`/contestants/getContestantScores/${compId}`);
   return res.data;
 };
