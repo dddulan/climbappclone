@@ -3,8 +3,6 @@ import { CompetitionsTable } from "@/features/competitions-table/CompetitionsTab
 import { RoutesTable } from "@/features/routes-table/RoutesTable";
 import { Calendar } from "lucide-react";
 const CompetitionsHome: React.FC = () => {
-  // represents the currently selected comp
-  //const [compId, setCompId] = useState(0);
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   const toggleEditing = (isSelected: boolean) => {
@@ -21,19 +19,12 @@ const CompetitionsHome: React.FC = () => {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <CompetitionsTable
-                // onCompSelect={(selected: number) => {
-                //   setCompId(selected);
-                // }}
-                isSelected={isSelected}
-              //toggleEditing={toggleEditing}
-              ></CompetitionsTable>
+              <CompetitionsTable isSelected={isSelected}></CompetitionsTable>
             </div>
           </div>
           <div>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <RoutesTable
-                //compId={compId}
                 isEdit={false}
                 toggleEditing={toggleEditing}
               ></RoutesTable>

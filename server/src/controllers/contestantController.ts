@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import pool from "../config/database";
+import { log } from "console";
 
 export const getAllContestants = async (
   req: Request,
@@ -187,8 +188,10 @@ export const getLeaderboard = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  const compId = req.params.id;
+
   try {
-    const result = await pool.query(`
+    const query = `
       SELECT 
         sch.name AS school_name, 
         SUM((r.point_value - ((s.attempt - 1) * 50))) AS score
@@ -196,8 +199,13 @@ export const getLeaderboard = async (
         INNER JOIN routes r ON r.id = s.route_id
         INNER JOIN contestants c ON c.id = s.contestant_id
         INNER JOIN schools sch ON sch.id = c.school_id
-      WHERE r.competition_id = 1
-      GROUP BY sch.name;`);
+      WHERE r.competition_id = ($1)
+      GROUP BY sch.name;`;
+
+    const values = [compId];
+
+    const result = await pool.query(query, values);
+
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err });
@@ -208,34 +216,53 @@ export const getContestantScores = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  const compId = req.params.id;
+
   try {
     const result = await pool.query(`
       SELECT 
-        co.name AS contestant_name, 
-        co.gender, 
-        s.name AS school_name, 
-        SUM(value) AS score
+        contestant_name,
+        gender,
+        school_name,
+        score
       FROM (
-          SELECT contestant_id, value
-          FROM (
-          SELECT contestant_id,
-            (r.point_value - ((s.attempt - 1) * 50)) AS value,
-            ROW_NUMBER() OVER (PARTITION BY contestant_id ORDER BY (r.point_value - ((s.attempt - 1) * 50)) DESC) AS rn
-          FROM scores s
-          INNER JOIN routes r ON r.id = s.route_id
-          WHERE r.competition_id = 1
-          ) ranked
-        WHERE rn <= 3
-      ) AS t
-      INNER JOIN contestants co ON co.id = t.contestant_id
-      INNER JOIN schools s ON s.id = co.school_id
-      GROUP BY co.name, co.gender, s.name
-      ORDER BY score DESC;`);
+        SELECT 
+          co.name AS contestant_name, 
+          co.gender, 
+          s.name AS school_name, 
+          SUM(value) AS score,
+          ROW_NUMBER()  OVER (PARTITION BY gender) AS gender_count
+
+        FROM (
+            SELECT contestant_id, value
+            FROM (
+            SELECT contestant_id,
+              (r.point_value - ((s.attempt - 1) * 50)) AS value,
+              ROW_NUMBER() OVER (PARTITION BY contestant_id ORDER BY (r.point_value - ((s.attempt - 1) * 50)) DESC) AS rn
+            FROM scores s
+            INNER JOIN routes r ON r.id = s.route_id
+            WHERE r.competition_id = ($1)
+            ) ranked
+          WHERE rn <= 3
+        ) AS t
+        INNER JOIN contestants co ON co.id = t.contestant_id
+        INNER JOIN schools s ON s.id = co.school_id
+        GROUP BY co.name, co.gender, s.name
+        ORDER BY gender, score DESC
+      )
+      WHERE 
+        gender_count <= 5;`, [compId]);
+
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err });
   }
 };
+
+export const getTopContestants = async (
+  req: Request,
+  res: Response
+): Promise<void> => {};
 
 export const createSchool = async (
   req: Request,
@@ -244,7 +271,6 @@ export const createSchool = async (
   const school = req.body;
 
   try {
-    console.log("Look", school);
     const query = `
       INSERT INTO schools (name)
       VALUES ($1)

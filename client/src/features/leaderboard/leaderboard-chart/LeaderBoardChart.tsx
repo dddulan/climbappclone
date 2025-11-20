@@ -67,16 +67,6 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
   return (
     <div>
       <Card>
-        <CardHeader>
-          <CardTitle>Leaderboard</CardTitle>
-          <CardDescription>
-            {ctx?.comp.id ? (
-              <h2>{ctx.comp.date_of}</h2>
-            ) : (
-              <h2>No active competition</h2>
-            )}
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig}>
             <BarChart

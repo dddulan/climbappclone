@@ -17,9 +17,7 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -29,15 +27,9 @@ import { format } from "date-fns";
 
 interface tableProps {
   isSelected: boolean;
-  toggleEditing: (isSelected: boolean) => void;
-  //onCompSelect: (selected: number) => void;
 }
 
-export const CompetitionsTable: React.FC<tableProps> = ({
-  isSelected,
-  //toggleEditing
-  //onCompSelect,
-}) => {
+export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
   const [competitions, setCompetitions] = useState<Competition[]>([]); // original copy of competitions, update when user saves any edits
   const [rows, setRows] = useState<Competition[]>([]); // rows for data table
   const [compType, setCompType] = useState<string>("");
@@ -52,7 +44,6 @@ export const CompetitionsTable: React.FC<tableProps> = ({
 
   const loadData = () => {
     setLoading(true);
-    console.log("LOOK ", ctx);
 
     getAllCompetitions()
       .then((res: Competition[]) => {
@@ -76,9 +67,6 @@ export const CompetitionsTable: React.FC<tableProps> = ({
   };
 
   const addRow = () => {
-    console.log(date);
-    console.log(compType);
-
     const newComp: Competition = {
       id: 0,
       date_of: date,

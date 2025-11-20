@@ -10,7 +10,7 @@ import {
   getLeaderboard,
   getContestantScores,
   getSchoolsforComp,
-  getContestantRoutes,
+  getContestantRoutes
 } from "../controllers/contestantController";
 
 const router = express.Router();
@@ -24,8 +24,8 @@ router.get("/getAllSchools", getAllSchools);
 router.post("/createSchool", createSchool);
 
 router.post("/logScore", logScore);
-router.get("/getLeaderboard", getLeaderboard);
-router.get("/getContestantScores", getContestantScores);
+router.get("/getLeaderboard/:id", getLeaderboard);
+router.get("/getContestantScores/:id", getContestantScores);
 
 router.get("/getSchoolsforComp/:id", getSchoolsforComp);
 router.get("/getContestantRoutes/:compId/:contestantId", getContestantRoutes);
