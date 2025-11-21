@@ -55,7 +55,7 @@ export const LogScore: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const timer = React.useRef<NodeJS.Timeout | undefined>(undefined);
   const [progress, setProgress] = React.useState(13);
-
+  
   //load schools, contestants, routes when comp changes
   React.useEffect(() => {
     const loadData = () => {

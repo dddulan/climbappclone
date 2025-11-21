@@ -35,7 +35,7 @@ export const TopSchoolsTable: React.FC = () => {
         <>
           <span className="text-sm font-bold">Top Schools</span>
 
-          <div className="container mx-auto w-90 flex justify-center items-center min-h-[300px]">
+          <div className="container mx-auto w-full flex justify-center items-center min-h-[300px]">
             <Spinner variant="default" className="w-8 h-8 text-primary" />
           </div>
         </>
@@ -43,7 +43,7 @@ export const TopSchoolsTable: React.FC = () => {
     }
     return (
       <>
-        <div className="container mx-auto w-90">
+        <div className="container mx-auto w-full">
           <DataTable columns={TopSchoolsColumns} data={rows} />
         </div>
       </>

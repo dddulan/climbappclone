@@ -16,7 +16,7 @@ export const SignupTable: React.FC<SignupTableProps> = ({ rows }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
-        <DataTable columns={signupColumns} data={rows} showPagination={false} />
+        <DataTable columns={signupColumns} data={rows} showPagination={true} />
       </CardContent>
     </Card>
   );

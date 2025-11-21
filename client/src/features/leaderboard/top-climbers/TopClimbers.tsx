@@ -38,7 +38,7 @@ export const TopClimbers: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-10 w-90">
+    <div className="container mx-auto py-10 w-full">
       <div className="gap-6 flex flex-col">
         {/* Top Male and Female Leaderboards */}
         <div className="flex flex-row gap-6">

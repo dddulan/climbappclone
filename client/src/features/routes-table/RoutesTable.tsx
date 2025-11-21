@@ -202,7 +202,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
         </div>
 
         {/* Routes Table */}
-        <div className="mx-auto pt-5 w-175 ">
+        <div className="mx-auto pt-5 w-full">
           <DataTable
             columns={routeColumns}
             data={rows}

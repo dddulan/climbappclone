@@ -154,7 +154,7 @@ function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex overflow-hidden rounded-md overflow-x-auto">
+      <div className="flex rounded-md overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

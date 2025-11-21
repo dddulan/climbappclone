@@ -30,7 +30,7 @@ const Leaderboard: React.FC = () => {
   const loadContent = () => {
     if (uploading) {
       return (
-        <div className="bg-muted min-h-svh p-6">
+        <div>
           <div className="container mx-auto">
             <div className="max-w-3xl mx-auto">
               <h1 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
@@ -85,7 +85,7 @@ const Leaderboard: React.FC = () => {
       );
     }
     return (
-      <div className="bg-muted min-h-svh p-6">
+      <div>
         <div className="container mx-auto">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">

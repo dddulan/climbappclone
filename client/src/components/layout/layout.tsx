@@ -95,7 +95,7 @@ export const Layout = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
+    <div className="flex flex-col h-full bg-neutral-100 text-foreground overflow-hidden">
       {/*competition context*/}
       <CompContext.Provider value={{ comp, setComp }}>
         {/*competition banner*/}
@@ -118,7 +118,7 @@ export const Layout = () => {
           <div className="bg-neutral-0">
             <HoverSlideIcon onClick={handleToggle} />
           </div>
-          <div className="h-full">
+          <div className="h-full overflow-y-auto mt-10">
             <Outlet />
           </div>
         </main>
