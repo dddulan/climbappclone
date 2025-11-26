@@ -7,6 +7,7 @@ interface SignupTableProps {
   rows: Contestant[];
 }
 
+
 export const SignupTable: React.FC<SignupTableProps> = ({ rows }) => {
   return (
     <Card className="bg-white shadow-lg rounded-xl border border-gray-100">
@@ -15,8 +16,8 @@ export const SignupTable: React.FC<SignupTableProps> = ({ rows }) => {
           Contestants
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6">
-        <DataTable columns={signupColumns} data={rows} showPagination={true} />
+      <CardContent className="pt-6 h-96 overflow-auto">
+        <DataTable columns={signupColumns} data={rows} showPagination={false} pageSize={100}  />
       </CardContent>
     </Card>
   );

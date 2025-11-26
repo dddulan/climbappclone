@@ -105,6 +105,7 @@ interface DataTableProps<TData, TValue> {
   onDeselect?: (rowIndex: number, isSave: boolean) => void;
   onDelete?: () => void;
   showPagination?: boolean;
+  pageSize?: number;
 }
 
 function DataTable<TData, TValue>({
@@ -118,6 +119,8 @@ function DataTable<TData, TValue>({
   isRouteSelected = false,
   isEdit = false,
   showPagination = true,
+  pageSize = 20,
+  
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -129,7 +132,7 @@ function DataTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: 20,
+        pageSize: pageSize,
       },
     },
     autoResetPageIndex: false,

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -22,7 +22,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { CompContext } from "@/components/layout/layout";
 import type { Score } from "@/models/score";
 
 interface LeaderBoardChartProps {
@@ -30,8 +29,6 @@ interface LeaderBoardChartProps {
 }
 
 export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
-  const ctx = useContext(CompContext)!;
-
   // Transform the API data to chart format
   const chartData = data
     .map((item) => ({

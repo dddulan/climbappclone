@@ -1,11 +1,11 @@
 import type { Route } from "@/models/route";
 import { gradeList, colorList, routeColumns } from "./RouteColumns";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/table";
 import { Plus, SquareArrowUp, SquareArrowDown,ChevronDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createRoute, getRoutesById } from "@/services/routeService";
-import { CompContext } from "@/components/layout/layout";
+import { useCompetition } from "@/hooks/useCompetition";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
@@ -40,18 +40,18 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const [scoreValue, setScoreValue] = useState<string>("");
   const [open, setOpen] = React.useState(false); //calendar open state
   const [date, setDate] = React.useState<string>("");
-  const ctx = useContext(CompContext);
+  const { comp } = useCompetition();
   //clickable header
   const [showRouteForm, setShowAddForm] = useState<boolean>(false);
 
   useEffect(() => {
     loadData();
-  }, [ctx?.comp.id]);
+  }, [comp.id]);
 
   const loadData = () => {
     setLoading(true);
-    if (ctx?.comp.id) {
-      getRoutesById(ctx?.comp.id)
+    if (comp.id) {
+      getRoutesById(comp.id)
         .then((res) => {
           setRoutes(res);
           setRows(res);
@@ -91,13 +91,13 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       number: 0,
       grade: selectedGrade,
       color: selectedRouteColor,
-      competition_id: ctx?.comp.id || 0,
+      competition_id: comp.id || 0,
       point_value: scoreValue ? parseInt(scoreValue) : 0,
       set_date: date,
     };
 
-    if (ctx?.comp.id) {
-      newRow.competition_id = ctx.comp.id;
+    if (comp.id) {
+      newRow.competition_id = comp.id;
     }
 
     createRoute(newRow).then(() => {

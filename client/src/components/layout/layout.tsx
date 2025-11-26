@@ -3,21 +3,10 @@ import { Outlet } from "react-router-dom";
 import Footer from "./footer/footer";
 import { createContext, useState, useEffect } from "react";
 import type { Competition } from "@/models/competition";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 import { HoverSlideIcon } from "../hoverslide/hoverslide";
 import { ActiveCompetitionBanner } from "../../features/active-comp-banner/ActiveCompetitionBanner";
+import { AdminDialog } from "@/features/admin-dialog/Admin-Dialog";
 export const CompContext = createContext<{
   comp: Competition;
   setComp: React.Dispatch<React.SetStateAction<Competition>>;
@@ -33,8 +22,6 @@ const EMPTY_COMPETITION: Competition = {
 export const Layout = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [openDialogue, setOpenDialogue] = useState(false);
-  const [password, setPassword] = useState<string>("");
-  const [alertOpen, setAlertOpen] = useState(false);
   const [comp, setComp] = useState<Competition>(() => {
     const saved = localStorage.getItem("selectedCompetition");
     if (saved) {
@@ -59,9 +46,7 @@ export const Layout = () => {
       try {
         //attempt to save comp when selected
         localStorage.setItem("selectedCompetition", JSON.stringify(comp));
-      } catch (error) {
-
-      }
+      } catch (error) {}
     } else {
       //remove item if no comp selected
       localStorage.removeItem("selectedCompetition");
@@ -75,23 +60,17 @@ export const Layout = () => {
     } else {
       //if navbar hidden ask for admin code
       setOpenDialogue(true);
-      setAlertOpen(false);
     }
   };
 
-  const handleClick = (e: React.FormEvent) => {
-    e.preventDefault(); // prevent page reload
-    //check if password is admin
-    if (password === "admin") {
+  const handleAdminSubmit = (password: string): boolean => {
+    const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
+    if (password === adminPassword) {
       setShowNavbar(true);
       setOpenDialogue(false);
-      setPassword("");
+      return true;
     }
-    //if not correct password alert user
-    else {
-      setAlertOpen(!alertOpen);
-      return;
-    }
+    return false;
   };
 
   return (
@@ -125,48 +104,12 @@ export const Layout = () => {
       </CompContext.Provider>
 
       {/*dialog to open navbar*/}
-
       {!showNavbar && (
-        <Dialog open={openDialogue} onOpenChange={setOpenDialogue}>
-          <form>
-            <DialogContent className="sm:max-w-[425px]">
-              {alertOpen && (
-                <Alert variant="destructive">
-                  <AlertTitle>Wrong Password</AlertTitle>
-                  <AlertDescription>
-                    <p>Please Try Again</p>
-                    <ul className="list-inside list-disc text-sm"></ul>
-                  </AlertDescription>
-                </Alert>
-              )}
-              <DialogHeader>
-                <DialogTitle>Admin Passcode</DialogTitle>
-                <DialogDescription>
-                  Enter the password to show the navbar again.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4">
-                <div className="grid gap-3">
-                  <Label htmlFor="Admin">Admin Code</Label>
-                  <Input
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    id="password"
-                    name="password"
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button type="submit" onClick={handleClick}>
-                  Save changes
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </form>
-        </Dialog>
+        <AdminDialog
+          isOpen={openDialogue}
+          onOpenChange={setOpenDialogue}
+          onSubmit={handleAdminSubmit}
+        />
       )}
 
       <div className="flex-shrink-0">

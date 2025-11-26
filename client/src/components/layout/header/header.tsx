@@ -17,7 +17,7 @@ const Header = () => {
   }, [currentTab]);
 
   return (
-    <div className="bg-white  text-black flex items-center justify-center">
+    <div className="bg-white  text-black flex items-center justify-center text-lg">
       <div>
         <img src={logo} className="h-12 pr-1" alt="logo" />
       </div>

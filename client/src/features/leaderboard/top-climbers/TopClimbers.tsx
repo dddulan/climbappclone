@@ -1,25 +1,25 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 
 import { DataTable } from "@/components/ui/table";
 import { LeaderboardContestants } from "./TopClimbersColumns";
 import { getContestantScores } from "@/services/contestantService";
 import type { Score } from "@/models/score";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CompContext } from "@/components/layout/layout";
+import { useCompetition } from "@/hooks/useCompetition";
 
 export const TopClimbers: React.FC = () => {
   const [maleLeaderboard, setMaleLeaderboard] = useState<Score[]>([]);
   const [femaleLeaderboard, setFemaleLeaderboard] = useState<Score[]>([]);
-  const ctx = useContext(CompContext)!;
+  const { comp } = useCompetition();
   // Get competition type from context (e.g., "Boulder", "Top Rope", "Both")
-  const competitionType = ctx?.comp?.type || "";
+  const competitionType = comp?.type || "";
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = () => {
-    getContestantScores(ctx.comp.id)
+    getContestantScores(comp.id)
       .then((res: Score[]) => {
         // Filter and sort male contestants
         const maleContestants = res.filter(

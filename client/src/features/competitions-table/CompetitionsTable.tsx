@@ -1,12 +1,12 @@
 import type { Competition } from "@/models/competition";
 import { competitionColumns, competitionTypeList } from "./CompetitionColumns";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/table";
 import {
   createCompetition,
   getAllCompetitions,
 } from "@/services/competitionService";
-import { CompContext } from "@/components/layout/layout";
+import { useCompetition } from "@/hooks/useCompetition";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -35,7 +35,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
   const [compType, setCompType] = useState<string>("");
   const [open, setOpen] = React.useState(false); //calendar open state
   const [date, setDate] = React.useState<string>("");
-  const ctx = useContext(CompContext);
+  const { setComp } = useCompetition();
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -170,7 +170,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
               }}
               onRowClick={(row) => {
                 if (!isSelected) {
-                  ctx?.setComp(row);
+                  setComp(row);
                 }
               }}
               isEdit={false}

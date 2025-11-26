@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -28,7 +28,7 @@ import {
 import { SignupTable } from "@/features/sign-up.tsx/signup-table/SignupTable";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
-import { CompContext } from "@/components/layout/layout";
+import { useCompetition } from "@/hooks/useCompetition";
 import { User, Users, School as SchoolIcon } from "lucide-react";
 import { Spinner } from "@/components/ui/loadingWheel";
 
@@ -40,32 +40,31 @@ export const SignUpForm: React.FC = () => {
   const [selectedSchool, setSelectedSchool] = useState<string>("");
   const [rows, setRows] = useState<Contestant[]>([]); // contestants array for sign up sheet
   const schoolObj = schools.find((school) => school.name === selectedSchool);
-  const ctx = useContext(CompContext)!;
+  const { comp } = useCompetition();
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    const loadData = () => {
+      setLoading(true);
+      getAllSchools()
+        .then((res: School[]) => {
+          setSchools(res);
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      if (comp?.id) {
+        getContestants();
+      }
+    };
     loadData();
-  }, []);
-
-  const loadData = () => {
-    setLoading(true);
-    getAllSchools()
-      .then((res: School[]) => {
-        setSchools(res);
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      })
-    if (ctx?.comp.id) {
-      getContestants();
-    }
-  };
+  }, [comp.id]);
 
   const getContestants = () => {
-    getContestantsForComp(ctx?.comp.id)
+    getContestantsForComp(comp?.id)
       .then((res: Contestant[]) => {
         setRows(res);
       })
@@ -89,7 +88,7 @@ export const SignUpForm: React.FC = () => {
     // Create a new contestant object
     const newContestant: Contestant = {
       name: `${firstName} ${lastName}`,
-      competition_id: ctx.comp.id,
+      competition_id: comp.id,
       school_id: schoolObj.id || 0,
       gender: selectedGender || "",
       id: 0,
@@ -115,10 +114,8 @@ export const SignUpForm: React.FC = () => {
     if (loading) {
       return (
         <>
-        
           <Toaster />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
             {/* Registration Form - LEFT SIDE */}
             <Card className="bg-white shadow-lg rounded-xl border border-gray-100">
               <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
@@ -126,9 +123,9 @@ export const SignUpForm: React.FC = () => {
                   Registration Form
                 </CardTitle>
                 <CardDescription className="text-base mt-2">
-                  {ctx?.comp.id ? (
+                  {comp?.id ? (
                     <span className="text-gray-700 font-medium">
-                      Competition on {ctx.comp.date_of}
+                      Competition on {comp.date_of}
                     </span>
                   ) : (
                     <span className="text-amber-600 font-medium">
@@ -222,7 +219,7 @@ export const SignUpForm: React.FC = () => {
                 <Button
                   onClick={onSubmit}
                   disabled={
-                    ctx?.comp.id == null ||
+                    comp?.id == null ||
                     !selectedSchool ||
                     !selectedGender ||
                     !firstName ||
@@ -240,7 +237,7 @@ export const SignUpForm: React.FC = () => {
             </div>
           </div>
         </>
-      )
+      );
     }
     return (
       <>
@@ -248,8 +245,12 @@ export const SignUpForm: React.FC = () => {
         <div className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-lg p-6 mb-6 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold mb-1">Join the Competition! </h1>
-              <p className="text-green-100 text-sm">Register now and start climbing</p>
+              <h1 className="text-2xl font-bold mb-1">
+                Join the Competition!{" "}
+              </h1>
+              <p className="text-green-100 text-sm">
+                Register now and start climbing
+              </p>
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm">
               <div className="text-center">
@@ -264,17 +265,17 @@ export const SignUpForm: React.FC = () => {
           </div>
         </div>
         <Toaster />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-h-full">
           {/* Registration Form - LEFT SIDE */}
-          <Card className="bg-white shadow-lg rounded-xl border border-gray-100">
+          <Card className="bg-white shadow-lg rounded-xl border border-gray-100 ">
             <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
               <CardTitle className="text-2xl font-bold text-gray-900">
                 Registration Form
               </CardTitle>
               <CardDescription className="text-base mt-2">
-                {ctx?.comp.id ? (
+                {comp?.id ? (
                   <span className="text-gray-700 font-medium">
-                    Competition on {ctx.comp.date_of}
+                    Competition on {comp.date_of}
                   </span>
                 ) : (
                   <span className="text-amber-600 font-medium">
@@ -368,7 +369,7 @@ export const SignUpForm: React.FC = () => {
               <Button
                 onClick={onSubmit}
                 disabled={
-                  ctx?.comp.id == null ||
+                  comp?.id == null ||
                   !selectedSchool ||
                   !selectedGender ||
                   !firstName ||
@@ -386,11 +387,7 @@ export const SignUpForm: React.FC = () => {
         </div>
       </>
     );
-  }
+  };
 
-  return (
-    <div>
-      {loadContent()}
-    </div >
-  )
+  return <div>{loadContent()}</div>;
 };
