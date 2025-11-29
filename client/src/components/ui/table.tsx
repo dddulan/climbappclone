@@ -14,7 +14,7 @@ declare module "@tanstack/react-table" {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
     onDeselect: (rowIndex: number, isSave: boolean) => void;
     // onCreate: () => void;
-    onDelete: () => void;
+    onDelete: (rowId?: number) => void;
     isEdit: boolean;
   }
 }
@@ -27,7 +27,10 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm bg-transparent", className)}
+        className={cn(
+          "w-full caption-bottom text-sm bg-transparent",
+          className
+        )}
         {...props}
       />
     </div>
@@ -103,8 +106,9 @@ interface DataTableProps<TData, TValue> {
   onRowClick?: (row: TData, isSelected: boolean) => void;
   onUpdate?: (rowIndex: number, columnId: string, value: unknown) => void;
   onDeselect?: (rowIndex: number, isSave: boolean) => void;
-  onDelete?: () => void;
+  onDelete?: (rowId?: number) => void;
   showPagination?: boolean;
+  pageSize?: number;
 }
 
 function DataTable<TData, TValue>({
@@ -118,6 +122,7 @@ function DataTable<TData, TValue>({
   isRouteSelected = false,
   isEdit = false,
   showPagination = true,
+  pageSize = 20,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -129,7 +134,7 @@ function DataTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: 20,
+        pageSize: pageSize,
       },
     },
     autoResetPageIndex: false,
@@ -140,8 +145,8 @@ function DataTable<TData, TValue>({
       onDeselect: (rowIndex: number, isSave: boolean) => {
         onDeselect?.(rowIndex, isSave);
       },
-      onDelete: () => {
-        onDelete?.();
+      onDelete: (rowId?: number) => {
+        onDelete?.(rowId);
       },
       isEdit,
     },
@@ -154,7 +159,7 @@ function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex overflow-hidden rounded-md overflow-x-auto">
+      <div className="flex rounded-md overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

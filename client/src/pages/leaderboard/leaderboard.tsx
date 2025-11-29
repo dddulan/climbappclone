@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { getLeaderboard } from "@/services/contestantService";
 import { LeaderBoardChart } from "@/features/leaderboard/leaderboard-chart/LeaderBoardChart";
 import type { Score } from "@/models/score";
 import { TopClimbers } from "@/features/leaderboard/top-climbers/TopClimbers";
 import { Trophy } from "lucide-react";
 import type { Competition } from "@/models/competition";
-import { CompContext } from "@/components/layout/layout";
+import { useCompetition } from "@/hooks/useCompetition";
 
 const Leaderboard: React.FC = () => {
   const [leaderboard, setLeaderboard] = useState<Score[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, isUploading] = useState<boolean>(false); //would be this in other pages => const [loading, setLoading] =  useState<boolean>(false)
-  const ctx = useContext(CompContext)!;
+  const { comp } = useCompetition();
 
   useEffect(() => {
     loadData();
@@ -19,7 +19,7 @@ const Leaderboard: React.FC = () => {
 
   const loadData = () => {
     setLoading(true);
-    getLeaderboard(ctx.comp.id)
+    getLeaderboard(comp.id)
       .then((res: Score[]) => {
         setLeaderboard(res);
       })
@@ -30,7 +30,7 @@ const Leaderboard: React.FC = () => {
   const loadContent = () => {
     if (uploading) {
       return (
-        <div className="bg-muted min-h-svh p-6">
+        <div>
           <div className="container mx-auto">
             <div className="max-w-3xl mx-auto">
               <h1 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
@@ -85,7 +85,7 @@ const Leaderboard: React.FC = () => {
       );
     }
     return (
-      <div className="bg-muted min-h-svh p-6">
+      <div>
         <div className="container mx-auto">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
@@ -131,11 +131,14 @@ const Leaderboard: React.FC = () => {
                   </div>
                 </div>
 
-                <TopClimbers />
               </div>
+
             )}
+
           </div>
         </div>
+                                                  <TopClimbers />
+
       </div>
     );
   };

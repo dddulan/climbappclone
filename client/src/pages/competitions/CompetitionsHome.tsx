@@ -10,7 +10,7 @@ const CompetitionsHome: React.FC = () => {
   };
 
   return (
-    <div className="bg-muted min-h-svh p-6">
+    <div className="bg-muted p-6">
       <div className="container mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
           <Calendar className="h-8 w-8 text-blue-600" />

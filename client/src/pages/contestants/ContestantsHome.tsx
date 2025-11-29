@@ -12,7 +12,7 @@ const Contestants: React.FC = () => {
   };
 
   return (
-    <div className="bg-muted min-h-svh p-6">
+    <div>
       <div className="container mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
           <Users className="h-8 w-8 text-green-600" />
