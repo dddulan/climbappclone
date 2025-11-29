@@ -17,7 +17,7 @@ export const competitionColumns: ColumnDef<Competition>[] = [
     id: "compNum",
     header: "#",
     cell: ({ row }) => {
-      return <span>{row.index + 1}</span>;
+      return <span>{row.original.id}</span>;
     },
   },
   {
@@ -76,12 +76,7 @@ export const competitionColumns: ColumnDef<Competition>[] = [
       };
 
       const handleDeleteClick = () => {
-        deleteCompetition(row.original.id)
-          .then(() => {
-            handleCancelClick();
-            table.options.meta?.onDelete();
-          })
-          .catch(console.error);
+        table.options.meta?.onDelete(Number(row.original.id));
       };
 
       return (

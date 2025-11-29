@@ -131,11 +131,14 @@ const Leaderboard: React.FC = () => {
                   </div>
                 </div>
 
-                <TopClimbers />
               </div>
+
             )}
+
           </div>
         </div>
+                                                  <TopClimbers />
+
       </div>
     );
   };

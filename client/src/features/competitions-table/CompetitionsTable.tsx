@@ -23,7 +23,21 @@ import {
 } from "@/components/ui/select";
 import { ChevronDownIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { deleteCompetition } from "@/services/competitionService";
+
 
 interface tableProps {
   isSelected: boolean;
@@ -37,6 +51,12 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
   const [date, setDate] = React.useState<string>("");
   const { setComp } = useCompetition();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [password, setPassword] = React.useState<string>("");
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [pendingAction, setPendingAction] = useState<string>("");
+  const [rowToDelete, setRowToDelete] = useState<number | null>(null);
+
 
   useEffect(() => {
     loadData();
@@ -47,6 +67,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
 
     getAllCompetitions()
       .then((res: Competition[]) => {
+
         setCompetitions(res);
         setRows(res);
       })
@@ -64,6 +85,27 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
         index === rowIndex ? { ...row, [columnId]: value } : row
       )
     );
+  };
+
+  const handleDelete = () => {
+    if (pendingAction === "delete" && rowToDelete) {
+
+      const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
+      if (password === adminPassword) {
+              deleteCompetition(rowToDelete)
+        .then(() => {
+          loadData();
+          setPendingAction("");
+          setRowToDelete(null);
+        })
+        .catch(console.error);
+      }
+
+
+    }
+    setPassword("");
+    setAlertOpen(false);
+    setIsOpen(false);
   };
 
   const addRow = () => {
@@ -165,8 +207,12 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
                 // toggleEditing(false);
               }}
               onUpdate={handleUpdate}
-              onDelete={() => {
-                loadData();
+              onDelete={(compId?: number) => {
+                if (compId){
+                  setRowToDelete(compId);
+                  setPendingAction("delete");
+                  setIsOpen(true);
+                }
               }}
               onRowClick={(row) => {
                 if (!isSelected) {
@@ -182,5 +228,50 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
     );
   };
 
-  return <div>{loadContent()}</div>;
+  return (
+    <>
+      {loadContent()}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <DialogContent className="sm:max-w-[425px]">
+            {alertOpen && (
+              <Alert variant="destructive">
+                <AlertTitle>Wrong Password</AlertTitle>
+                <AlertDescription>
+                  <p>Please Try Again</p>
+                </AlertDescription>
+              </Alert>
+            )}
+            <DialogHeader>
+              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogDescription>
+                Enter the admin password to confirm deleting this competition.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4">
+              <div className="grid gap-3">
+                <Label htmlFor="password">Admin Code</Label>
+                <Input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Enter admin password"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline" onClick={() => setPendingAction("")}>Cancel</Button>
+              </DialogClose>
+              <Button type="submit" onClick={handleDelete}>
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </form>
+      </Dialog>
+    </>
+  );
 };

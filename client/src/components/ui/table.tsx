@@ -14,7 +14,7 @@ declare module "@tanstack/react-table" {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
     onDeselect: (rowIndex: number, isSave: boolean) => void;
     // onCreate: () => void;
-    onDelete: () => void;
+    onDelete: (rowId?: number) => void;
     isEdit: boolean;
   }
 }
@@ -27,7 +27,10 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm bg-transparent", className)}
+        className={cn(
+          "w-full caption-bottom text-sm bg-transparent",
+          className
+        )}
         {...props}
       />
     </div>
@@ -103,7 +106,7 @@ interface DataTableProps<TData, TValue> {
   onRowClick?: (row: TData, isSelected: boolean) => void;
   onUpdate?: (rowIndex: number, columnId: string, value: unknown) => void;
   onDeselect?: (rowIndex: number, isSave: boolean) => void;
-  onDelete?: () => void;
+  onDelete?: (rowId?: number) => void;
   showPagination?: boolean;
   pageSize?: number;
 }
@@ -120,7 +123,6 @@ function DataTable<TData, TValue>({
   isEdit = false,
   showPagination = true,
   pageSize = 20,
-  
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -143,8 +145,8 @@ function DataTable<TData, TValue>({
       onDeselect: (rowIndex: number, isSave: boolean) => {
         onDeselect?.(rowIndex, isSave);
       },
-      onDelete: () => {
-        onDelete?.();
+      onDelete: (rowId?: number) => {
+        onDelete?.(rowId);
       },
       isEdit,
     },

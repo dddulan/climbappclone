@@ -10,13 +10,14 @@ import { useCompetition } from "@/hooks/useCompetition";
 export const TopClimbers: React.FC = () => {
   const [maleLeaderboard, setMaleLeaderboard] = useState<Score[]>([]);
   const [femaleLeaderboard, setFemaleLeaderboard] = useState<Score[]>([]);
+  const [nonbinaryLeaderboard, setNonbinaryLeaderboard] = useState<Score[]>([]);
   const { comp } = useCompetition();
   // Get competition type from context (e.g., "Boulder", "Top Rope", "Both")
   const competitionType = comp?.type || "";
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [comp.id]);
 
   const loadData = () => {
     getContestantScores(comp.id)
@@ -30,9 +31,14 @@ export const TopClimbers: React.FC = () => {
         const femaleContestants = res.filter(
           (score) => score.gender?.toLowerCase() === "female"
         );
+        // Filter and sort non-binary contestants
+        const nonbinaryContestants = res.filter(
+          (score) => score.gender?.toLowerCase() === "nonbinary"
+        );
 
         setMaleLeaderboard(maleContestants);
         setFemaleLeaderboard(femaleContestants);
+        setNonbinaryLeaderboard(nonbinaryContestants);
       })
       .catch(console.error);
   };
@@ -41,6 +47,7 @@ export const TopClimbers: React.FC = () => {
     <div className="container mx-auto py-10 w-full">
       <div className="gap-6 flex flex-col">
         {/* Top Male and Female Leaderboards */}
+
         <div className="flex flex-row gap-6">
           {maleLeaderboard.length > 0 && (
             <div className="flex-1">
@@ -58,6 +65,7 @@ export const TopClimbers: React.FC = () => {
               </Card>
             </div>
           )}
+
           {femaleLeaderboard.length > 0 && (
             <div className="flex-1">
               <Card>
@@ -68,6 +76,25 @@ export const TopClimbers: React.FC = () => {
                   <DataTable
                     columns={LeaderboardContestants}
                     data={femaleLeaderboard}
+                    showPagination={false}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {nonbinaryLeaderboard.length > 0 && (
+            <div className="flex-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    Top Nonbinary {competitionType} Climbers
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <DataTable
+                    columns={LeaderboardContestants}
+                    data={nonbinaryLeaderboard}
                     showPagination={false}
                   />
                 </CardContent>

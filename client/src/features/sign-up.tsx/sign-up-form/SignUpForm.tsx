@@ -42,7 +42,6 @@ export const SignUpForm: React.FC = () => {
   const schoolObj = schools.find((school) => school.name === selectedSchool);
   const { comp } = useCompetition();
   const [loading, setLoading] = useState<boolean>(false);
-
   useEffect(() => {
     const loadData = () => {
       setLoading(true);
@@ -93,15 +92,17 @@ export const SignUpForm: React.FC = () => {
       gender: selectedGender || "",
       id: 0,
     };
-
+    // Call the signUpContestant service to submit the new contestant
     signUpContestant(newContestant).then(() => {
       getContestants();
     });
 
+    // Reset form fields
     setFirstName("");
     setLastName("");
     setSelectedGender("");
     setSelectedSchool("");
+
 
     // Show success message
     toast("Registration Complete", {
@@ -111,134 +112,6 @@ export const SignUpForm: React.FC = () => {
   };
 
   const loadContent = () => {
-    if (loading) {
-      return (
-        <>
-          <Toaster />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Registration Form - LEFT SIDE */}
-            <Card className="bg-white shadow-lg rounded-xl border border-gray-100">
-              <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
-                <CardTitle className="text-2xl font-bold text-gray-900">
-                  Registration Form
-                </CardTitle>
-                <CardDescription className="text-base mt-2">
-                  {comp?.id ? (
-                    <span className="text-gray-700 font-medium">
-                      Competition on {comp.date_of}
-                    </span>
-                  ) : (
-                    <span className="text-amber-600 font-medium">
-                      No active competition
-                    </span>
-                  )}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="pt-6">
-                <form className="flex flex-col gap-6">
-                  <div className="grid gap-3">
-                    <Label className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-blue-600" />
-                      First Name
-                    </Label>
-                    <Input
-                      value={firstName}
-                      id="first-name"
-                      type="text"
-                      placeholder="Magnus"
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="grid gap-3">
-                    <Label className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-blue-600" />
-                      Last Name
-                    </Label>
-                    <Input
-                      value={lastName}
-                      id="last-name"
-                      type="text"
-                      placeholder="Midtbo"
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="grid gap-3">
-                    <Label className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-purple-600" />
-                      Gender
-                    </Label>
-                    <Select
-                      value={selectedGender}
-                      onValueChange={setSelectedGender}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a Gender" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Gender</SelectLabel>
-                          <SelectItem value="Male">Male</SelectItem>
-                          <SelectItem value="Female">Female</SelectItem>
-                          <SelectItem value="Non-Binary">Non-Binary</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="grid gap-3">
-                    <Label className="flex items-center gap-2">
-                      <SchoolIcon className="h-4 w-4 text-green-600" />
-                      School
-                    </Label>
-                    <Select
-                      value={selectedSchool}
-                      onValueChange={setSelectedSchool}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a School" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {schools.map((school, index) => (
-                          <SelectItem key={index} value={school.name}>
-                            {school.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </form>
-              </CardContent>
-
-              <CardFooter className="flex-col gap-2">
-                <Button
-                  onClick={onSubmit}
-                  disabled={
-                    comp?.id == null ||
-                    !selectedSchool ||
-                    !selectedGender ||
-                    !firstName ||
-                    !lastName
-                  }
-                  variant="default"
-                  className="w-full"
-                >
-                  Submit
-                </Button>
-              </CardFooter>
-            </Card>
-            <div className="bg-white rounded-x1 container mx-auto pt-5 w-full flex justify-center items-center min-h-[200px]">
-              <Spinner variant="default" className="w-8 h-8 text-primary" />
-            </div>
-          </div>
-        </>
-      );
-    }
     return (
       <>
         {/* Hero Banner */}
@@ -334,8 +207,7 @@ export const SignUpForm: React.FC = () => {
                         <SelectLabel>Gender</SelectLabel>
                         <SelectItem value="Male">Male</SelectItem>
                         <SelectItem value="Female">Female</SelectItem>
-                        <SelectItem value="Non-Binary">Non-Binary</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
+                        <SelectItem value="Nonbinary">Non-Binary</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -362,6 +234,7 @@ export const SignUpForm: React.FC = () => {
                     </SelectContent>
                   </Select>
                 </div>
+
               </form>
             </CardContent>
 
