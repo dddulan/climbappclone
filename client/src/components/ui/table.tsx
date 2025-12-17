@@ -13,7 +13,6 @@ declare module "@tanstack/react-table" {
   interface TableMeta<TData extends unknown> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
     onDeselect: (rowIndex: number, isSave: boolean) => void;
-    // onCreate: () => void;
     onDelete: (rowId?: number) => void;
     isEdit: boolean;
   }

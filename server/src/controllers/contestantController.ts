@@ -9,11 +9,13 @@ export const getAllContestants = async (
   try {
     const result = await pool.query(`
       SELECT 
+        c.id,
         c.name, 
         c.gender, 
         s.name AS school_name 
       FROM contestants c 
-      INNER JOIN schools s ON c.school_id = s.id`);
+      INNER JOIN schools s ON c.school_id = s.id
+      ORDER BY c.id`);
     res.json(result.rows);
   } catch (err) {
     console.error("Query error:", err);
@@ -49,12 +51,94 @@ export const getContestantsForComp = async (
   }
 };
 
+export const updateContestant = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const contestant = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE contestants 
+        SET 
+        name = $2, gender = $3
+        WHERE id = $1 RETURNING *`,
+      [contestant.id, contestant.name, contestant.gender]
+    );
+
+    res.json({ message: "Success" });
+  } catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const deleteContestant = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+
+  try {
+    await pool.query(
+      `DELETE FROM contestants
+       WHERE id = ${id}`
+    );
+
+    res.json({ message: "Success" });
+  } catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const updateSchool = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const school = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE schools 
+        SET 
+        name = $2
+        WHERE id = $1 RETURNING *`,
+      [school.id, school.name]
+    );
+
+    res.json({ message: "Success" });
+  } catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const deleteSchool = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+
+  try {
+    await pool.query(
+      `DELETE FROM schools
+       WHERE id = ${id}`
+    );
+
+    res.json({ message: "Success" });
+  } catch (err) {
+    console.error("Query error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export const getAllSchools = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const result = await pool.query("SELECT * FROM schools");
+    const result = await pool.query("SELECT * FROM schools ORDER BY id");
     res.json(result.rows);
   } catch (err) {
     console.error("Query error:", err);
@@ -156,9 +240,12 @@ export const logScore = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const getContestantRoutes = async (req: Request, res: Response): Promise<void>=>{
-  const {compId,contestantId} = req.params;
-  try{
+export const getContestantRoutes = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { compId, contestantId } = req.params;
+  try {
     const result = await pool.query(
       `
       SELECT
@@ -178,7 +265,7 @@ export const getContestantRoutes = async (req: Request, res: Response): Promise<
       [contestantId, compId]
     );
     res.json(result.rows);
-  }catch (err) {
+  } catch (err) {
     console.error("Query error:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -219,7 +306,8 @@ export const getContestantScores = async (
   const compId = req.params.id;
 
   try {
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT 
         contestant_name,
         gender,
@@ -251,7 +339,9 @@ export const getContestantScores = async (
         ORDER BY gender, score DESC
       )
       WHERE 
-        gender_count <= 5;`, [compId]);
+        gender_count <= 5;`,
+      [compId]
+    );
 
     res.json(result.rows);
   } catch (err) {

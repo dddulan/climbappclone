@@ -8,10 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Label } from "@/components/ui/label";
 
 export const SchoolsTable: React.FC = () => {
-  const [school, setSchools] = useState<School[]>([]);
+  const [schools, setSchools] = useState<School[]>([]);
   const [rows, setRows] = useState<School[]>([]);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,6 +34,14 @@ export const SchoolsTable: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const handleUpdate = (rowIndex: number, columnId: string, value: unknown) => {
+    setRows((old) =>
+      old.map((row, index) =>
+        index === rowIndex ? { ...row, [columnId]: value } : row
+      )
+    );
   };
 
   // Button function to handle submission of a new school
@@ -99,7 +106,23 @@ export const SchoolsTable: React.FC = () => {
             </Button>
           </div>
           <div className="container mx-auto py-5 w-full">
-            <DataTable columns={SchoolColums} data={rows} />
+            <DataTable
+              columns={SchoolColums}
+              data={rows}
+              onDeselect={(rowIndex, isSave) => {
+                // edit row was just canceled, revert row back to pre-edit state
+                setRows((old) =>
+                  old.map((row, index) =>
+                    // search rows until we find rowIndex
+                    index === rowIndex && !isSave ? schools[index] : row
+                  )
+                );
+              }}
+              onUpdate={handleUpdate}
+              onDelete={() => {
+                loadData();
+              }}
+            />
           </div>
         </div>
       </>

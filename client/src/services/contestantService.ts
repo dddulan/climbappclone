@@ -23,6 +23,20 @@ export const getContestantsForComp = async (
   return res.data;
 };
 
+// Update an existing Contestant
+export const updateContestant = async (contestant: Contestant) => {
+  let res = await axios.post("/contestants/updateContestant", contestant);
+  return res.data;
+};
+
+// Delete an existing Contestant by id
+export const deleteContestant = async (contestant_id: Number) => {
+  let res = await axios.delete(
+    "/contestants/deleteContestant/" + contestant_id
+  );
+  return res.data;
+};
+
 export const getSchoolsForComp = async (compId: number): Promise<School[]> => {
   const res = await axios.get(`/contestants/getSchoolsForComp/${compId}`);
   return res.data;
@@ -39,6 +53,18 @@ export const createSchool = async (school: School) => {
   return res.data;
 };
 
+// Update an existing School
+export const updateSchool = async (School: School) => {
+  let res = await axios.post("/contestants/updateSchool", School);
+  return res.data;
+};
+
+// Delete an existing School by id
+export const deleteSchool = async (school_id: Number) => {
+  let res = await axios.delete("/contestants/deleteSchool/" + school_id);
+  return res.data;
+};
+
 // Log score for a contestant
 export const logScore = async (score: Score) => {
   const res = await axios.post("/contestants/logScore", score);
@@ -49,7 +75,9 @@ export const getContestantRoutes = async (
   compId: number,
   contestantId: number
 ): Promise<Score[]> => {
-  const res = await axios.get(`/contestants/getContestantRoutes/${compId}/${contestantId}`);
+  const res = await axios.get(
+    `/contestants/getContestantRoutes/${compId}/${contestantId}`
+  );
   return res.data;
 };
 

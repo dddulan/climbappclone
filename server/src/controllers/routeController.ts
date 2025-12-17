@@ -1,33 +1,6 @@
 import { Request, Response } from "express";
 import pool from "../config/database";
 
-export const getRoutesById = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const { id } = req.params;
-
-  try {
-    const result = await pool.query(`
-      SELECT 
-        id,
-        name,
-        number,
-        grade,
-        color,
-        point_value,
-        TO_CHAR(set_date, 'MM/DD/YYYY') AS set_date
-      FROM routes
-      WHERE competition_id = ${id}
-      ORDER BY id
-    `);
-    res.json(result.rows);
-  } catch (err) {
-    console.error("Query error:", err);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
 export const getRoutesForComp = async (
   req: Request,
   res: Response
@@ -38,7 +11,9 @@ export const getRoutesForComp = async (
     const result = await pool.query(`
       SELECT r.* FROM routes r
       INNER JOIN competitions c ON c.id = r.competition_id
-      WHERE c.id = ${compId}`);
+      WHERE c.id = ${compId}
+      ORDER BY r.id
+      `);
     res.json(result.rows);
   } catch (err) {
     console.error("Query error:", err);

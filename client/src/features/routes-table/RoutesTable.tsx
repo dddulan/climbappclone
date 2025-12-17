@@ -2,9 +2,14 @@ import type { Route } from "@/models/route";
 import { gradeList, colorList, routeColumns } from "./RouteColumns";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/table";
-import { Plus, SquareArrowUp, SquareArrowDown,ChevronDownIcon } from "lucide-react";
+import {
+  Plus,
+  SquareArrowUp,
+  SquareArrowDown,
+  ChevronDownIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { createRoute, getRoutesById } from "@/services/routeService";
+import { createRoute, getRoutesForComp } from "@/services/routeService";
 import { useCompetition } from "@/hooks/useCompetition";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
@@ -51,7 +56,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const loadData = () => {
     setLoading(true);
     if (comp.id) {
-      getRoutesById(comp.id)
+      getRoutesForComp(comp.id)
         .then((res) => {
           setRoutes(res);
           setRows(res);

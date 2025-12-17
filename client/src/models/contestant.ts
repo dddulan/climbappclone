@@ -1,5 +1,5 @@
 export interface Contestant {
-  id: number | null;
+  id: number;
   competition_id: number;
   school_id: number;
   school_name?: string;

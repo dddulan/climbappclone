@@ -38,7 +38,6 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { deleteCompetition } from "@/services/competitionService";
 
-
 interface tableProps {
   isSelected: boolean;
 }
@@ -57,7 +56,6 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
   const [pendingAction, setPendingAction] = useState<string>("");
   const [rowToDelete, setRowToDelete] = useState<number | null>(null);
 
-
   useEffect(() => {
     loadData();
   }, []);
@@ -67,7 +65,6 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
 
     getAllCompetitions()
       .then((res: Competition[]) => {
-
         setCompetitions(res);
         setRows(res);
       })
@@ -89,19 +86,16 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
 
   const handleDelete = () => {
     if (pendingAction === "delete" && rowToDelete) {
-
       const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
       if (password === adminPassword) {
-              deleteCompetition(rowToDelete)
-        .then(() => {
-          loadData();
-          setPendingAction("");
-          setRowToDelete(null);
-        })
-        .catch(console.error);
+        deleteCompetition(rowToDelete)
+          .then(() => {
+            loadData();
+            setPendingAction("");
+            setRowToDelete(null);
+          })
+          .catch(console.error);
       }
-
-
     }
     setPassword("");
     setAlertOpen(false);
@@ -203,12 +197,10 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
                     index === rowIndex && !isSave ? competitions[index] : row
                   )
                 );
-
-                // toggleEditing(false);
               }}
               onUpdate={handleUpdate}
               onDelete={(compId?: number) => {
-                if (compId){
+                if (compId) {
                   setRowToDelete(compId);
                   setPendingAction("delete");
                   setIsOpen(true);
@@ -263,7 +255,9 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" onClick={() => setPendingAction("")}>Cancel</Button>
+                <Button variant="outline" onClick={() => setPendingAction("")}>
+                  Cancel
+                </Button>
               </DialogClose>
               <Button type="submit" onClick={handleDelete}>
                 Delete

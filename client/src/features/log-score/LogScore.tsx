@@ -16,7 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
-import { School as SchoolIcon, User, Mountain, Hash } from "lucide-react";
+import {
+  School as SchoolIcon,
+  User,
+  Mountain,
+  Hash,
+  Check,
+  ChevronsUpDown,
+  Command,
+} from "lucide-react";
 import {
   getContestantsForComp,
   logScore,
@@ -40,6 +48,19 @@ import { ScoreTable } from "@/features/scores-table/ScoreTable";
 import { Progress } from "@/components/ui/progress";
 import { useCompetition } from "@/hooks/useCompetition";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
+import {
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "cmdk";
 
 export const LogScore: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);
@@ -55,11 +76,12 @@ export const LogScore: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const timer = React.useRef<NodeJS.Timeout | undefined>(undefined);
   const [progress, setProgress] = React.useState(13);
-  
+
+  const [open1, setOpen1] = React.useState(false);
+
   //load schools, contestants, routes when comp changes
   React.useEffect(() => {
     const loadData = () => {
-
       //when the comp changes reset all selections
       setSelectedSchool("");
       setSelectedContestants("");
@@ -86,8 +108,6 @@ export const LogScore: React.FC = () => {
             setRoutes(res);
           })
           .catch(console.error);
-        
-
       }
     };
 
@@ -107,16 +127,13 @@ export const LogScore: React.FC = () => {
           setOpen(false);
         }
       }, 100);
-
     }
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
   }, [open]);
 
-
-
-//submit handler
+  //submit handler
   const onSubmit = async () => {
     // Check if all fields are filled
     if (
@@ -128,7 +145,7 @@ export const LogScore: React.FC = () => {
       toast("Please fill in all fields");
       return;
     }
-  //construct score object
+    //construct score object
     const newScore: Score = {
       id: Number(0),
       contestant_id: Number(selectedContestants),
@@ -138,13 +155,15 @@ export const LogScore: React.FC = () => {
     try {
       await logScore(newScore);
       //fetch updated scores for the contestant
-      const updatedScores = await getContestantRoutes(comp.id,Number(selectedContestants));
+      const updatedScores = await getContestantRoutes(
+        comp.id,
+        Number(selectedContestants)
+      );
       //set score table display
       setDisplayScores(updatedScores);
     } catch (err) {
       console.error(" Failed to send score:", err);
     }
- 
 
     // Here you would typically send newContestant to your backend API
 
@@ -163,7 +182,9 @@ export const LogScore: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold mb-1">Log your Score </h1>
-              <p className="text-green-100 text-sm">Enter your route information</p>
+              <p className="text-green-100 text-sm">
+                Enter your route information
+              </p>
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm">
               <div className="text-center">
@@ -174,7 +195,7 @@ export const LogScore: React.FC = () => {
                 <p className="text-xl font-bold">{schools.length}</p>
                 <p className="text-xs text-green-100">Schools</p>
               </div>
-                            <div className="text-center">
+              <div className="text-center">
                 <p className="text-xl font-bold">{routes.length}</p>
                 <p className="text-xs text-green-100">Routes</p>
               </div>
@@ -215,9 +236,9 @@ export const LogScore: React.FC = () => {
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a School" />
                   </SelectTrigger>
-                  <SelectContent >
+                  <SelectContent>
                     {schools.map((school, index) => (
-                      <SelectItem key={index} value={school.id.toString()}>
+                      <SelectItem key={index} value={school.id!.toString()}>
                         {school.name}
                       </SelectItem>
                     ))}
@@ -285,11 +306,39 @@ export const LogScore: React.FC = () => {
                   <SelectContent>
                     {routes.map((route, index) => (
                       <SelectItem key={index} value={route.id.toString()}>
-                        {route.number} - {route.color} - {route.grade}
+                        <b>#{index + 1}:</b> {route.color} {route.grade}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+
+                {/* <Popover open={open1} onOpenChange={setOpen1}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={open1}
+                      className="w-[200px] justify-between"
+                    >
+                      YOOOOOOOOOOOOOOOOOOOO
+                      <ChevronsUpDown className="opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput
+                        placeholder="Search framework..."
+                        className="h-9"
+                      />
+                      <CommandList>
+                        <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandGroup>
+
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover> */}
               </div>
 
               {/* Attempt */}

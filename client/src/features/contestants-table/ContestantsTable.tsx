@@ -30,6 +30,14 @@ export const ContestantsTable: React.FC = () => {
       });
   };
 
+  const handleUpdate = (rowIndex: number, columnId: string, value: unknown) => {
+    setRows((old) =>
+      old.map((row, index) =>
+        index === rowIndex ? { ...row, [columnId]: value } : row
+      )
+    );
+  };
+
   const loadContent = () => {
     if (loading) {
       return (
@@ -50,7 +58,19 @@ export const ContestantsTable: React.FC = () => {
           <DataTable
             columns={ContestantColums}
             data={rows}
-            showPagination={false}
+            onDeselect={(rowIndex, isSave) => {
+              // edit row was just canceled, revert row back to pre-edit state
+              setRows((old) =>
+                old.map((row, index) =>
+                  // search rows until we find rowIndex
+                  index === rowIndex && !isSave ? contestants[index] : row
+                )
+              );
+            }}
+            onUpdate={handleUpdate}
+            onDelete={() => {
+              loadData();
+            }}
           />
         </div>
       </>

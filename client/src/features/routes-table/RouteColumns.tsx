@@ -36,32 +36,32 @@ export const colorList: string[] = [
 ];
 
 export const routeColumns: ColumnDef<Route>[] = [
-  // {
-  //   id: "routeNum",
-  //   header: "#",
-  //   cell: ({ row }) => {
-  //     return <span>{row.index + 1}</span>;
-  //   },
-  // },
   {
-    accessorKey: "number",
-    header: "Number",
-    cell: ({ row, table }) => {
-      const isSelected = row.getIsSelected();
-      const value = row.getValue("number") as string;
-
-      return (
-        <InputCell
-          rowIndex={row.index}
-          columnName="number"
-          value={value}
-          table={table}
-          isEdit={isSelected}
-          width="w-15"
-        />
-      );
+    id: "routeNum",
+    header: "#",
+    cell: ({ row }) => {
+      return <span>{row.index + 1}</span>;
     },
   },
+  // {
+  //   accessorKey: "number",
+  //   header: "Number",
+  //   cell: ({ row, table }) => {
+  //     const isSelected = row.getIsSelected();
+  //     const value = row.getValue("number") as string;
+
+  //     return (
+  //       <InputCell
+  //         rowIndex={row.index}
+  //         columnName="number"
+  //         value={value}
+  //         table={table}
+  //         isEdit={isSelected}
+  //         width="w-15"
+  //       />
+  //     );
+  //   },
+  // },
   {
     accessorKey: "grade",
     header: "Grade",

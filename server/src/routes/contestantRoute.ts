@@ -10,7 +10,11 @@ import {
   getLeaderboard,
   getContestantScores,
   getSchoolsforComp,
-  getContestantRoutes
+  getContestantRoutes,
+  updateContestant,
+  deleteContestant,
+  updateSchool,
+  deleteSchool,
 } from "../controllers/contestantController";
 
 const router = express.Router();
@@ -19,9 +23,13 @@ router.get("", getAllContestants);
 router.get("/getContestantsForComp/:id", getContestantsForComp);
 router.post("/save", saveContestants);
 router.post("/signup", signUpContestant);
+router.post("/updateContestant", updateContestant);
+router.delete("/deleteContestant/:id", deleteContestant);
 
 router.get("/getAllSchools", getAllSchools);
 router.post("/createSchool", createSchool);
+router.post("/updateSchool", updateSchool);
+router.delete("/deleteSchool/:id", deleteSchool);
 
 router.post("/logScore", logScore);
 router.get("/getLeaderboard/:id", getLeaderboard);

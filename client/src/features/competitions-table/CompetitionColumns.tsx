@@ -5,7 +5,6 @@ import { DateSelectCell } from "@/components/cells/dateSelectCell";
 import { Button } from "@/components/ui/button";
 import { CircleX, Save, Trash2 } from "lucide-react";
 import {
-  deleteCompetition,
   updateCompetition,
 } from "@/services/competitionService";
 
