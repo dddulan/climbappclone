@@ -62,7 +62,8 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
 
   const loadData = () => {
     setLoading(true);
-
+    console.log(loading);
+    
     getAllCompetitions()
       .then((res: Competition[]) => {
         setCompetitions(res);
@@ -115,110 +116,104 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
   };
 
   const loadContent = () => {
-    if (loading) {
-      return (
-        <>
-          <span className="text-2xl font-medium px-4 py-2 block border-1">
-            Competitions
-          </span>
-          <div className="px-5 border-1 rounded-sm bg-white shadow-xl min-h-[200px] flex justify-center items-center">
-            <div className="w-full pt-2 flex justify-center">
-              <Spinner variant="default" className="w-8 h-8 text-primary" />
-            </div>
-          </div>
-        </>
-      );
-    }
     return (
       <>
         <span className="text-2xl font-medium px-4 py-2 block border-1">
           Competitions
         </span>
-        <div className="px-5 border-1 rounded-sm bg-white shadow-xl">
-          <div className="flex space-x-2 pt-5">
-            {/* Date */}
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  id="date-picker"
-                  className="w-32 justify-between font-normal"
+        {loading ? (
+          <div className="px-5 border-1 rounded-sm bg-white shadow-xl min-h-[200px] flex justify-center items-center">
+            <div className="w-full pt-2 flex justify-center">
+              <Spinner variant="default" className="w-8 h-8 text-primary" />
+            </div>
+          </div>
+        ) : (
+          <div className="px-5 border-1 rounded-sm bg-white shadow-xl">
+            <div className="flex space-x-2 pt-5">
+              {/* Date */}
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    id="date-picker"
+                    className="w-32 justify-between font-normal"
+                  >
+                    {date ? format(date, "MM/dd/yyyy") : "Select date"}
+                    <ChevronDownIcon />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto overflow-hidden p-0"
+                  align="start"
                 >
-                  {date ? format(date, "MM/dd/yyyy") : "Select date"}
-                  <ChevronDownIcon />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-auto overflow-hidden p-0"
-                align="start"
-              >
-                <Calendar
-                  mode="single"
-                  // selected={new Date(date)}
-                  captionLayout="dropdown"
-                  onSelect={(date) => {
-                    setDate(format(date as Date, "MM/dd/yyyy"));
-                    setOpen(false);
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
+                  <Calendar
+                    mode="single"
+                    // selected={new Date(date)}
+                    captionLayout="dropdown"
+                    onSelect={(date) => {
+                      setDate(format(date as Date, "MM/dd/yyyy"));
+                      setOpen(false);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
 
-            {/* Type */}
-            <Select onValueChange={(value) => setCompType(value)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                {competitionTypeList.map((type, index) => (
-                  <SelectItem key={index} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              {/* Type */}
+              <Select onValueChange={(value) => setCompType(value)}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {competitionTypeList.map((type, index) => (
+                    <SelectItem key={index} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            {/* Add Button */}
-            <Button size="sm" onClick={addRow}>
-              <Plus />
-            </Button>
+              {/* Add Button */}
+              <Button size="sm" onClick={addRow}>
+                <Plus />
+              </Button>
+            </div>
+
+            {/* Competitions Table */}
+            <div className="w-full pt-2  min-h-[300px] ">
+              <DataTable
+                columns={competitionColumns}
+                data={rows}
+                onDeselect={(rowIndex, isSave) => {
+                  // edit row was just canceled, revert row back to pre-edit state
+                  setRows((old) =>
+                    old.map((row, index) =>
+                      // search rows until we find rowIndex
+                      index === rowIndex && !isSave ? competitions[index] : row
+                    )
+                  );
+                }}
+                onUpdate={handleUpdate}
+                onDelete={(compId?: number) => {
+                  if (compId) {
+                    setRowToDelete(compId);
+                    setPendingAction("delete");
+                    setIsOpen(true);
+                  }
+                }}
+                onRowClick={(row) => {
+                  if (!isSelected) {
+                    setComp(row);
+                  }
+                }}
+                isEdit={false}
+                isRouteSelected={isSelected}
+              />
+            </div>
           </div>
-
-          {/* Competitions Table */}
-          <div className="w-full pt-2  min-h-[300px] ">
-            <DataTable
-              columns={competitionColumns}
-              data={rows}
-              onDeselect={(rowIndex, isSave) => {
-                // edit row was just canceled, revert row back to pre-edit state
-                setRows((old) =>
-                  old.map((row, index) =>
-                    // search rows until we find rowIndex
-                    index === rowIndex && !isSave ? competitions[index] : row
-                  )
-                );
-              }}
-              onUpdate={handleUpdate}
-              onDelete={(compId?: number) => {
-                if (compId) {
-                  setRowToDelete(compId);
-                  setPendingAction("delete");
-                  setIsOpen(true);
-                }
-              }}
-              onRowClick={(row) => {
-                if (!isSelected) {
-                  setComp(row);
-                }
-              }}
-              isEdit={false}
-              isRouteSelected={isSelected}
-            />
-          </div>
-        </div>
+        )}
       </>
     );
-  };
+  }
 
   return (
     <>

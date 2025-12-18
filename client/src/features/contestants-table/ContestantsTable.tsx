@@ -38,22 +38,15 @@ export const ContestantsTable: React.FC = () => {
     );
   };
 
-  const loadContent = () => {
-    if (loading) {
-      return (
-        <>
-          <span className="text-2xl font-medium">Contestants</span>
 
-          <div className="flex container space-x-2 mx-auto pt-5 w-full justify-center items-center min-h-[300px]">
-            <Spinner variant="default" className="w-8 h-8 text-primary" />
-          </div>
-        </>
-      );
-    }
-    return (
-      <>
-        <span className="text-2xl font-medium">Contestants</span>
-
+  return (
+    <>
+      <span className="text-2xl font-medium">Contestants</span>
+      {loading ? (
+        <div className="flex container space-x-2 mx-auto pt-5 w-full justify-center items-center min-h-[300px]">
+          <Spinner variant="default" className="w-8 h-8 text-primary" />
+        </div>
+      ) : (
         <div className="container mx-auto py-5 w-full">
           <DataTable
             columns={ContestantColums}
@@ -73,8 +66,7 @@ export const ContestantsTable: React.FC = () => {
             }}
           />
         </div>
-      </>
-    );
-  };
-  return <div>{loadContent()}</div>;
+      )}
+    </>
+  );
 };
