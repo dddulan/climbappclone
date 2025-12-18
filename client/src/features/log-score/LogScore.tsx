@@ -172,7 +172,6 @@ export const LogScore: React.FC = () => {
     timer.current = setTimeout(() => setOpen(false), 5000);
   };
 
-  const loadContent = () => {
     return (
       <div className="w-full">
         <Toaster position="top-center" />
@@ -414,7 +413,4 @@ export const LogScore: React.FC = () => {
         </Card>
       </div>
     );
-  };
-
-  return <div>{loadContent()}</div>;
 };

@@ -63,29 +63,23 @@ export const SchoolsTable: React.FC = () => {
 
     createSchool(newSchool).then(() => {
       loadData();
-    });
+    })
 
     setSchoolName("");
   };
 
-  const loadContent = () => {
-    if (loading) {
-      return (
-        <>
-          <span className="text-2xl font-medium">Schools</span>
 
-          <div className="py-5">
-            <div className="flex container space-x-2 pt-5 justify-center items-center min-h-[260px]">
-              <Spinner variant="default" className="w-8 h-8 text-primary" />
-            </div>
+
+  return (
+    <>
+      <span className="text-2xl font-medium">Schools</span>
+      {loading ? (
+        <div className="py-5">
+          <div className="flex container space-x-2 pt-5 justify-center items-center min-h-[260px]">
+            <Spinner variant="default" className="w-8 h-8 text-primary" />
           </div>
-        </>
-      );
-    }
-    return (
-      <>
-        <span className="text-2xl font-medium">Schools</span>
-
+        </div>
+      ) : (
         <div className="py-5 container bg-white">
           <div className="flex space-x-2 pt-5">
             {/* <Label>Add School:</Label> */}
@@ -125,9 +119,7 @@ export const SchoolsTable: React.FC = () => {
             />
           </div>
         </div>
-      </>
-    );
-  };
-
-  return <div>{loadContent()}</div>;
+      )}
+    </>
+  );
 };

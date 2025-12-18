@@ -123,117 +123,128 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
           </div>
         </span>
 
-        <div
-          className="overflow-hidden transition-all duration-500 ease-in-out"
-          style={{
-            maxHeight: showRouteForm ? "100px" : "0",
-          }}
-        >
-          <div className="  rounded-sm bg-white shadow-xl ">
-            <div className="flex space-x-2 p-5 bg-neutral-200">
-              {/* ADD ROW COMPOENENT GOES HERE */}
-              <Select onValueChange={(value) => setSelectedGrade(value)}>
-                <SelectTrigger className="w-[90px] bg-blue-800 text-white">
-                  <SelectValue placeholder="Grade" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Grade</SelectLabel>
-                    {gradeList.map((grade, index) => (
-                      <SelectItem key={index} value={grade}>
-                        {grade}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-              <Select onValueChange={(value) => setSelectedRouteColor(value)}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Color" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Colors</SelectLabel>
-                    {colorList.map((color, index) => (
-                      <SelectItem key={index} value={color}>
-                        {color}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {/* Score*/}
-              <Input
-                placeholder="ex.150"
-                type="number"
-                value={scoreValue}
-                onChange={(e) => setScoreValue(e.target.value)}
-                className="w-40 bg-neutral-100 border-neutral-200"
-              />
-              {/* Date*/}
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    id="date-picker"
-                    className="w-32 justify-between font-normal"
-                  >
-                    {date ? format(date, "MM/dd/yyyy") : "Select date"}
-                    <ChevronDownIcon />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="w-auto overflow-hidden p-0"
-                  align="start"
-                >
-                  <Calendar
-                    mode="single"
-                    selected={new Date(date)}
-                    captionLayout="dropdown"
-                    onSelect={(date) => {
-                      setDate(format(date as Date, "MM/dd/yyyy"));
-                      setOpen(false);
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-              {/* Add Button */}
-              <Button size="sm" onClick={addRow}>
-                <Plus />
-              </Button>
+        {loading ? (
+          <div className="mx-auto pt-5 w-full border-1 rounded-sm bg-white shadow-xl min-h-[200px] flex justify-center items-center">
+            <div className="flex justify-center">
+              <Spinner variant="default" className="w-8 h-8 text-primary" />
             </div>
           </div>
-        </div>
+        ) : (
+          <div>
+            <div
+              className="overflow-hidden transition-all duration-500 ease-in-out"
+              style={{
+                maxHeight: showRouteForm ? "100px" : "0",
+              }}
+            >
+              <div className="  rounded-sm bg-white shadow-xl ">
+                <div className="flex space-x-2 p-5 bg-neutral-200">
+                  {/* ADD ROW COMPOENENT GOES HERE */}
+                  <Select onValueChange={(value) => setSelectedGrade(value)}>
+                    <SelectTrigger className="w-[90px] bg-blue-800 text-white">
+                      <SelectValue placeholder="Grade" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Grade</SelectLabel>
+                        {gradeList.map((grade, index) => (
+                          <SelectItem key={index} value={grade}>
+                            {grade}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
 
-        {/* Routes Table */}
-        <div className="mx-auto pt-5 w-full">
-          <DataTable
-            columns={routeColumns}
-            data={rows}
-            onUpdate={handleUpdate}
-            onDeselect={(rowIndex, isSave) => {
-              // edit row was just canceled, revert row back to pre-edit state
+                  <Select onValueChange={(value) => setSelectedRouteColor(value)}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Colors</SelectLabel>
+                        {colorList.map((color, index) => (
+                          <SelectItem key={index} value={color}>
+                            {color}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {/* Score*/}
+                  <Input
+                    placeholder="ex.150"
+                    type="number"
+                    value={scoreValue}
+                    onChange={(e) => setScoreValue(e.target.value)}
+                    className="w-40 bg-neutral-100 border-neutral-200"
+                  />
+                  {/* Date*/}
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="date-picker"
+                        className="w-32 justify-between font-normal"
+                      >
+                        {date ? format(date, "MM/dd/yyyy") : "Select date"}
+                        <ChevronDownIcon />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto overflow-hidden p-0"
+                      align="start"
+                    >
+                      <Calendar
+                        mode="single"
+                        selected={new Date(date)}
+                        captionLayout="dropdown"
+                        onSelect={(date) => {
+                          setDate(format(date as Date, "MM/dd/yyyy"));
+                          setOpen(false);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {/* Add Button */}
+                  <Button size="sm" onClick={addRow}>
+                    <Plus />
+                  </Button>
+                </div>
+              </div>
+            </div>
 
-              setRows((old) =>
-                old.map((row, index) =>
-                  // search rows until we find rowIndex
-                  index === rowIndex && !isSave ? routes[index] : row
-                )
-              );
+            {/* Routes Table */}
+            <div className="mx-auto pt-5 w-full border-1 rounded-sm">
+              <DataTable
+                columns={routeColumns}
+                data={rows}
+                onUpdate={handleUpdate}
+                onDeselect={(rowIndex, isSave) => {
+                  // edit row was just canceled, revert row back to pre-edit state
 
-              toggleEditing(false);
-            }}
-            onDelete={() => {
-              loadData();
-            }}
-            onRowClick={(row) => {
-              // setCurrentRoute(row);
-              toggleEditing(true);
-            }}
-            emptyMessage="Please select a competition."
-          />
-        </div>
+                  setRows((old) =>
+                    old.map((row, index) =>
+                      // search rows until we find rowIndex
+                      index === rowIndex && !isSave ? routes[index] : row
+                    )
+                  );
+
+                  toggleEditing(false);
+                }}
+                onDelete={() => {
+                  loadData();
+                }}
+                onRowClick={(row) => {
+                  // setCurrentRoute(row);
+                  toggleEditing(true);
+                }}
+                emptyMessage="Please select a competition."
+              />
+            </div>
+          </div>
+        )}
+
       </>
     );
   };
