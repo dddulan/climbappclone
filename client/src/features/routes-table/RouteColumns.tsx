@@ -8,7 +8,12 @@ import { Button } from "@/components/ui/button";
 import { deleteRoute, updateRoute } from "@/services/routeService";
 
 // for all dropdown selects
-export const gradeList: string[] = [
+export const climbType: string[] = [
+  "Bouldering",
+  "Top Rope",
+];
+
+export const boulderingGradeList: string[] = [
   "v0",
   "v1",
   "v2",
@@ -22,6 +27,25 @@ export const gradeList: string[] = [
   "v10",
   "v11",
   "v12",
+];
+
+export const topRopeGradeList: string[] = [
+  "5.6",
+  "5.7",
+  "5.8",
+  "5.9",
+  "5.10a",
+  "5.10b",
+  "5.10c",
+  "5.10d",
+  "5.11a",
+  "5.11b",
+  "5.11c",
+  "5.11d",
+  "5.12a",
+  "5.12b",
+  "5.12c",
+  "5.12d",
 ];
 export const colorList: string[] = [
   "red",
@@ -76,7 +100,7 @@ export const routeColumns: ColumnDef<Route>[] = [
           value={value}
           table={table}
           isEdit={isSelected}
-          list={gradeList}
+          list={[...boulderingGradeList, ...topRopeGradeList]}
           width="w-18"
         />
       );

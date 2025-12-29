@@ -1,5 +1,5 @@
 import type { Route } from "@/models/route";
-import { gradeList, colorList, routeColumns } from "./RouteColumns";
+import { climbType, boulderingGradeList, topRopeGradeList, colorList, routeColumns } from "./RouteColumns";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/table";
 import {
@@ -41,13 +41,22 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const [rows, setRows] = useState<Route[]>([]); // rows for data table
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedGrade, setSelectedGrade] = useState<string>("");
+  const [selectedClimbType, setSelectedClimbType] = useState<string>("");
   const [selectedRouteColor, setSelectedRouteColor] = useState<string>("");
   const [scoreValue, setScoreValue] = useState<string>("");
   const [open, setOpen] = React.useState(false); //calendar open state
   const [date, setDate] = React.useState<string>("");
   const { comp } = useCompetition();
-  //clickable header
-  const [showRouteForm, setShowAddForm] = useState<boolean>(false);
+  //clickable header - persist state in localStorage
+  const [showRouteForm, setShowAddForm] = useState<boolean>(() => {
+    const saved = localStorage.getItem('showRouteForm');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  // Save showRouteForm state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('showRouteForm', JSON.stringify(showRouteForm));
+  }, [showRouteForm]);
 
   useEffect(() => {
     loadData();
@@ -140,21 +149,60 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
               <div className="  rounded-sm bg-white shadow-xl ">
                 <div className="flex space-x-2 p-5 bg-neutral-200">
                   {/* ADD ROW COMPOENENT GOES HERE */}
-                  <Select onValueChange={(value) => setSelectedGrade(value)}>
+                  <Select onValueChange={(value) => setSelectedClimbType(value)}>
                     <SelectTrigger className="w-[90px] bg-blue-800 text-white">
-                      <SelectValue placeholder="Grade" />
+                      <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Grade</SelectLabel>
-                        {gradeList.map((grade, index) => (
-                          <SelectItem key={index} value={grade}>
-                            {grade}
+                        <SelectLabel>Climb</SelectLabel>
+                        {climbType.map((climb, index) => (
+                          <SelectItem key={index} value={climb}>
+                            {climb}
                           </SelectItem>
                         ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
+{selectedClimbType === "Bouldering" ? (
+                    <Select onValueChange={(value) => setSelectedGrade(value)}>
+                      <SelectTrigger className="w-[90px] bg-blue-800 text-white">
+                        <SelectValue placeholder="Grade" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Boulder Grade</SelectLabel>
+                          {boulderingGradeList.map((grade, index) => (
+                            <SelectItem key={index} value={grade}>
+                              {grade}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  ) : selectedClimbType === "Top Rope" ? (
+                    <Select onValueChange={(value) => setSelectedGrade(value)}>
+                      <SelectTrigger className="w-[90px] bg-blue-800 text-white">
+                        <SelectValue placeholder="Grade" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Top Rope Grade</SelectLabel>
+                          {topRopeGradeList.map((grade, index) => (
+                            <SelectItem key={index} value={grade}>
+                              {grade}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Select disabled>
+                      <SelectTrigger className="w-[90px] bg-gray-400 text-white">
+                        <SelectValue placeholder="Grade" />
+                      </SelectTrigger>
+                    </Select>
+                  )}
 
                   <Select onValueChange={(value) => setSelectedRouteColor(value)}>
                     <SelectTrigger className="w-[180px]">
@@ -199,6 +247,8 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                         mode="single"
                         selected={new Date(date)}
                         captionLayout="dropdown"
+                        startMonth={new Date(2020, 0)}
+                        endMonth={new Date(2030, 11)}
                         onSelect={(date) => {
                           setDate(format(date as Date, "MM/dd/yyyy"));
                           setOpen(false);

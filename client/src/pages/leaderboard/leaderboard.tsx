@@ -15,7 +15,7 @@ const Leaderboard: React.FC = () => {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [comp.id]);
 
   const loadData = () => {
     setLoading(true);
