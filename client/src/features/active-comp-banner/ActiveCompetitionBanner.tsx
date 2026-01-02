@@ -56,19 +56,19 @@ export const ActiveCompetitionBanner = ({
     : "No competition selected";
 
   return (
-    <Card className="border-none bg-transparent shadow-none !gap-0 !p-0 !m-0">
+    <Card className="border bg-neutral-50 shadow-none !gap-0 !p-0 !m-0 ">
       <CardContent className="flex items-center p-1 ">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-col">
             <div className="flex flex-row">
               <Trophy className="h-4 w-4 text-muted-foreground" />
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              <p className="text-[14px] font-semibold uppercase tracking-wide text-muted-foreground">
                 Active Competition
               </p>
             </div>
             <div>
               {selected && (competition.date_of || "").length > 0 && (
-                <div className="flex items-center gap-2 text-[11px] text-muted-foreground sm:text-xs">
+                <div className="flex items-center gap-2 text-[16px] text-muted-foreground sm:text-sm">
                   <CalendarDays className="h-4 w-4" />
                   <span>{competition.date_of}</span>
                 </div>
@@ -78,9 +78,9 @@ export const ActiveCompetitionBanner = ({
 
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity sm:text-md">
                 <Badge variant={selected ? "default" : "secondary"}>
-                  {badgeLabel}:<p className="text-xs"> {competitionLabel} </p>
+                  {badgeLabel}:<p className="text-md"> {competitionLabel} </p>
                   <ChevronDown />
                 </Badge>
               </div>

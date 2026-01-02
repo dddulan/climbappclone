@@ -137,6 +137,11 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
                     variant="outline"
                     id="date-picker"
                     className="w-32 justify-between font-normal"
+                    style={{
+                      backgroundColor: "var(--secondary)",
+                      border: "1px solid var(--sidebar-border)",
+                      color: "var(--foreground)",
+                    }}
                   >
                     {date ? format(date, "MM/dd/yyyy") : "Select date"}
                     <ChevronDownIcon />

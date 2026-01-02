@@ -1,5 +1,11 @@
 import type { Route } from "@/models/route";
-import { climbType, boulderingGradeList, topRopeGradeList, colorList, routeColumns } from "./RouteColumns";
+import {
+  climbType,
+  boulderingGradeList,
+  topRopeGradeList,
+  colorList,
+  routeColumns,
+} from "./RouteColumns";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/table";
 import {
@@ -29,7 +35,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/loadingWheel";
-import { Arrow } from "@radix-ui/react-select";
 
 interface tableProps {
   isEdit: boolean;
@@ -49,14 +54,19 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const { comp } = useCompetition();
   //clickable header - persist state in localStorage
   const [showRouteForm, setShowAddForm] = useState<boolean>(() => {
-    const saved = localStorage.getItem('showRouteForm');
+    const saved = localStorage.getItem("showRouteForm");
     return saved ? JSON.parse(saved) : false;
   });
 
   // Save showRouteForm state to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('showRouteForm', JSON.stringify(showRouteForm));
+    localStorage.setItem("showRouteForm", JSON.stringify(showRouteForm));
   }, [showRouteForm]);
+
+  // Reset grade when climb type changes
+  useEffect(() => {
+    setSelectedGrade("");
+  }, [selectedClimbType]);
 
   useEffect(() => {
     loadData();
@@ -146,11 +156,13 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                 maxHeight: showRouteForm ? "100px" : "0",
               }}
             >
-              <div className="  rounded-sm bg-white shadow-xl ">
-                <div className="flex space-x-2 p-5 bg-neutral-200">
+              <div className="rounded-sm bg-white shadow-xl">
+                <div className="flex flex-wrap gap-2 p-5 bg-neutral-200">
                   {/* ADD ROW COMPOENENT GOES HERE */}
-                  <Select onValueChange={(value) => setSelectedClimbType(value)}>
-                    <SelectTrigger className="w-[90px] bg-blue-800 text-white">
+                  <Select
+                    onValueChange={(value) => setSelectedClimbType(value)}
+                  >
+                    <SelectTrigger className="w-[120px] sm:w-[140px] bg-blue-800 text-white">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -164,9 +176,12 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-{selectedClimbType === "Bouldering" ? (
-                    <Select onValueChange={(value) => setSelectedGrade(value)}>
-                      <SelectTrigger className="w-[90px] bg-blue-800 text-white">
+                  {selectedClimbType === "Bouldering" ? (
+                    <Select
+                      value={selectedGrade}
+                      onValueChange={(value) => setSelectedGrade(value)}
+                    >
+                      <SelectTrigger className="w-[80px] sm:w-[90px] bg-blue-800 text-white">
                         <SelectValue placeholder="Grade" />
                       </SelectTrigger>
                       <SelectContent>
@@ -181,8 +196,11 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                       </SelectContent>
                     </Select>
                   ) : selectedClimbType === "Top Rope" ? (
-                    <Select onValueChange={(value) => setSelectedGrade(value)}>
-                      <SelectTrigger className="w-[90px] bg-blue-800 text-white">
+                    <Select
+                      value={selectedGrade}
+                      onValueChange={(value) => setSelectedGrade(value)}
+                    >
+                      <SelectTrigger className="w-[80px] sm:w-[90px] bg-blue-800 text-white">
                         <SelectValue placeholder="Grade" />
                       </SelectTrigger>
                       <SelectContent>
@@ -198,14 +216,16 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                     </Select>
                   ) : (
                     <Select disabled>
-                      <SelectTrigger className="w-[90px] bg-gray-400 text-white">
+                      <SelectTrigger className="w-[80px] sm:w-[90px] bg-gray-400 text-white">
                         <SelectValue placeholder="Grade" />
                       </SelectTrigger>
                     </Select>
                   )}
 
-                  <Select onValueChange={(value) => setSelectedRouteColor(value)}>
-                    <SelectTrigger className="w-[180px]">
+                  <Select
+                    onValueChange={(value) => setSelectedRouteColor(value)}
+                  >
+                    <SelectTrigger className="w-[100px] sm:w-[100px]">
                       <SelectValue placeholder="Color" />
                     </SelectTrigger>
                     <SelectContent>
@@ -225,7 +245,12 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                     type="number"
                     value={scoreValue}
                     onChange={(e) => setScoreValue(e.target.value)}
-                    className="w-40 bg-neutral-100 border-neutral-200"
+                    className="w-[100px] sm:w-40 focus-visible:ring-black focus-visible:border-black"
+                    style={{
+                      backgroundColor: "var(--secondary)",
+                      border: "1px solid var(--sidebar-border)",
+                      color: "var(--foreground)",
+                    }}
                   />
                   {/* Date*/}
                   <Popover open={open} onOpenChange={setOpen}>
@@ -233,7 +258,12 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                       <Button
                         variant="outline"
                         id="date-picker"
-                        className="w-32 justify-between font-normal"
+                        className="w-[130px] sm:w-32 justify-between font-normal"
+                        style={{
+                          backgroundColor: "var(--secondary)",
+                          border: "1px solid var(--sidebar-border)",
+                          color: "var(--foreground)",
+                        }}
                       >
                         {date ? format(date, "MM/dd/yyyy") : "Select date"}
                         <ChevronDownIcon />
@@ -285,16 +315,14 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                 onDelete={() => {
                   loadData();
                 }}
-                onRowClick={(row) => {
-                  // setCurrentRoute(row);
+                onRowClick={() => {
                   toggleEditing(true);
                 }}
-                emptyMessage="Please select a competition."
+                emptyMessage="No data found"
               />
             </div>
           </div>
         )}
-
       </>
     );
   };
