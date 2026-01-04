@@ -54,13 +54,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
-import {
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from "cmdk";
+
 
 export const LogScore: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);

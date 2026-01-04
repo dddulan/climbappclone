@@ -19,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../components/ui/select";
-import { toast, Toaster } from "sonner";
 import {
   getContestantsForComp,
   getAllSchools,
@@ -29,8 +28,15 @@ import { SignupTable } from "@/features/sign-up.tsx/signup-table/SignupTable";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
 import { useCompetition } from "@/hooks/useCompetition";
-import { User, Users, School as SchoolIcon } from "lucide-react";
+import { User, Users, School as SchoolIcon, CheckCircle2 } from "lucide-react";
 import { Spinner } from "@/components/ui/loadingWheel";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export const SignUpForm: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<string>("");
@@ -42,10 +48,32 @@ export const SignUpForm: React.FC = () => {
   const schoolObj = schools.find((school) => school.name === selectedSchool);
   const { comp } = useCompetition();
   const [loading, setLoading] = useState<boolean>(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
+  const [registeredName, setRegisteredName] = useState<string>("");
+  const [countdown, setCountdown] = useState<number>(3);
 
   useEffect(() => {
     loadData();
   }, [comp.id]);
+
+  // Auto-close dialog after countdown
+  useEffect(() => {
+    if (showSuccessDialog) {
+      setCountdown(3);
+      const interval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setShowSuccessDialog(false);
+            return 3;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [showSuccessDialog]);
 
   const loadData = () => {
     setLoading(true);
@@ -82,13 +110,15 @@ export const SignUpForm: React.FC = () => {
       !selectedSchool ||
       !schoolObj
     ) {
-      toast("Please fill in all fields");
+      alert("Please fill in all fields");
       return;
     }
 
+    const fullName = `${firstName} ${lastName}`;
+
     // Create a new contestant object
     const newContestant: Contestant = {
-      name: `${firstName} ${lastName}`,
+      name: fullName,
       competition_id: comp.id,
       school_id: schoolObj.id || 0,
       gender: selectedGender || "",
@@ -105,12 +135,9 @@ export const SignUpForm: React.FC = () => {
     setSelectedGender("");
     setSelectedSchool("");
 
-
-    // Show success message
-    toast("Registration Complete", {
-      description: "Welcome to the competition" + " " + firstName,
-      className: "!bg-emerald-400 !text-neutral-800 !border-neutral-400",
-    });
+    // Show success dialog
+    setRegisteredName(fullName);
+    setShowSuccessDialog(true);
   };
 
   return (
@@ -138,7 +165,27 @@ export const SignUpForm: React.FC = () => {
           </div>
         </div>
       </div>
-      <Toaster />
+      {/* Success Dialog */}
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+                <CheckCircle2 className="h-6 w-6 text-green-600" />
+              </div>
+              <DialogTitle className="text-xl">Registration Complete!</DialogTitle>
+            </div>
+          </DialogHeader>
+          <DialogDescription className="pt-4 text-base">
+            <span className="font-semibold text-gray-900">{registeredName}</span> has been successfully added to the competition.
+          </DialogDescription>
+          <div className="flex justify-center pt-6">
+            <div className="text-sm text-gray-500">
+              Closing in <span className="font-semibold text-green-600">{countdown}</span> second{countdown !== 1 ? 's' : ''}...
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-h-full">
         {/* Registration Form - LEFT SIDE */}
         <Card className="bg-white shadow-lg rounded-xl border border-gray-100 ">

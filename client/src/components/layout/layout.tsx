@@ -20,7 +20,10 @@ const EMPTY_COMPETITION: Competition = {
 };
 
 export const Layout = () => {
-  const [showNavbar, setShowNavbar] = useState(true);
+  const [showNavbar, setShowNavbar] = useState(() => {
+    const saved = localStorage.getItem("showNavbar");
+    return saved ? JSON.parse(saved) : true;
+  });
   const [openDialogue, setOpenDialogue] = useState(false);
   const [comp, setComp] = useState<Competition>(() => {
     const saved = localStorage.getItem("selectedCompetition");
@@ -52,6 +55,11 @@ export const Layout = () => {
       localStorage.removeItem("selectedCompetition");
     }
   }, [comp]);
+
+  // Save navbar state to localStorage
+  useEffect(() => {
+    localStorage.setItem("showNavbar", JSON.stringify(showNavbar));
+  }, [showNavbar]);
 
   const handleToggle = () => {
     //if navbar showing then hide it
