@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/select";
 import { ChevronDownIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import {
   Dialog,
   DialogContent,

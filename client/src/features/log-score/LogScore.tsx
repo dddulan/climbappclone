@@ -228,6 +228,7 @@ export const LogScore: React.FC = () => {
     setSelectedRoute(undefined);
     setSelectedAttempt("");
     setShowRoute(false);
+    setRouteInput("");
   };
 
   return (
