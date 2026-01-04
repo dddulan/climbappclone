@@ -78,6 +78,7 @@ export const getContestantRoutes = async (
   const res = await axios.get(
     `/contestants/getContestantRoutes/${compId}/${contestantId}`
   );
+  
   return res.data;
 };
 

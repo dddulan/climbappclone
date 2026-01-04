@@ -23,7 +23,7 @@ export function InputCell<TData>({
   } else {
     return (
       <Input
-        className={`${width} !h-6`}
+        className={`${width} !h-8 bg-white`}
         value={value}
         onChange={(e) => {
           table.options.meta?.updateData(rowIndex, columnName, e.target.value);

@@ -153,7 +153,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
             <div
               className="overflow-hidden transition-all duration-500 ease-in-out"
               style={{
-                maxHeight: showRouteForm ? "100px" : "0",
+                maxHeight: showRouteForm ? "150px" : "0",
               }}
             >
               <div className="rounded-sm bg-white shadow-xl">
@@ -162,12 +162,11 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                   <Select
                     onValueChange={(value) => setSelectedClimbType(value)}
                   >
-                    <SelectTrigger className="w-[120px] sm:w-[140px] bg-blue-800 text-white">
+                    <SelectTrigger className="w-30">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Climb</SelectLabel>
                         {climbType.map((climb, index) => (
                           <SelectItem key={index} value={climb}>
                             {climb}
@@ -181,12 +180,11 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                       value={selectedGrade}
                       onValueChange={(value) => setSelectedGrade(value)}
                     >
-                      <SelectTrigger className="w-[80px] sm:w-[90px] bg-blue-800 text-white">
+                      <SelectTrigger>
                         <SelectValue placeholder="Grade" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>Boulder Grade</SelectLabel>
                           {boulderingGradeList.map((grade, index) => (
                             <SelectItem key={index} value={grade}>
                               {grade}
@@ -200,12 +198,11 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                       value={selectedGrade}
                       onValueChange={(value) => setSelectedGrade(value)}
                     >
-                      <SelectTrigger className="w-[80px] sm:w-[90px] bg-blue-800 text-white">
+                      <SelectTrigger>
                         <SelectValue placeholder="Grade" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>Top Rope Grade</SelectLabel>
                           {topRopeGradeList.map((grade, index) => (
                             <SelectItem key={index} value={grade}>
                               {grade}
@@ -216,7 +213,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                     </Select>
                   ) : (
                     <Select disabled>
-                      <SelectTrigger className="w-[80px] sm:w-[90px] bg-gray-400 text-white">
+                      <SelectTrigger className="bg-gray-400">
                         <SelectValue placeholder="Grade" />
                       </SelectTrigger>
                     </Select>
@@ -241,29 +238,21 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                   </Select>
                   {/* Score*/}
                   <Input
-                    placeholder="ex.150"
+                    placeholder="150"
                     type="number"
                     value={scoreValue}
                     onChange={(e) => setScoreValue(e.target.value)}
-                    className="w-[100px] sm:w-40 focus-visible:ring-black focus-visible:border-black"
-                    style={{
-                      backgroundColor: "var(--secondary)",
-                      border: "1px solid var(--sidebar-border)",
-                      color: "var(--foreground)",
-                    }}
+                    className="w-[100px] sm:w-40 bg-white"
+                    min="150"
+                    step="50"
                   />
                   {/* Date*/}
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                       <Button
-                        variant="outline"
+                        variant="date"
                         id="date-picker"
                         className="w-[130px] sm:w-32 justify-between font-normal"
-                        style={{
-                          backgroundColor: "var(--secondary)",
-                          border: "1px solid var(--sidebar-border)",
-                          color: "var(--foreground)",
-                        }}
                       >
                         {date ? format(date, "MM/dd/yyyy") : "Select date"}
                         <ChevronDownIcon />
@@ -318,7 +307,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                 onRowClick={() => {
                   toggleEditing(true);
                 }}
-                emptyMessage="No data found"
+                emptyMessage="No data found."
               />
             </div>
           </div>

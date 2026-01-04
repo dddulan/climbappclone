@@ -3,7 +3,7 @@ import type { Score } from "@/models/score";
 
 export const ScoreColumn: ColumnDef<Score>[] = [
       {
-    accessorKey: "number",
+    accessorKey: "route_number",
     header: "Number",
   },
   {

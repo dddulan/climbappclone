@@ -146,9 +146,7 @@ export const SignUpForm: React.FC = () => {
       <div className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-lg p-6 mb-6 text-white shadow-lg">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold mb-1">
-              Join the Competition!{" "}
-            </h1>
+            <h1 className="text-2xl font-bold mb-1">Join the Competition! </h1>
             <p className="text-green-100 text-sm">
               Register now and start climbing
             </p>
@@ -173,15 +171,22 @@ export const SignUpForm: React.FC = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
                 <CheckCircle2 className="h-6 w-6 text-green-600" />
               </div>
-              <DialogTitle className="text-xl">Registration Complete!</DialogTitle>
+              <DialogTitle className="text-xl">
+                Registration Complete!
+              </DialogTitle>
             </div>
           </DialogHeader>
           <DialogDescription className="pt-4 text-base">
-            <span className="font-semibold text-gray-900">{registeredName}</span> has been successfully added to the competition.
+            <span className="font-semibold text-gray-900">
+              {registeredName}
+            </span>{" "}
+            has been successfully added to the competition.
           </DialogDescription>
           <div className="flex justify-center pt-6">
             <div className="text-sm text-gray-500">
-              Closing in <span className="font-semibold text-green-600">{countdown}</span> second{countdown !== 1 ? 's' : ''}...
+              Closing in{" "}
+              <span className="font-semibold text-green-600">{countdown}</span>{" "}
+              second{countdown !== 1 ? "s" : ""}...
             </div>
           </div>
         </DialogContent>
@@ -217,7 +222,7 @@ export const SignUpForm: React.FC = () => {
                   value={firstName}
                   id="first-name"
                   type="text"
-                  placeholder="Magnus"
+                  placeholder="First"
                   onChange={(e) => setFirstName(e.target.value)}
                   required
                 />
@@ -232,7 +237,7 @@ export const SignUpForm: React.FC = () => {
                   value={lastName}
                   id="last-name"
                   type="text"
-                  placeholder="Midtbo"
+                  placeholder="Last"
                   onChange={(e) => setLastName(e.target.value)}
                   required
                 />
@@ -282,7 +287,6 @@ export const SignUpForm: React.FC = () => {
                   </SelectContent>
                 </Select>
               </div>
-
             </form>
           </CardContent>
 
@@ -304,16 +308,13 @@ export const SignUpForm: React.FC = () => {
           </CardFooter>
         </Card>
 
-        {loading ?
-          (
-            <div className="flex rounded-xl bg-white container space-x-2 mx-auto pt-5 w-full justify-center items-center min-h-[300px]">
-              <Spinner variant="default" className="w-8 h-8 text-primary" />
-            </div>
-          ) :
-          (
-            <SignupTable rows={rows} />
-          )
-        }
+        {loading ? (
+          <div className="flex rounded-xl bg-white container space-x-2 mx-auto pt-5 w-full justify-center items-center min-h-[300px]">
+            <Spinner variant="default" className="w-8 h-8 text-primary" />
+          </div>
+        ) : (
+          <SignupTable rows={rows} />
+        )}
       </div>
     </>
   );

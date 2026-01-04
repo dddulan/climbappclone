@@ -62,8 +62,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
 
   const loadData = () => {
     setLoading(true);
-    console.log(loading);
-    
+
     getAllCompetitions()
       .then((res: Competition[]) => {
         setCompetitions(res);
@@ -134,14 +133,9 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <Button
-                    variant="outline"
+                    variant="date"
                     id="date-picker"
                     className="w-32 justify-between font-normal"
-                    style={{
-                      backgroundColor: "var(--secondary)",
-                      border: "1px solid var(--sidebar-border)",
-                      color: "var(--foreground)",
-                    }}
                   >
                     {date ? format(date, "MM/dd/yyyy") : "Select date"}
                     <ChevronDownIcon />
@@ -218,7 +212,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
         )}
       </>
     );
-  }
+  };
 
   return (
     <>

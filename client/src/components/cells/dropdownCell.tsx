@@ -36,7 +36,7 @@ export function DropdownCell<TData>({
           table.options.meta?.updateData(rowIndex, columnName, newValue);
         }}
       >
-        <SelectTrigger className={`${width} !h-6`}>
+        <SelectTrigger className={`${width} !h-8`}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

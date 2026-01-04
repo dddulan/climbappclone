@@ -72,12 +72,12 @@ const Header = () => {
 
         <Link
           style={{
-            color: currentTab == "scoreshome" ? "white" : "",
-            background: currentTab == "scoreshome" ? "black" : "",
+            color: currentTab == "scores" ? "white" : "",
+            background: currentTab == "scores" ? "black" : "",
           }}
           className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
-          onClick={() => handleClick("scoreshome")}
-          to="/scoreshome"
+          onClick={() => handleClick("scores")}
+          to="/scores"
         >
           Log Score
         </Link>

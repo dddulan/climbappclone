@@ -9,7 +9,16 @@ export const getRoutesForComp = async (
 
   try {
     const result = await pool.query(`
-      SELECT r.* FROM routes r
+      SELECT 
+        r.id,
+        competition_id,
+        name,
+        number,
+        grade,
+        color,
+        point_value,
+        TO_CHAR(set_date, 'MM/DD/YYYY') AS set_date
+      FROM routes r
       INNER JOIN competitions c ON c.id = r.competition_id
       WHERE c.id = ${compId}
       ORDER BY r.id

@@ -226,15 +226,21 @@ export const saveContestants = async (
 
 export const logScore = async (req: Request, res: Response): Promise<void> => {
   const score = req.body;
-
   try {
     const query = `
       INSERT INTO scores (contestant_id, route_id, attempt)
-      VALUES ($1, $2, $3)`;
+      VALUES ($1, $2, $3)
+      ON CONFLICT (contestant_id, route_id) DO NOTHING`;
     const values = [score.contestant_id, score.route_id, score.attempt];
 
-    await pool.query(query, values);
-    res.json({ message: "Success" });
+    const result = await pool.query(query, values);
+
+    if (result.rowCount) {
+      res.json({ message: "Success" });
+    } else {
+      // score being saved is not a unique constentant and route combo
+      res.json({ message: "Duplicate" });
+    }
   } catch (err) {
     res.status(500).json({ error: err });
   }
@@ -249,9 +255,8 @@ export const getContestantRoutes = async (
     const result = await pool.query(
       `
       SELECT
-        r.id,
-        r.name,
-        r.number,
+        r.id AS route_id,
+        r.number AS route_number,
         r.color,
         r.grade,
         s.attempt,

@@ -35,9 +35,9 @@ export function DateSelectCell<TData>({
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
-              variant="outline"
+              variant="date"
               id="date"
-              className="w-30 justify-between font-normal !h-6"
+              className="w-30 justify-between font-normal !h-8"
               onClick={(e) => {
                 e.stopPropagation();
               }}
