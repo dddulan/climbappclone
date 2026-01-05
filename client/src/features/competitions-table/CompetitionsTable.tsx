@@ -21,7 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronDownIcon, Plus, SquareArrowDown, SquareArrowUp } from "lucide-react";
+import {
+  ChevronDownIcon,
+  Plus,
+  SquareArrowDown,
+  SquareArrowUp,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import {
@@ -174,6 +179,7 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
                       mode="single"
                       // selected={new Date(date)}
                       captionLayout="dropdown"
+                      endMonth={new Date(2030, 11)}
                       onSelect={(date) => {
                         setDate(format(date as Date, "MM/dd/yyyy"));
                         setOpen(false);
@@ -204,37 +210,37 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
             </div>
 
             {/* Competitions Table */}
-              <div className="w-full min-h-[300px] px-4">
-                <DataTable
-                  columns={competitionColumns}
-                  data={rows}
-                  onDeselect={(rowIndex, isSave) => {
-                    // edit row was just canceled, revert row back to pre-edit state
-                    setRows((old) =>
-                      old.map((row, index) =>
-                        // search rows until we find rowIndex
-                        index === rowIndex && !isSave ? competitions[index] : row
-                      )
-                    );
-                  }}
-                  onUpdate={handleUpdate}
-                  onDelete={(compId?: number) => {
-                    if (compId) {
-                      setRowToDelete(compId);
-                      setPendingAction("delete");
-                      setIsOpen(true);
-                    }
-                  }}
-                  onRowClick={(row) => {
-                    if (!isSelected) {
-                      setComp(row);
-                    }
-                  }}
-                  isEdit={false}
-                  isRouteSelected={isSelected}
-                />
-              </div>
+            <div className="w-full min-h-[300px] px-4">
+              <DataTable
+                columns={competitionColumns}
+                data={rows}
+                onDeselect={(rowIndex, isSave) => {
+                  // edit row was just canceled, revert row back to pre-edit state
+                  setRows((old) =>
+                    old.map((row, index) =>
+                      // search rows until we find rowIndex
+                      index === rowIndex && !isSave ? competitions[index] : row
+                    )
+                  );
+                }}
+                onUpdate={handleUpdate}
+                onDelete={(compId?: number) => {
+                  if (compId) {
+                    setRowToDelete(compId);
+                    setPendingAction("delete");
+                    setIsOpen(true);
+                  }
+                }}
+                onRowClick={(row) => {
+                  if (!isSelected) {
+                    setComp(row);
+                  }
+                }}
+                isEdit={false}
+                isRouteSelected={isSelected}
+              />
             </div>
+          </div>
         )}
       </>
     );

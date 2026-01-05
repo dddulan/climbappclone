@@ -28,7 +28,15 @@ import { SignupTable } from "@/features/sign-up.tsx/signup-table/SignupTable";
 import type { School } from "@/models/school";
 import type { Contestant } from "@/models/contestant";
 import { useCompetition } from "@/hooks/useCompetition";
-import { User, Users, School as SchoolIcon, CheckCircle2 } from "lucide-react";
+import {
+  User,
+  Users,
+  School as SchoolIcon,
+  CheckCircle2,
+  Mars,
+  Venus,
+  NonBinary,
+} from "lucide-react";
 import { Spinner } from "@/components/ui/loadingWheel";
 import {
   Dialog,
@@ -37,6 +45,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export const SignUpForm: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<string>("");
@@ -126,7 +135,7 @@ export const SignUpForm: React.FC = () => {
     };
     // Call the signUpContestant service to submit the new contestant
     signUpContestant(newContestant).then(() => {
-      loadData();
+      getContestants();
     });
 
     // Reset form fields
@@ -163,34 +172,7 @@ export const SignUpForm: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Success Dialog */}
-      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-                <CheckCircle2 className="h-6 w-6 text-green-600" />
-              </div>
-              <DialogTitle className="text-xl">
-                Registration Complete!
-              </DialogTitle>
-            </div>
-          </DialogHeader>
-          <DialogDescription className="pt-4 text-base">
-            <span className="font-semibold text-gray-900">
-              {registeredName}
-            </span>{" "}
-            has been successfully added to the competition.
-          </DialogDescription>
-          <div className="flex justify-center pt-6">
-            <div className="text-sm text-gray-500">
-              Closing in{" "}
-              <span className="font-semibold text-green-600">{countdown}</span>{" "}
-              second{countdown !== 1 ? "s" : ""}...
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-h-full">
         {/* Registration Form - LEFT SIDE */}
         <Card className="bg-white shadow-lg rounded-xl border border-gray-100 ">
@@ -211,6 +193,7 @@ export const SignUpForm: React.FC = () => {
             </CardDescription>
           </CardHeader>
 
+          {/* First Name */}
           <CardContent className="pt-6">
             <form className="flex flex-col gap-6">
               <div className="grid gap-3">
@@ -228,6 +211,7 @@ export const SignUpForm: React.FC = () => {
                 />
               </div>
 
+              {/* Last Name */}
               <div className="grid gap-3">
                 <Label className="flex items-center gap-2">
                   <User className="h-4 w-4 text-blue-600" />
@@ -243,29 +227,7 @@ export const SignUpForm: React.FC = () => {
                 />
               </div>
 
-              <div className="grid gap-3">
-                <Label className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-purple-600" />
-                  Gender
-                </Label>
-                <Select
-                  value={selectedGender}
-                  onValueChange={setSelectedGender}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a Gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Gender</SelectLabel>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                      <SelectItem value="Nonbinary">Non-Binary</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-
+              {/* School */}
               <div className="grid gap-3">
                 <Label className="flex items-center gap-2">
                   <SchoolIcon className="h-4 w-4 text-green-600" />
@@ -287,6 +249,34 @@ export const SignUpForm: React.FC = () => {
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Gender */}
+              <div className="grid">
+                <Label className="flex items-center p-2">
+                  <Users className="h-4 w-4 text-purple-600" />
+                  Gender
+                </Label>
+
+                <div className="gap-2 w-50">
+                  <ToggleGroup
+                    type="single"
+                    variant="outline"
+                    spacing={4}
+                    value={selectedGender}
+                    onValueChange={(value) => setSelectedGender(value)}
+                  >
+                    <ToggleGroupItem className="" size="lg" value="Male">
+                      <Mars className="text-blue-600" /> Male
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="Female">
+                      <Venus className="text-pink-600" /> Female
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="Non-Binary">
+                      <NonBinary /> Non-Binary
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </div>
+              </div>
             </form>
           </CardContent>
 
@@ -307,6 +297,37 @@ export const SignUpForm: React.FC = () => {
             </Button>
           </CardFooter>
         </Card>
+
+        {/* Success Dialog */}
+        <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <div className="flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+                  <CheckCircle2 className="h-6 w-6 text-green-600" />
+                </div>
+                <DialogTitle className="text-xl">
+                  Registration Complete!
+                </DialogTitle>
+              </div>
+            </DialogHeader>
+            <DialogDescription className="pt-4 text-base">
+              <span className="font-semibold text-gray-900">
+                {registeredName}
+              </span>{" "}
+              has been successfully added to the competition.
+            </DialogDescription>
+            <div className="flex justify-center pt-6">
+              <div className="text-sm text-gray-500">
+                Closing in{" "}
+                <span className="font-semibold text-green-600">
+                  {countdown}
+                </span>{" "}
+                second{countdown !== 1 ? "s" : ""}...
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {loading ? (
           <div className="flex rounded-xl bg-white container space-x-2 mx-auto pt-5 w-full justify-center items-center min-h-[300px]">

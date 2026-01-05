@@ -30,7 +30,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -227,7 +226,6 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Colors</SelectLabel>
                         {colorList.map((color, index) => (
                           <SelectItem key={index} value={color}>
                             {color}

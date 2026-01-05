@@ -8,7 +8,6 @@ import { Spinner } from "@/components/ui/loadingWheel";
 export const ContestantsTable: React.FC = () => {
   const [contestants, setContestants] = useState<Contestant[]>([]);
   const [rows, setRows] = useState<Contestant[]>([]);
-  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export const ContestantsTable: React.FC = () => {
       )
     );
   };
-
 
   return (
     <>
