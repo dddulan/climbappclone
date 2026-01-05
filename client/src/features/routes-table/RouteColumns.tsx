@@ -46,6 +46,14 @@ export const topRopeGradeList: string[] = [
   "5.12b",
   "5.12c",
   "5.12d",
+  "5.13a",
+  "5.13b",
+  "5.13c",
+  "5.13d",
+  "5.14a",
+  "5.14b",
+  "5.14c",
+  "5.14d",
 ];
 export const colorList: string[] = [
   "red",
@@ -194,9 +202,8 @@ export const routeColumns: ColumnDef<Route>[] = [
         <div className="space-x-3 ml-2">
           <Button
             size="icon"
-            className={`${
-              isSelected ? "" : "hidden"
-            } size-6 !p-0 bg-green-600 hover:bg-green-700`}
+            className={`${isSelected ? "" : "hidden"
+              } size-6 !p-0 bg-green-600 hover:bg-green-700`}
             onClick={handleSaveClick}
           >
             <Save />
@@ -204,9 +211,8 @@ export const routeColumns: ColumnDef<Route>[] = [
 
           <Button
             size="icon"
-            className={`${
-              isSelected ? "" : "hidden"
-            } size-6 !p-0 bg-gray-500 hover:bg-gray-800`}
+            className={`${isSelected ? "" : "hidden"
+              } size-6 !p-0 bg-gray-500 hover:bg-gray-800`}
             onClick={handleCancelClick}
           >
             <CircleX />
@@ -214,9 +220,8 @@ export const routeColumns: ColumnDef<Route>[] = [
 
           <Button
             size="icon"
-            className={`${
-              isSelected ? "" : "hidden"
-            } size-6 !p-0 bg-red-500 hover:bg-red-800`}
+            className={`${isSelected ? "" : "hidden"
+              } size-6 !p-0 bg-red-500 hover:bg-red-800`}
             onClick={handleDeleteClick}
           >
             <Trash2 />
