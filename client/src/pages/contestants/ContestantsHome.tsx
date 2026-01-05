@@ -20,12 +20,12 @@ const Contestants: React.FC = () => {
         </h1>
         <div className="flex flex-row justify-center gap-6">
           <div className="flex-1">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden p-4">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <ContestantsTable></ContestantsTable>
             </div>
           </div>
           <div className="flex-1">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden p-4">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <SchoolsTable></SchoolsTable>
             </div>
           </div>

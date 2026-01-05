@@ -5,7 +5,7 @@ import { getAllSchools, createSchool } from "@/services/contestantService";
 import { SchoolColums } from "./SchoolsColumns";
 import { Spinner } from "@/components/ui/loadingWheel";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, SquareArrowDown, SquareArrowUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
@@ -15,7 +15,10 @@ export const SchoolsTable: React.FC = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [schoolName, setSchoolName] = useState<string>("");
-  // const [school_id]
+  const [showSchoolForm, setShowAddForm] = useState<boolean>(() => {
+    const saved = localStorage.getItem("showCompForm");
+    return saved ? JSON.parse(saved) : false;
+  });
 
   useEffect(() => {
     loadData();
@@ -34,6 +37,10 @@ export const SchoolsTable: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const handleShowAddForm = () => {
+    setShowAddForm(!showSchoolForm);
   };
 
   const handleUpdate = (rowIndex: number, columnId: string, value: unknown) => {
@@ -72,34 +79,49 @@ export const SchoolsTable: React.FC = () => {
 
   return (
     <>
-      <span className="text-2xl font-medium">Schools</span>
+      <span
+        className={`flex items-center text-3xl font-medium px-4 py-2 cursor-pointer gap-2 hover:bg-neutral-200 `}
+        onClick={handleShowAddForm}
+      >
+        Schools
+        <div className="flex items-center">
+          {showSchoolForm ? <SquareArrowUp /> : <SquareArrowDown />}
+        </div>
+      </span>
       {loading ? (
-        <div className="py-5">
+        <div>
           <div className="flex container space-x-2 pt-5 justify-center items-center min-h-[260px]">
             <Spinner variant="default" className="w-8 h-8 text-primary" />
           </div>
         </div>
       ) : (
-        <div className="py-5 container bg-white">
-          <div className="flex space-x-2 pt-5">
-            {/* <Label>Add School:</Label> */}
-            <Input
-              value={schoolName}
-              id="schoolName"
-              type="schoolName"
-              placeholder="Sheldon High School"
-              onChange={(e) => setSchoolName(e.target.value)}
-              className="bg-neutral-100 border-neutral-200"
-              required
-            />
-            <Button size="default" variant="default" onClick={onSubmit}>
-              {/* disabled={
+        <div>
+          <div
+            className="overflow-hidden transition-all duration-500 ease-in-out"
+            style={{
+              maxHeight: showSchoolForm ? "150px" : "0",
+            }}
+          >
+            <div className="flex p-5 bg-neutral-200">
+              {/* <Label>Add School:</Label> */}
+              <Input
+                value={schoolName}
+                id="schoolName"
+                type="schoolName"
+                placeholder="Sheldon High School"
+                onChange={(e) => setSchoolName(e.target.value)}
+                className="bg-neutral-100 border-neutral-200"
+                required
+              />
+              <Button size="default" variant="default" onClick={onSubmit}>
+                {/* disabled={
                                 !schoolName
                             } */}
-              <Plus />
-            </Button>
+                <Plus />
+              </Button>
+            </div>
           </div>
-          <div className="container mx-auto py-5 w-full">
+          <div className="container mx-auto w-full p-4">
             <DataTable
               columns={SchoolColums}
               data={rows}
