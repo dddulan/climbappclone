@@ -89,11 +89,11 @@ export const SchoolsTable: React.FC = () => {
         </div>
       </span>
       {loading ? (
-        <div>
-          <div className="flex container space-x-2 pt-5 justify-center items-center min-h-[260px]">
-            <Spinner variant="default" className="w-8 h-8 text-primary" />
+          <div className="mx-auto pt-5 w-full bg-white shadow-xl min-h-[200px] flex justify-center items-center">
+            <div className="flex justify-center">
+              <Spinner variant="default" className="w-8 h-8 text-primary" />
+            </div>
           </div>
-        </div>
       ) : (
         <div>
           <div
