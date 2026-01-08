@@ -145,8 +145,8 @@ export const CompetitionsTable: React.FC<tableProps> = ({ isSelected }) => {
           </div>
         </span>
         {loading ? (
-          <div className="mx-auto pt-5 w-full border-1 rounded-sm bg-white shadow-xl min-h-[200px] flex justify-center items-center">
-            <div className="w-full flex justify-center">
+          <div className="mx-auto pt-5 w-full bg-white shadow-xl min-h-[200px] flex justify-center items-center">
+            <div className="flex justify-center">
               <Spinner variant="default" className="w-8 h-8 text-primary" />
             </div>
           </div>
