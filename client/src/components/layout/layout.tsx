@@ -1,16 +1,13 @@
 import Header from "./header/header";
 import { Outlet } from "react-router-dom";
 import Footer from "./footer/footer";
-import { createContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import type { Competition } from "@/models/competition";
+import { CompContext } from "@/contexts/competitionContext";
 
 import { HoverSlideIcon } from "../hoverslide/hoverslide";
 import { ActiveCompetitionBanner } from "../../features/active-comp-banner/ActiveCompetitionBanner";
 import { AdminDialog } from "@/features/admin-dialog/Admin-Dialog";
-export const CompContext = createContext<{
-  comp: Competition;
-  setComp: React.Dispatch<React.SetStateAction<Competition>>;
-} | null>(null);
 
 // Default empty competition when nothing is selected
 const EMPTY_COMPETITION: Competition = {
@@ -88,14 +85,14 @@ export const Layout = () => {
         {/*competition banner*/}
         {/*show header only if showNavbar is true*/}
         <div
-          className="flex-shrink-0 transition-all duration-500 ease-in-out"
+          className="shrink-0 transition-all duration-500 ease-in-out"
           style={{
             maxHeight: showNavbar ? "100px" : "0",
             overflow: "hidden",
           }}
         >
           <Header />
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <ActiveCompetitionBanner competition={comp} />
           </div>
         </div>
@@ -120,7 +117,7 @@ export const Layout = () => {
         />
       )}
 
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <Footer />
       </div>
     </div>

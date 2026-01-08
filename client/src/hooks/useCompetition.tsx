@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { CompContext } from "@/components/layout/layout";
-// Custom hook to access the global competition context
+import { CompContext } from "@/contexts/competitionContext";
+
 export const useCompetition = () => {
   const ctx = useContext(CompContext);
 
