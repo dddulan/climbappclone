@@ -33,7 +33,7 @@ export const TopClimbers: React.FC = () => {
         );
         // Filter and sort non-binary contestants
         const nonbinaryContestants = res.filter(
-          (score) => score.gender?.toLowerCase() === "nonbinary"
+          (score) => score.gender?.toLowerCase() === "non-binary"
         );
 
         setMaleLeaderboard(maleContestants);
@@ -88,7 +88,7 @@ export const TopClimbers: React.FC = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>
-                    Top Nonbinary {competitionType} Climbers
+                    Top Non-Binary {competitionType} Climbers
                   </CardTitle>
                 </CardHeader>
                 <CardContent>

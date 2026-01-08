@@ -15,7 +15,7 @@ export const getAllContestants = async (
         s.name AS school_name 
       FROM contestants c 
       INNER JOIN schools s ON c.school_id = s.id
-      ORDER BY c.id`);
+      ORDER BY c.name`);
     res.json(result.rows);
   } catch (err) {
     console.error("Query error:", err);
@@ -41,7 +41,7 @@ export const getContestantsForComp = async (
       FROM contestants c
         INNER JOIN schools s ON s.id = c.school_id
       WHERE c.competition_id = $1
-      ORDER BY c.name`,
+      ORDER BY c.id`,
       [compId]
     );
     res.json(result.rows);

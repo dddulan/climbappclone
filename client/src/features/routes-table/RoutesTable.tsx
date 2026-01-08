@@ -30,7 +30,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -133,7 +132,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
     return (
       <>
         <span
-          className={`flex items-center text-2xl font-medium px-4 py-2  cursor-pointer gap-2 hover:bg-neutral-200 `}
+          className={`flex items-center text-3xl font-medium px-4 py-2  cursor-pointer gap-2 hover:bg-neutral-200 `}
           onClick={handleShowAddForm}
         >
           Routes
@@ -143,7 +142,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
         </span>
 
         {loading ? (
-          <div className="mx-auto pt-5 w-full border-1 rounded-sm bg-white shadow-xl min-h-[200px] flex justify-center items-center">
+          <div className="mx-auto pt-5 w-full bg-white shadow-xl min-h-[200px] flex justify-center items-center">
             <div className="flex justify-center">
               <Spinner variant="default" className="w-8 h-8 text-primary" />
             </div>
@@ -156,7 +155,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                 maxHeight: showRouteForm ? "150px" : "0",
               }}
             >
-              <div className="rounded-sm bg-white shadow-xl">
+              <div className="bg-white shadow-xl">
                 <div className="flex flex-wrap gap-2 p-5 bg-neutral-200">
                   {/* ADD ROW COMPOENENT GOES HERE */}
                   <Select
@@ -227,7 +226,6 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Colors</SelectLabel>
                         {colorList.map((color, index) => (
                           <SelectItem key={index} value={color}>
                             {color}
@@ -284,7 +282,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
             </div>
 
             {/* Routes Table */}
-            <div className="mx-auto pt-5 w-full border-1 rounded-sm">
+            <div className="mx-auto w-full px-4">
               <DataTable
                 columns={routeColumns}
                 data={rows}
