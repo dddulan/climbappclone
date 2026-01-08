@@ -56,7 +56,7 @@ export const ActiveCompetitionBanner = ({
     : "No competition selected";
 
   return (
-    <Card className="border bg-neutral-50 shadow-none !gap-0 !p-0 !m-0 ">
+    <Card className="border bg-neutral-50 shadow-none gap-0! p-0! m-0! ">
       <CardContent className="flex items-center p-1 ">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-col">
