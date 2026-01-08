@@ -1,5 +1,3 @@
-import type { set } from "date-fns";
-import { Home } from "lucide-react";
 import { SquareArrowDown, SquareArrowUp } from "lucide-react";
 import React from "react";
 interface HoverSlideIconProps {

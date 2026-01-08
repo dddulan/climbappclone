@@ -37,7 +37,7 @@ export function DateSelectCell<TData>({
             <Button
               variant="date"
               id="date"
-              className="w-30 justify-between font-normal !h-8"
+              className="w-30 justify-between font-normal h-8!"
               onClick={(e) => {
                 e.stopPropagation();
               }}

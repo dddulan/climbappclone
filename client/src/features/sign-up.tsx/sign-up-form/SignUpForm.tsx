@@ -13,9 +13,7 @@ import { Button } from "../../../components/ui/button";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../../../components/ui/select";
@@ -152,7 +150,7 @@ export const SignUpForm: React.FC = () => {
   return (
     <>
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-lg p-6 mb-6 text-white shadow-lg">
+      <div className="bg-linear-to-r from-green-600 to-emerald-500 rounded-lg p-6 mb-6 text-white shadow-lg">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold mb-1">Join the Competition! </h1>
@@ -176,7 +174,7 @@ export const SignUpForm: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-h-full">
         {/* Registration Form - LEFT SIDE */}
         <Card className="bg-white shadow-lg rounded-xl border border-gray-100 ">
-          <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
+          <CardHeader className="bg-linear-to-r from-slate-50 to-gray-50 border-b border-gray-200">
             <CardTitle className="text-2xl font-bold text-gray-900">
               Registration Form
             </CardTitle>
@@ -330,7 +328,7 @@ export const SignUpForm: React.FC = () => {
         </Dialog>
 
         {loading ? (
-          <div className="flex rounded-xl bg-white container space-x-2 mx-auto pt-5 w-full justify-center items-center min-h-[300px]">
+          <div className="flex rounded-xl bg-white container space-x-2 mx-auto pt-5 w-full justify-center items-center min-h-75">
             <Spinner variant="default" className="w-8 h-8 text-primary" />
           </div>
         ) : (
