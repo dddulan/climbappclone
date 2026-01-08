@@ -4,13 +4,11 @@ import { LeaderBoardChart } from "@/features/leaderboard/leaderboard-chart/Leade
 import type { Score } from "@/models/score";
 import { TopClimbers } from "@/features/leaderboard/top-climbers/TopClimbers";
 import { Trophy } from "lucide-react";
-import type { Competition } from "@/models/competition";
 import { useCompetition } from "@/hooks/useCompetition";
 
 const Leaderboard: React.FC = () => {
   const [leaderboard, setLeaderboard] = useState<Score[]>([]);
   const [loading, setLoading] = useState(true);
-  const [uploading, isUploading] = useState<boolean>(false); //would be this in other pages => const [loading, setLoading] =  useState<boolean>(false)
   const { comp } = useCompetition();
 
   useEffect(() => {

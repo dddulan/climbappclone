@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { useNavigation } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const [inputValue, setInputValue] = useState('');
-  
-  const onSubmit = () => {};
 
-  const handleChange = (event: any) => {
-    setInputValue(event.target.value);
+  const handleChange = () => {
+    // setInputValue(event.target.value);
   };
 
   return (
