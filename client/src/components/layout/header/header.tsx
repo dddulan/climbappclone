@@ -1,20 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../../../assets/mount.png";
-import { useState, useEffect } from "react";
 
 const Header = () => {
-  const [currentTab, setCurrentTab] = useState<string>(() => {
-    const saved = localStorage.getItem("currentTab");
-    return saved || "";
-  });
+  const location = useLocation();
 
-  const handleClick = (pageName: string) => {
-    setCurrentTab(pageName);
-  };
-
-  useEffect(() => {
-    localStorage.setItem("currentTab", currentTab);
-  }, [currentTab]);
+  // Extract the current tab from the URL pathname
+  // "/competitions" -> "competitions", "/scores" -> "scores", etc.
+  const currentTab = location.pathname.split('/')[1] || "competitions";
 
   return (
     <div className="bg-white  text-black flex items-center justify-center text-lg">
@@ -28,7 +20,6 @@ const Header = () => {
             background: currentTab == "competitions" ? "black" : "",
           }}
           className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
-          onClick={() => handleClick("competitions")}
           to="/competitions"
         >
           Competitions
@@ -40,7 +31,6 @@ const Header = () => {
             background: currentTab == "contestants" ? "black" : "",
           }}
           className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
-          onClick={() => handleClick("contestants")}
           to="/contestants"
         >
           Contestants
@@ -52,7 +42,6 @@ const Header = () => {
             background: currentTab == "leaderboard" ? "black" : "",
           }}
           className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
-          onClick={() => handleClick("leaderboard")}
           to="/leaderboard"
         >
           Leaderboard
@@ -64,7 +53,6 @@ const Header = () => {
             background: currentTab == "signup" ? "black" : "",
           }}
           className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
-          onClick={() => handleClick("signup")}
           to="/signup"
         >
           Sign Up
@@ -76,7 +64,6 @@ const Header = () => {
             background: currentTab == "scores" ? "black" : "",
           }}
           className="text-black no-underline pl-4 pr-4 font-bold rounded-lg"
-          onClick={() => handleClick("scores")}
           to="/scores"
         >
           Log Score

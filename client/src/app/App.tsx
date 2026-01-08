@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import CompetitionsHome from '../pages/competitions/CompetitionsHome';
 import Contestants from '../pages/contestants/ContestantsHome';
 import Leaderboard from '../pages/leaderboard/leaderboard';
@@ -13,6 +13,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
+        <Route index element={<Navigate to ="competitions" replace />} />
           <Route path="competitions" element={<CompetitionsHome />} />
           <Route path="contestants" element={<Contestants />} />
           <Route path="leaderboard" element={<Leaderboard />} />
