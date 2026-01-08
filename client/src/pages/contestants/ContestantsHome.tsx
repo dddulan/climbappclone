@@ -1,16 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { ContestantsTable } from "@/features/contestants-table/ContestantsTable";
-import { Button } from "@/components/ui/button";
 import { SchoolsTable } from "@/features/schools-table/SchoolsTable";
 import { Users } from "lucide-react";
 
 const Contestants: React.FC = () => {
-
-  const [isSelected, setIsSelected] = useState<boolean>(false);
-  const toggleEditing = (isSelected: boolean) => {
-    setIsSelected(isSelected);
-  };
-
   return (
     <div>
       <div className="container mx-auto">

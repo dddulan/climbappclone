@@ -142,7 +142,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
         </span>
 
         {loading ? (
-          <div className="mx-auto pt-5 w-full bg-white shadow-xl min-h-[200px] flex justify-center items-center">
+          <div className="mx-auto pt-5 w-full bg-white shadow-xl min-h-200px flex justify-center items-center">
             <div className="flex justify-center">
               <Spinner variant="default" className="w-8 h-8 text-primary" />
             </div>
@@ -161,7 +161,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                   <Select
                     onValueChange={(value) => setSelectedClimbType(value)}
                   >
-                    <SelectTrigger className="w-30">
+                    <SelectTrigger className="w-35">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -221,7 +221,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                   <Select
                     onValueChange={(value) => setSelectedRouteColor(value)}
                   >
-                    <SelectTrigger className="w-[100px] sm:w-[100px]">
+                    <SelectTrigger>
                       <SelectValue placeholder="Color" />
                     </SelectTrigger>
                     <SelectContent>

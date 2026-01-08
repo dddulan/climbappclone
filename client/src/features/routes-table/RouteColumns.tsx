@@ -148,7 +148,7 @@ export const routeColumns: ColumnDef<Route>[] = [
           value={value}
           table={table}
           isEdit={isSelected}
-          width="w-15"
+          width="w-25"
         />
       );
     },

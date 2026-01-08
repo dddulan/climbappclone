@@ -12,7 +12,6 @@ import { toast } from "sonner";
 export const SchoolsTable: React.FC = () => {
   const [schools, setSchools] = useState<School[]>([]);
   const [rows, setRows] = useState<School[]>([]);
-  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [schoolName, setSchoolName] = useState<string>("");
   const [showSchoolForm, setShowAddForm] = useState<boolean>(() => {
@@ -70,12 +69,10 @@ export const SchoolsTable: React.FC = () => {
 
     createSchool(newSchool).then(() => {
       loadData();
-    })
+    });
 
     setSchoolName("");
   };
-
-
 
   return (
     <>
@@ -89,11 +86,11 @@ export const SchoolsTable: React.FC = () => {
         </div>
       </span>
       {loading ? (
-          <div className="mx-auto pt-5 w-full bg-white shadow-xl min-h-[200px] flex justify-center items-center">
-            <div className="flex justify-center">
-              <Spinner variant="default" className="w-8 h-8 text-primary" />
-            </div>
+        <div className="mx-auto pt-5 w-full bg-white shadow-xl min-h-[200px] flex justify-center items-center">
+          <div className="flex justify-center">
+            <Spinner variant="default" className="w-8 h-8 text-primary" />
           </div>
+        </div>
       ) : (
         <div>
           <div
@@ -102,21 +99,18 @@ export const SchoolsTable: React.FC = () => {
               maxHeight: showSchoolForm ? "150px" : "0",
             }}
           >
-            <div className="flex p-5 bg-neutral-200">
+            <div className="flex p-5 gap-2 bg-neutral-200">
               {/* <Label>Add School:</Label> */}
               <Input
                 value={schoolName}
                 id="schoolName"
                 type="schoolName"
-                placeholder="Sheldon High School"
+                placeholder="Enter a school name."
                 onChange={(e) => setSchoolName(e.target.value)}
                 className="bg-neutral-100 border-neutral-200"
                 required
               />
               <Button size="default" variant="default" onClick={onSubmit}>
-                {/* disabled={
-                                !schoolName
-                            } */}
                 <Plus />
               </Button>
             </div>
