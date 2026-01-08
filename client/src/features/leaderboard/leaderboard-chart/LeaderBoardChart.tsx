@@ -8,14 +8,7 @@ import {
   YAxis,
   Cell,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import type { ChartConfig } from "@/components/ui/chart";
 import {
   ChartContainer,
@@ -36,6 +29,8 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
       score: item.score || 0,
     }))
     .sort((a, b) => b.score - a.score); // Sort by score descending
+
+  const max = chartData[0].score * 1.2;
 
   const colors = [
     "#3b82f6",
@@ -63,7 +58,7 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
 
   return (
     <div>
-      <Card>
+      <Card className="w-100vh">
         <CardContent>
           <ChartContainer config={chartConfig}>
             <BarChart
@@ -71,7 +66,7 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
               data={chartData}
               layout="vertical"
               margin={{
-                right: 16,
+                left: 0,
               }}
             >
               <CartesianGrid horizontal={false} />
@@ -84,7 +79,13 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
                 tickFormatter={(value) => value.slice(0, 3)}
                 hide
               />
-              <XAxis dataKey="score" type="number" hide />
+              <XAxis
+                dataKey="score"
+                type="number"
+                domain={[0, max]}
+                hide
+                allowDataOverflow
+              />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent indicator="line" />}
@@ -93,7 +94,7 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
                 dataKey="score"
                 layout="vertical"
                 fill="var(--color-desktop)"
-                radius={4}
+                radius={5}
               >
                 {chartData.map((_, index) => (
                   <Cell key={index} fill={colors[index % colors.length]} />
