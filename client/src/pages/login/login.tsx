@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
 const Login: React.FC = () => {
-
   const handleChange = () => {
     // setInputValue(event.target.value);
   };
