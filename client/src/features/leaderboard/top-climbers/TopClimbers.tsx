@@ -51,7 +51,7 @@ export const TopClimbers: React.FC = () => {
         <div className="flex flex-row gap-4">
           {maleLeaderboard.length > 0 && (
             <div className="flex-1">
-              <Card>
+              <Card className="h-92">
                 <CardHeader>
                   <CardTitle>Top Male {competitionType} Climbers</CardTitle>
                 </CardHeader>
@@ -68,7 +68,7 @@ export const TopClimbers: React.FC = () => {
 
           {femaleLeaderboard.length > 0 && (
             <div className="flex-1">
-              <Card>
+              <Card className="h-92">
                 <CardHeader>
                   <CardTitle>Top Female {competitionType} Climbers</CardTitle>
                 </CardHeader>
@@ -85,7 +85,7 @@ export const TopClimbers: React.FC = () => {
 
           {nonbinaryLeaderboard.length > 0 && (
             <div className="flex-1">
-              <Card>
+              <Card className="h-92">
                 <CardHeader>
                   <CardTitle>
                     Top Non-Binary {competitionType} Climbers
