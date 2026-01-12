@@ -75,6 +75,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
       data-slot="table-cell"
       className={cn(
         "px-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "truncate max-w-0",
         className
       )}
       {...props}
@@ -159,7 +160,7 @@ function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex rounded-md overflow-x-auto">
-        <Table>
+        <Table className="table-fixed w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

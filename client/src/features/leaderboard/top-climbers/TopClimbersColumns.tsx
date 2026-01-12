@@ -14,7 +14,7 @@ export const LeaderboardContestants: ColumnDef<Score>[] = [
   },
   {
     accessorKey: "school_name",
-    header: "",
+    header: "School",
   },
   {
     accessorKey: "score",
