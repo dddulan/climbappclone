@@ -13,6 +13,7 @@ import {
   SquareArrowUp,
   SquareArrowDown,
   ChevronDownIcon,
+  TriangleAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createRoute, getRoutesForComp } from "@/services/routeService";
@@ -34,6 +35,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/loadingWheel";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface tableProps {
   isEdit: boolean;
@@ -51,11 +59,14 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const [open, setOpen] = React.useState(false); //calendar open state
   const [date, setDate] = React.useState<string>("");
   const { comp } = useCompetition();
+  const [showWarning, setShowWarning] = useState<boolean>(false);
   //clickable header - persist state in localStorage
   const [showRouteForm, setShowAddForm] = useState<boolean>(() => {
     const saved = localStorage.getItem("showRouteForm");
     return saved ? JSON.parse(saved) : false;
   });
+  //point value for pop up
+  const minimumPointValue = 150;
 
   // Save showRouteForm state to localStorage whenever it changes
   useEffect(() => {
@@ -101,6 +112,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       return temp;
     });
   };
+
   //adding a row function
   const addRow = () => {
     if (!selectedGrade || !selectedRouteColor || !date || !scoreValue) {
@@ -123,196 +135,214 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       newRow.competition_id = comp.id;
     }
 
-    createRoute(newRow).then(() => {
-      loadData();
-    });
+    if (parseInt(scoreValue) < minimumPointValue) {
+      setShowWarning(true);
+    }
+    else {
+      createRoute(newRow).then(() => {
+        loadData();
+      });
+    }
   };
 
-  const loadContent = () => {
-    return (
-      <>
-        <span
-          className={`flex items-center text-3xl font-medium px-4 py-2  cursor-pointer gap-2 hover:bg-neutral-200 `}
-          onClick={handleShowAddForm}
-        >
-          Routes
-          <div className="flex items-center">
-            {showRouteForm ? <SquareArrowUp /> : <SquareArrowDown />}
-          </div>
-        </span>
+  return (
+    <>
+      <span
+        className={`flex items-center text-3xl font-medium px-4 py-2 cursor-pointer gap-2 hover:bg-neutral-200 `}
+        onClick={handleShowAddForm}
+      >
+        Routes
+        <div className="flex items-center">
+          {showRouteForm ? <SquareArrowUp /> : <SquareArrowDown />}
+        </div>
+      </span>
 
-        {loading ? (
-          <div className="mx-auto pt-5 w-full bg-white shadow-xl min-h-200px flex justify-center items-center">
-            <div className="flex justify-center">
-              <Spinner variant="default" className="w-8 h-8 text-primary" />
-            </div>
+      {loading ? (
+        <div className="mx-auto pt-5 w-full bg-white shadow-xl md:min-h-50 flex justify-center items-center">
+          <div className="flex justify-center">
+            <Spinner variant="default" className="w-8 h-8 text-primary" />
           </div>
-        ) : (
-          <div>
-            <div
-              className="overflow-hidden transition-all duration-500 ease-in-out"
-              style={{
-                maxHeight: showRouteForm ? "150px" : "0",
-              }}
-            >
-              <div className="bg-white shadow-xl">
-                <div className="flex flex-wrap gap-2 p-5 bg-neutral-200">
-                  {/* ADD ROW COMPOENENT GOES HERE */}
+        </div>
+      ) : (
+        <div>
+          <div
+            className="overflow-hidden transition-all duration-500 ease-in-out"
+            style={{
+              maxHeight: showRouteForm ? "150px" : "0",
+            }}
+          >
+            <div className="bg-white shadow-xl">
+              <div className="flex flex-wrap gap-2 p-5 bg-neutral-200">
+                {/* ADD ROW COMPOENENT GOES HERE */}
+                <Select
+                  onValueChange={(value) => setSelectedClimbType(value)}
+                >
+                  <SelectTrigger className="w-35">
+                    <SelectValue placeholder="Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {climbType.map((climb, index) => (
+                        <SelectItem key={index} value={climb}>
+                          {climb}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {selectedClimbType === "Bouldering" ? (
                   <Select
-                    onValueChange={(value) => setSelectedClimbType(value)}
-                  >
-                    <SelectTrigger className="w-35">
-                      <SelectValue placeholder="Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {climbType.map((climb, index) => (
-                          <SelectItem key={index} value={climb}>
-                            {climb}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  {selectedClimbType === "Bouldering" ? (
-                    <Select
-                      value={selectedGrade}
-                      onValueChange={(value) => setSelectedGrade(value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Grade" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {boulderingGradeList.map((grade, index) => (
-                            <SelectItem key={index} value={grade}>
-                              {grade}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  ) : selectedClimbType === "Top Rope" ? (
-                    <Select
-                      value={selectedGrade}
-                      onValueChange={(value) => setSelectedGrade(value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Grade" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {topRopeGradeList.map((grade, index) => (
-                            <SelectItem key={index} value={grade}>
-                              {grade}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <Select disabled>
-                      <SelectTrigger className="bg-gray-400">
-                        <SelectValue placeholder="Grade" />
-                      </SelectTrigger>
-                    </Select>
-                  )}
-
-                  <Select
-                    onValueChange={(value) => setSelectedRouteColor(value)}
+                    value={selectedGrade}
+                    onValueChange={(value) => setSelectedGrade(value)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Color" />
+                      <SelectValue placeholder="Grade" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        {colorList.map((color, index) => (
-                          <SelectItem key={index} value={color}>
-                            {color}
+                        {boulderingGradeList.map((grade, index) => (
+                          <SelectItem key={index} value={grade}>
+                            {grade}
                           </SelectItem>
                         ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  {/* Score*/}
-                  <Input
-                    placeholder="150"
-                    type="number"
-                    value={scoreValue}
-                    onChange={(e) => setScoreValue(e.target.value)}
-                    className="w-[100px] sm:w-40 bg-white"
-                    min="150"
-                    step="50"
-                  />
-                  {/* Date*/}
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="date"
-                        id="date-picker"
-                        className="w-[130px] sm:w-32 justify-between font-normal"
-                      >
-                        {date ? format(date, "MM/dd/yyyy") : "Select date"}
-                        <ChevronDownIcon />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="w-auto overflow-hidden p-0"
-                      align="start"
+                ) : selectedClimbType === "Top Rope" ? (
+                  <Select
+                    value={selectedGrade}
+                    onValueChange={(value) => setSelectedGrade(value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Grade" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {topRopeGradeList.map((grade, index) => (
+                          <SelectItem key={index} value={grade}>
+                            {grade}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Select disabled>
+                    <SelectTrigger className="bg-gray-400">
+                      <SelectValue placeholder="Grade" />
+                    </SelectTrigger>
+                  </Select>
+                )}
+
+                <Select
+                  onValueChange={(value) => setSelectedRouteColor(value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Color" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {colorList.map((color, index) => (
+                        <SelectItem key={index} value={color}>
+                          {color}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {/* Score*/}
+                <Input
+                  placeholder="150"
+                  type="number"
+                  value={scoreValue}
+                  onChange={(e) => setScoreValue(e.target.value)}
+                  className="w-[100px] sm:w-40 bg-white"
+                  min="150"
+                  step="50"
+                />
+                {/* Date*/}
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="date"
+                      id="date-picker"
+                      className="w-[130px] sm:w-32 justify-between font-normal"
                     >
-                      <Calendar
-                        mode="single"
-                        selected={new Date(date)}
-                        captionLayout="dropdown"
-                        startMonth={new Date(2020, 0)}
-                        endMonth={new Date(2030, 11)}
-                        onSelect={(date) => {
-                          setDate(format(date as Date, "MM/dd/yyyy"));
-                          setOpen(false);
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  {/* Add Button */}
-                  <Button size="sm" onClick={addRow}>
-                    <Plus />
-                  </Button>
-                </div>
+                      {date ? format(date, "MM/dd/yyyy") : "Select date"}
+                      <ChevronDownIcon />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-auto overflow-hidden p-0"
+                    align="start"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={new Date(date)}
+                      captionLayout="dropdown"
+                      startMonth={new Date(2020, 0)}
+                      endMonth={new Date(2030, 11)}
+                      onSelect={(date) => {
+                        setDate(format(date as Date, "MM/dd/yyyy"));
+                        setOpen(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+                {/* Add Button */}
+                <Button size="sm" onClick={addRow}>
+                  <Plus />
+                </Button>
+
+                {/* If score is below 150, this pops up */}
+                <Dialog open={showWarning} onOpenChange={setShowWarning}>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full">
+                          <TriangleAlert className="h-6 w-6 text-yellow-500" />
+                        </div>
+                        <DialogTitle className="text-xl">Invalid Score</DialogTitle>
+                      </div>
+                    </DialogHeader>
+                    <DialogDescription className="text-black text-lg">
+                      Route scores must be above {minimumPointValue}
+                    </DialogDescription>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
-
-            {/* Routes Table */}
-            <div className="mx-auto w-full px-4">
-              <DataTable
-                columns={routeColumns}
-                data={rows}
-                onUpdate={handleUpdate}
-                onDeselect={(rowIndex, isSave) => {
-                  // edit row was just canceled, revert row back to pre-edit state
-
-                  setRows((old) =>
-                    old.map((row, index) =>
-                      // search rows until we find rowIndex
-                      index === rowIndex && !isSave ? routes[index] : row
-                    )
-                  );
-
-                  toggleEditing(false);
-                }}
-                onDelete={() => {
-                  loadData();
-                }}
-                onRowClick={() => {
-                  toggleEditing(true);
-                }}
-                emptyMessage="No data found."
-              />
-            </div>
           </div>
-        )}
-      </>
-    );
-  };
 
-  return <div>{loadContent()}</div>;
+          {/* Routes Table */}
+          <div className="mx-auto w-full px-4">
+            <DataTable
+              columns={routeColumns}
+              data={rows}
+              onUpdate={handleUpdate}
+              onDeselect={(rowIndex, isSave) => {
+                // edit row was just canceled, revert row back to pre-edit state
+
+                setRows((old) =>
+                  old.map((row, index) =>
+                    // search rows until we find rowIndex
+                    index === rowIndex && !isSave ? routes[index] : row
+                  )
+                );
+
+                toggleEditing(false);
+              }}
+              onDelete={() => {
+                loadData();
+              }}
+              onRowClick={() => {
+                toggleEditing(true);
+              }}
+              emptyMessage="No data found."
+            />
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
