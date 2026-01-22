@@ -65,6 +65,8 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
     const saved = localStorage.getItem("showRouteForm");
     return saved ? JSON.parse(saved) : false;
   });
+  //point value for pop up
+  const minimumPointValue = 150;
 
   // Save showRouteForm state to localStorage whenever it changes
   useEffect(() => {
@@ -86,8 +88,6 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       getRoutesForComp(comp.id)
         .then((res) => {
           setRoutes(res);
-          console.log(comp);
-
           setRows(res);
         })
         .catch((err) => {
@@ -120,10 +120,6 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       return;
     }
 
-    //point value for pop up
-    const minimumPointValue = 150;
-
-
     const newRow: Route = {
       id: 0,
       name: "",
@@ -140,7 +136,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
     }
 
     if (parseInt(scoreValue) < minimumPointValue) {
-        setShowWarning(true);
+      setShowWarning(true);
     }
     else {
       createRoute(newRow).then(() => {
@@ -148,7 +144,6 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
       });
     }
   };
-
 
   return (
     <>
@@ -311,7 +306,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                       </div>
                     </DialogHeader>
                     <DialogDescription className="text-black text-lg">
-                      Route scores must be above 150
+                      Route scores must be above {minimumPointValue}
                     </DialogDescription>
                   </DialogContent>
                 </Dialog>

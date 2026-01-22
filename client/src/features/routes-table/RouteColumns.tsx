@@ -14,6 +14,7 @@ export const climbType: string[] = [
 ];
 
 export const boulderingGradeList: string[] = [
+  "vb",
   "v0",
   "v1",
   "v2",
@@ -30,6 +31,7 @@ export const boulderingGradeList: string[] = [
 ];
 
 export const topRopeGradeList: string[] = [
+  "5.5",
   "5.6",
   "5.7",
   "5.8",
@@ -55,16 +57,19 @@ export const topRopeGradeList: string[] = [
   "5.14c",
   "5.14d",
 ];
+
 export const colorList: string[] = [
   "red",
   "green",
   "blue",
   "yellow",
+  "pink",
   "orange",
   "purple",
   "black",
   "white",
   "gray",
+  "brown",
 ];
 
 export const routeColumns: ColumnDef<Route>[] = [
