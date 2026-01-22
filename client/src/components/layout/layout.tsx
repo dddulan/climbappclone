@@ -4,7 +4,6 @@ import Footer from "./footer/footer";
 import { useState, useEffect } from "react";
 import type { Competition } from "@/models/competition";
 import { CompContext } from "@/contexts/competitionContext";
-
 import { HoverSlideIcon } from "../hoverslide/hoverslide";
 import { ActiveCompetitionBanner } from "../../features/active-comp-banner/ActiveCompetitionBanner";
 import { AdminDialog } from "@/features/admin-dialog/Admin-Dialog";
@@ -19,6 +18,10 @@ const EMPTY_COMPETITION: Competition = {
 export const Layout = () => {
   const [showNavbar, setShowNavbar] = useState(() => {
     const saved = localStorage.getItem("showNavbar");
+    return saved ? JSON.parse(saved) : true;
+  });
+  const [showFooter, setShowFooter] = useState(() => {
+    const saved = localStorage.getItem("showFooter");
     return saved ? JSON.parse(saved) : true;
   });
   const [openDialogue, setOpenDialogue] = useState(false);
@@ -46,7 +49,7 @@ export const Layout = () => {
       try {
         //attempt to save comp when selected
         localStorage.setItem("selectedCompetition", JSON.stringify(comp));
-      } catch (error) {}
+      } catch (error) { }
     } else {
       //remove item if no comp selected
       localStorage.removeItem("selectedCompetition");
@@ -56,12 +59,14 @@ export const Layout = () => {
   // Save navbar state to localStorage
   useEffect(() => {
     localStorage.setItem("showNavbar", JSON.stringify(showNavbar));
-  }, [showNavbar]);
+    localStorage.setItem("showFooter", JSON.stringify(showFooter));
+  }, [showNavbar][showFooter]);
 
   const handleToggle = () => {
     //if navbar showing then hide it
     if (showNavbar) {
       setShowNavbar(false);
+      setShowFooter(false);
     } else {
       //if navbar hidden ask for admin code
       setOpenDialogue(true);
@@ -72,6 +77,7 @@ export const Layout = () => {
     const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
     if (password === adminPassword) {
       setShowNavbar(true);
+      setShowFooter(true);
       setOpenDialogue(false);
       return true;
     }
@@ -117,7 +123,13 @@ export const Layout = () => {
         />
       )}
 
-      <div className="shrink-0">
+      <div
+        className="shrink-0 transition-all duration-500 ease-in-out"
+        style={{
+          maxHeight: showNavbar ? "100px" : "0",
+          overflow: "hidden",
+        }}
+      >
         <Footer />
       </div>
     </div>

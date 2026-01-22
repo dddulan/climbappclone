@@ -9,7 +9,7 @@ const Header = () => {
   const currentTab = location.pathname.split('/')[1] || "competitions";
 
   return (
-    <div className="bg-white  text-black flex items-center justify-center text-lg">
+    <div className="bg-white text-black flex items-center justify-center text-lg">
       <div>
         <img src={logo} className="h-12 pr-1" alt="logo" />
       </div>
