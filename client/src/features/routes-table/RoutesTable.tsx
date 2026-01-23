@@ -106,7 +106,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
   const handleUpdate = (rowIndex: number, columnId: string, value: unknown) => {
     setRows((old) => {
       const temp = old.map((row, index) =>
-        index === rowIndex ? { ...row, [columnId]: value } : row
+        index === rowIndex ? { ...row, [columnId]: value } : row,
       );
 
       return temp;
@@ -137,8 +137,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
 
     if (parseInt(scoreValue) < minimumPointValue) {
       setShowWarning(true);
-    }
-    else {
+    } else {
       createRoute(newRow).then(() => {
         loadData();
       });
@@ -174,9 +173,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
             <div className="bg-white shadow-xl">
               <div className="flex flex-wrap gap-2 p-5 bg-neutral-200">
                 {/* ADD ROW COMPOENENT GOES HERE */}
-                <Select
-                  onValueChange={(value) => setSelectedClimbType(value)}
-                >
+                <Select onValueChange={(value) => setSelectedClimbType(value)}>
                   <SelectTrigger className="w-35">
                     <SelectValue placeholder="Type" />
                   </SelectTrigger>
@@ -234,9 +231,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                   </Select>
                 )}
 
-                <Select
-                  onValueChange={(value) => setSelectedRouteColor(value)}
-                >
+                <Select onValueChange={(value) => setSelectedRouteColor(value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Color" />
                   </SelectTrigger>
@@ -252,7 +247,7 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                 </Select>
                 {/* Score*/}
                 <Input
-                  placeholder="150"
+                  placeholder="Score"
                   type="number"
                   value={scoreValue}
                   onChange={(e) => setScoreValue(e.target.value)}
@@ -302,7 +297,9 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                         <div className="flex h-10 w-10 items-center justify-center rounded-full">
                           <TriangleAlert className="h-6 w-6 text-yellow-500" />
                         </div>
-                        <DialogTitle className="text-xl">Invalid Score</DialogTitle>
+                        <DialogTitle className="text-xl">
+                          Invalid Score
+                        </DialogTitle>
                       </div>
                     </DialogHeader>
                     <DialogDescription className="text-black text-lg">
@@ -326,8 +323,8 @@ export const RoutesTable: React.FC<tableProps> = ({ toggleEditing }) => {
                 setRows((old) =>
                   old.map((row, index) =>
                     // search rows until we find rowIndex
-                    index === rowIndex && !isSave ? routes[index] : row
-                  )
+                    index === rowIndex && !isSave ? routes[index] : row,
+                  ),
                 );
 
                 toggleEditing(false);

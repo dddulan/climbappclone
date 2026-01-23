@@ -6,16 +6,26 @@ export const LeaderboardContestants: ColumnDef<Score>[] = [
   {
     accessorKey: "rank",
     header: "",
-    cell: ({ row }) => <RankBadge rank={row.index + 1} />,
+    cell: ({ row }) => (
+      <div>
+        <RankBadge rank={row.index + 1} />
+      </div>
+    ),
   },
   {
     accessorKey: "contestant_name",
     header: "Contestant",
+    cell: ({ row }) => (
+      <div className="whitespace-normal">{row.getValue("contestant_name")}</div>
+    ),
   },
-  {
-    accessorKey: "school_name",
-    header: "School",
-  },
+  // {
+  //   accessorKey: "school_name",
+  //   header: "School",
+  //   cell: ({ row }) => (
+  //     <div className="whitespace-normal">{row.getValue("school_name")}</div>
+  //   ),
+  // },
   {
     accessorKey: "score",
     header: "Score",

@@ -17,6 +17,10 @@ const Leaderboard: React.FC = () => {
 
   const loadData = () => {
     setLoading(true);
+    getLeaderboardData();
+  };
+
+  const getLeaderboardData = () => {
     getLeaderboard(comp.id)
       .then((res: Score[]) => {
         setLeaderboard(res);
@@ -29,9 +33,9 @@ const Leaderboard: React.FC = () => {
     <div>
       <div className="container mx-auto">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4 flex items-center gap-2">
             <Trophy className="h-8 w-8 text-yellow-600" />
-            Competition Leaderboard
+            Leaderboard
           </h1>
 
           {loading ? (
@@ -56,14 +60,13 @@ const Leaderboard: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-6">
-              <LeaderBoardChart data={leaderboard} />
-
-            </div>
+            <LeaderBoardChart data={leaderboard} />
           )}
         </div>
       </div>
-      <TopClimbers />
+      <div>
+        <TopClimbers />
+      </div>
     </div>
   );
 };

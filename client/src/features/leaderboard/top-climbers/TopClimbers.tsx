@@ -24,16 +24,16 @@ export const TopClimbers: React.FC = () => {
       .then((res: Score[]) => {
         // Filter and sort male contestants
         const maleContestants = res.filter(
-          (score) => score.gender?.toLowerCase() === "male"
+          (score) => score.gender?.toLowerCase() === "male",
         );
 
         // Filter and sort female contestants
         const femaleContestants = res.filter(
-          (score) => score.gender?.toLowerCase() === "female"
+          (score) => score.gender?.toLowerCase() === "female",
         );
         // Filter and sort non-binary contestants
         const nonbinaryContestants = res.filter(
-          (score) => score.gender?.toLowerCase() === "non-binary"
+          (score) => score.gender?.toLowerCase() === "non-binary",
         );
 
         setMaleLeaderboard(maleContestants);
@@ -44,14 +44,14 @@ export const TopClimbers: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-10 w-full">
+    <div className="container mx-auto pt-5 w-full">
       <div className="gap-6 flex flex-col">
         {/* Top Male and Female Leaderboards */}
 
         <div className="flex flex-row gap-4">
           {maleLeaderboard.length > 0 && (
             <div className="flex-1">
-              <Card className="h-92">
+              <Card className="gap-0">
                 <CardHeader>
                   <CardTitle>Top Male {competitionType} Climbers</CardTitle>
                 </CardHeader>
@@ -68,7 +68,7 @@ export const TopClimbers: React.FC = () => {
 
           {femaleLeaderboard.length > 0 && (
             <div className="flex-1">
-              <Card className="h-92">
+              <Card className="gap-0">
                 <CardHeader>
                   <CardTitle>Top Female {competitionType} Climbers</CardTitle>
                 </CardHeader>
@@ -85,7 +85,7 @@ export const TopClimbers: React.FC = () => {
 
           {nonbinaryLeaderboard.length > 0 && (
             <div className="flex-1">
-              <Card className="h-92">
+              <Card className="gap-0">
                 <CardHeader>
                   <CardTitle>
                     Top Non-Binary {competitionType} Climbers

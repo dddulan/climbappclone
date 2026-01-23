@@ -174,7 +174,7 @@ export const SignUpForm: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-h-full">
         {/* Registration Form - LEFT SIDE */}
         <Card className="bg-white shadow-lg rounded-xl border border-gray-100 ">
-          <CardHeader className="bg-linear-to-r from-slate-50 to-gray-50 border-b border-gray-200">
+          <CardHeader className="bg-linear-to-r from-slate-50 to-gray-50 border-b border-gray-300">
             <CardTitle className="text-2xl font-bold text-gray-900">
               Registration Form
             </CardTitle>
