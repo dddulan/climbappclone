@@ -23,26 +23,25 @@ export const ActiveCompetitionBanner = ({
   competition,
 }: ActiveCompetitionBannerProps) => {
   const [competitions, setCompetitions] = useState<Competition[]>([]);
-
   const { comp, setComp } = useCompetition();
 
   // Refetch competitions when the banner mounts or when comp changes
   useEffect(() => {
-    const fetchCompetitions = () => {
-      getAllCompetitions()
-        .then((res: Competition[]) => {
-          setCompetitions(res);
-        })
-        .catch(console.error);
-    };
-
     fetchCompetitions();
 
     // Set up interval to periodically refresh competitions list
-    const interval = setInterval(fetchCompetitions, 5000);
+    // const interval = setInterval(fetchCompetitions, 5000);
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, []);
+
+  const fetchCompetitions = () => {
+    getAllCompetitions()
+      .then((res: Competition[]) => {
+        setCompetitions(res);
+      })
+      .catch(console.error);
+  };
 
   const selected = hasSelection(competition);
 
