@@ -7,6 +7,6 @@ export interface Score {
   school_name?: string;
   contestant_name?: string;
   gender?: string;
-  score?: number;
+  score: number;
   points_earned?: number;
 }

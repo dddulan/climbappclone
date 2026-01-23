@@ -139,6 +139,7 @@ export const LogScore: React.FC = () => {
       id: 0,
       contestant_id: Number(selectedContestant),
       route_id: selectedRoute.id,
+      score: 0,
       attempt: Number(selectedAttempt),
     };
 
@@ -155,11 +156,8 @@ export const LogScore: React.FC = () => {
         //fetch updated scores for the contestant
         const updatedScores: Score[] = await getContestantRoutes(
           comp.id,
-          Number(selectedContestant)
+          Number(selectedContestant),
         );
-
-        console.log(updatedScores);
-        console.log("ALL", routes);
 
         // map route numbers to the routes that this contestant completed
         updatedScores.forEach((item: Score) => {
@@ -323,7 +321,7 @@ export const LogScore: React.FC = () => {
                   {contestants
                     .filter(
                       (contestant) =>
-                        contestant.school_id === Number(selectedSchool)
+                        contestant.school_id === Number(selectedSchool),
                     )
                     .map(
                       (contestant, index) =>
@@ -334,7 +332,7 @@ export const LogScore: React.FC = () => {
                           >
                             {contestant.name}
                           </SelectItem>
-                        )
+                        ),
                     )}
                 </SelectContent>
               </Select>
@@ -358,7 +356,7 @@ export const LogScore: React.FC = () => {
                 ></Input>
 
                 <Label
-                  className="block text-center border-2 px-4 py-1 rounded-md border-gray-400 gap-2 text-base"
+                  className="block text-center border-2 px-4 py-1 rounded-md border-gray-300 gap-2 text-base"
                   hidden={!showRoute}
                 >
                   {routeText}
@@ -402,7 +400,7 @@ export const LogScore: React.FC = () => {
                   Score
                 </Label>
 
-                <Label className="block content-center text-center text-base border-2 h-9 rounded-md border-gray-400">
+                <Label className="block content-center text-center text-base border-2 h-9 rounded-md border-gray-300">
                   <span hidden={!selectedAttempt}>{score}</span>
                 </Label>
               </div>

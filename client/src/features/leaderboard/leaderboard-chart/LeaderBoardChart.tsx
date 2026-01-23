@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -16,21 +16,40 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { Score } from "@/models/score";
+import { getLeaderboard } from "@/services/contestantService";
+import { useCompetition } from "@/hooks/useCompetition";
 
 interface LeaderBoardChartProps {
   data: Score[];
 }
 
 export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
-  // Transform the API data to chart format
-  const chartData = data
-    .map((item) => ({
-      team: item.school_name || "",
-      score: item.score || 0,
-    }))
-    .sort((a, b) => b.score - a.score); // Sort by score descending
+  const [chartData, setChartData] = useState<Score[]>([...data]);
+  const [max, setMax] = useState<number>(0);
+  const { comp } = useCompetition();
 
-  const max = chartData[0].score * 1.2;
+  // Refresh leaderboard every 15s
+  useEffect(() => {
+    chartData.sort((a, b) => b.score - a.score);
+    setMax(chartData[0].score * 1.2);
+  }, []);
+
+  const getLeaderboardData = () => {
+    getLeaderboard(comp.id)
+      .then((res: Score[]) => {
+        setChartData(res.sort((a, b) => b.score - a.score));
+      })
+      .catch(console.error);
+  };
+
+  // Refresh leaderboard every 15s
+  useEffect(() => {
+    const interval = setInterval(getLeaderboardData, 10000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const colors = [
     "#3b82f6",
@@ -58,7 +77,7 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
 
   return (
     <div>
-      <Card className="w-100vh">
+      <Card className="gap-0">
         <CardContent>
           <ChartContainer config={chartConfig}>
             <BarChart
@@ -66,12 +85,12 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
               data={chartData}
               layout="vertical"
               margin={{
-                left: 0,
+                left: 150,
               }}
             >
               <CartesianGrid horizontal={false} />
               <YAxis
-                dataKey="team"
+                dataKey="school_name"
                 type="category"
                 tickLine={false}
                 tickMargin={10}
@@ -100,10 +119,9 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
                   <Cell key={index} fill={colors[index % colors.length]} />
                 ))}
                 <LabelList
-                  dataKey="team"
-                  position="insideLeft"
+                  dataKey="school_name"
+                  position="left"
                   offset={8}
-                  className="fill-(--color-label)"
                   fontSize={12}
                 />
                 <LabelList
