@@ -43,6 +43,15 @@ export const TopClimbers: React.FC = () => {
       .catch(console.error);
   };
 
+  useEffect(() => {
+    loadData();
+    //refreshes the top climbers every 15 seconds
+    const interval = setInterval(loadData, 15000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <div className="container mx-auto pt-5 w-full">
       <div className="gap-6 flex flex-col">
