@@ -25,4 +25,4 @@ dist-ssr
 
 # Production
 /.env
-/src/services/axios.ts
+./src/services/axios.ts

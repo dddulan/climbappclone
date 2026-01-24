@@ -4,7 +4,7 @@ import { log } from "console";
 
 export const getAllContestants = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const result = await pool.query(`
@@ -25,7 +25,7 @@ export const getAllContestants = async (
 
 export const getContestantsForComp = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const compId = req.params.id;
 
@@ -42,7 +42,7 @@ export const getContestantsForComp = async (
         INNER JOIN schools s ON s.id = c.school_id
       WHERE c.competition_id = $1
       ORDER BY c.id`,
-      [compId]
+      [compId],
     );
     res.json(result.rows);
   } catch (err) {
@@ -53,7 +53,7 @@ export const getContestantsForComp = async (
 
 export const updateContestant = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const contestant = req.body;
 
@@ -63,7 +63,7 @@ export const updateContestant = async (
         SET 
         name = $2, gender = $3
         WHERE id = $1 RETURNING *`,
-      [contestant.id, contestant.name, contestant.gender]
+      [contestant.id, contestant.name, contestant.gender],
     );
 
     res.json({ message: "Success" });
@@ -75,14 +75,14 @@ export const updateContestant = async (
 
 export const deleteContestant = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const { id } = req.params;
 
   try {
     await pool.query(
       `DELETE FROM contestants
-       WHERE id = ${id}`
+       WHERE id = ${id}`,
     );
 
     res.json({ message: "Success" });
@@ -94,7 +94,7 @@ export const deleteContestant = async (
 
 export const updateSchool = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const school = req.body;
 
@@ -104,7 +104,7 @@ export const updateSchool = async (
         SET 
         name = $2
         WHERE id = $1 RETURNING *`,
-      [school.id, school.name]
+      [school.id, school.name],
     );
 
     res.json({ message: "Success" });
@@ -116,14 +116,14 @@ export const updateSchool = async (
 
 export const deleteSchool = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const { id } = req.params;
 
   try {
     await pool.query(
       `DELETE FROM schools
-       WHERE id = ${id}`
+       WHERE id = ${id}`,
     );
 
     res.json({ message: "Success" });
@@ -135,7 +135,7 @@ export const deleteSchool = async (
 
 export const getAllSchools = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const result = await pool.query("SELECT * FROM schools ORDER BY id");
@@ -148,7 +148,7 @@ export const getAllSchools = async (
 
 export const getSchoolsforComp = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const compId = req.params.id;
 
@@ -161,7 +161,7 @@ export const getSchoolsforComp = async (
       WHERE c.competition_id = $1
       ORDER BY s.name
       `,
-      [compId]
+      [compId],
     );
     res.json(result.rows);
   } catch (err) {
@@ -172,7 +172,7 @@ export const getSchoolsforComp = async (
 
 export const signUpContestant = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const contestant = req.body;
 
@@ -196,7 +196,7 @@ export const signUpContestant = async (
 
 export const saveContestants = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const contestants = req.body;
   const values: any[] = [];
@@ -248,7 +248,7 @@ export const logScore = async (req: Request, res: Response): Promise<void> => {
 
 export const getContestantRoutes = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const { compId, contestantId } = req.params;
   try {
@@ -267,7 +267,7 @@ export const getContestantRoutes = async (
         AND r.competition_id = $2
       ORDER BY s.id DESC
       `,
-      [contestantId, compId]
+      [contestantId, compId],
     );
     res.json(result.rows);
   } catch (err) {
@@ -278,21 +278,67 @@ export const getContestantRoutes = async (
 
 export const getLeaderboard = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const compId = req.params.id;
 
   try {
+    // const query = `
+    //   SELECT
+    //     sch.name AS school_name,
+    //     SUM((r.point_value - ((s.attempt - 1) * 50))) AS score
+    //   FROM scores s
+    //     INNER JOIN routes r ON r.id = s.route_id
+    //     INNER JOIN contestants c ON c.id = s.contestant_id
+    //     INNER JOIN schools sch ON sch.id = c.school_id
+    //   WHERE r.competition_id = ($1)
+    //   GROUP BY sch.name, sch.id
+    //   ORDER BY sch.id;
+    // `;
+
     const query = `
       SELECT 
-        sch.name AS school_name, 
-        SUM((r.point_value - ((s.attempt - 1) * 50))) AS score
-      FROM scores s
-        INNER JOIN routes r ON r.id = s.route_id
-        INNER JOIN contestants c ON c.id = s.contestant_id
-        INNER JOIN schools sch ON sch.id = c.school_id
-      WHERE r.competition_id = ($1)
-      GROUP BY sch.name;`;
+          school_id,
+          school_name,
+          SUM(score) AS score
+      FROM (
+          SELECT *,
+                ROW_NUMBER() OVER (
+                    PARTITION BY school_id
+                    ORDER BY score DESC
+                ) AS school_rank
+          FROM (
+              -- Contestant total score (top 5 routes)
+              SELECT 
+                  s.id AS school_id,
+                  s.name AS school_name,
+                  co.id AS contestant_id,
+                  SUM(route_value) AS score
+              FROM (
+                  SELECT 
+                      scr.contestant_id,
+                      scr.route_id,
+                      (r.point_value - ((scr.attempt - 1) * 50)) AS route_value,
+                      ROW_NUMBER() OVER (
+                          PARTITION BY scr.contestant_id
+                          ORDER BY (r.point_value - ((scr.attempt - 1) * 50)) DESC
+                      ) AS rn
+                  FROM scores scr
+                  INNER JOIN routes r ON r.id = scr.route_id
+                  WHERE r.competition_id = ($1)
+              ) ranked_routes
+              INNER JOIN contestants co 
+                  ON co.id = ranked_routes.contestant_id
+              INNER JOIN schools s 
+                  ON s.id = co.school_id
+              WHERE rn <= 5
+              GROUP BY s.id, s.name, co.id
+          ) contestant_scores
+      ) ranked_contestants
+      WHERE school_rank <= 5
+      GROUP BY school_id, school_name
+      ORDER BY score DESC;
+    `;
 
     const values = [compId];
 
@@ -306,7 +352,7 @@ export const getLeaderboard = async (
 
 export const getContestantScores = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const compId = req.params.id;
 
@@ -336,7 +382,7 @@ export const getContestantScores = async (
             INNER JOIN routes r ON r.id = s.route_id
             WHERE r.competition_id = ($1)
             ) ranked
-          WHERE rn <= 3
+          WHERE rn <= 5
         ) AS t
         INNER JOIN contestants co ON co.id = t.contestant_id
         INNER JOIN schools s ON s.id = co.school_id
@@ -345,7 +391,7 @@ export const getContestantScores = async (
       )
       WHERE 
         gender_count <= 5;`,
-      [compId]
+      [compId],
     );
 
     res.json(result.rows);
@@ -356,12 +402,12 @@ export const getContestantScores = async (
 
 export const getTopContestants = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {};
 
 export const createSchool = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   const school = req.body;
 

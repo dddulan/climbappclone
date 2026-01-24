@@ -1,31 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { getLeaderboard } from "@/services/contestantService";
+import React from "react";
 import { LeaderBoardChart } from "@/features/leaderboard/leaderboard-chart/LeaderBoardChart";
-import type { Score } from "@/models/score";
 import { TopClimbers } from "@/features/leaderboard/top-climbers/TopClimbers";
 import { Trophy } from "lucide-react";
-import { useCompetition } from "@/hooks/useCompetition";
 
 const Leaderboard: React.FC = () => {
-  const [leaderboard, setLeaderboard] = useState<Score[]>([]);
-  const { comp } = useCompetition();
-
-  useEffect(() => {
-    loadData();
-  }, [comp.id]);
-
-  const loadData = () => {
-    getLeaderboardData();
-  };
-
-  const getLeaderboardData = () => {
-    getLeaderboard(comp.id)
-      .then((res: Score[]) => {
-        setLeaderboard(res);
-      })
-      .catch(console.error)
-  };
-
   return (
     <div>
       <div className="container mx-auto">
@@ -35,8 +13,7 @@ const Leaderboard: React.FC = () => {
             Leaderboard
           </h1>
 
-            <LeaderBoardChart data={leaderboard} />
-          
+          <LeaderBoardChart />
         </div>
       </div>
       <div>

@@ -20,34 +20,30 @@ import { getLeaderboard } from "@/services/contestantService";
 import { useCompetition } from "@/hooks/useCompetition";
 import { Trophy } from "lucide-react";
 
-interface LeaderBoardChartProps {
-  data: Score[];
-}
-
-export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
-  const [chartData, setChartData] = useState<Score[]>([...data]);
+export const LeaderBoardChart: React.FC = () => {
+  const [chartData, setChartData] = useState<Score[]>([]);
   const [max, setMax] = useState<number>(0);
   const { comp } = useCompetition();
   const [loading, setLoading] = useState(true);
 
-  const loadData = () => {
-    setLoading(true);
-  };
-
   useEffect(() => {
     loadData();
-  }, []);
+  }, [comp.id]);
+
+  const loadData = () => {
+    setLoading(true);
+    getLeaderboardData();
+  };
 
   const getLeaderboardData = () => {
     getLeaderboard(comp.id)
       .then((res: Score[]) => {
-        // Sort data by score descending
-        const sorted = res.sort((a, b) => b.score - a.score);
-        setChartData(sorted);
-        // Set max for XAxis domain
-        // edge case handling for empty data
-        if (sorted.length > 0) {
-          setMax(sorted[0].score * 1.2);
+        setChartData(res);
+
+        // set maximum length used for chart width
+        if (res.length > 0) {
+          let highest = Math.max(...res.map((item) => item.score));
+          setMax(highest * 1.2);
         }
       })
       .catch(console.error)
@@ -56,9 +52,6 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
 
   // Refresh leaderboard every 15s
   useEffect(() => {
-    // Initial load preventing waiting for interval
-    getLeaderboardData();
-    // Set interval for loads
     const interval = setInterval(getLeaderboardData, 15000);
 
     return () => {
@@ -86,7 +79,7 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
       label: "Mobile",
     },
     label: {
-      color: "var(--background)",
+      color: "red",
     },
   } satisfies ChartConfig;
 
@@ -159,14 +152,15 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
                     dataKey="school_name"
                     position="left"
                     offset={8}
-                    fontSize={12}
+                    fontSize={13}
+                    className="font-bold"
                   />
                   <LabelList
                     dataKey="score"
                     position="right"
                     offset={8}
                     className="fill-foreground"
-                    fontSize={12}
+                    fontSize={13}
                   />
                 </Bar>
               </BarChart>
