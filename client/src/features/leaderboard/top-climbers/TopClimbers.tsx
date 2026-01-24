@@ -43,6 +43,15 @@ export const TopClimbers: React.FC = () => {
       .catch(console.error);
   };
 
+  useEffect(() => {
+    //refreshes the top climbers every 15 seconds
+    const interval = setInterval(loadData, 15000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <div className="container mx-auto pt-5 w-full">
       <div className="gap-6 flex flex-col">
@@ -53,7 +62,7 @@ export const TopClimbers: React.FC = () => {
             <div className="flex-1">
               <Card className="gap-0">
                 <CardHeader>
-                  <CardTitle>Top Male {competitionType} Climbers</CardTitle>
+                  <CardTitle>Top Male Climbers</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <DataTable
@@ -70,7 +79,7 @@ export const TopClimbers: React.FC = () => {
             <div className="flex-1">
               <Card className="gap-0">
                 <CardHeader>
-                  <CardTitle>Top Female {competitionType} Climbers</CardTitle>
+                  <CardTitle>Top Female Climbers</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <DataTable
@@ -87,9 +96,7 @@ export const TopClimbers: React.FC = () => {
             <div className="flex-1">
               <Card className="gap-0">
                 <CardHeader>
-                  <CardTitle>
-                    Top Non-Binary {competitionType} Climbers
-                  </CardTitle>
+                  <CardTitle>Top Non-Binary Climbers</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <DataTable

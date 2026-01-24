@@ -153,7 +153,7 @@ export const LogScore: React.FC = () => {
         setShowWarning(true);
       } else {
         // successful save
-        //fetch updated scores for the contestant
+        // fetch updated scores for the contestant
         const updatedScores: Score[] = await getContestantRoutes(
           comp.id,
           Number(selectedContestant),
@@ -430,7 +430,7 @@ export const LogScore: React.FC = () => {
         <DialogContent className="sm:max-w-md ">
           <DialogHeader>
             <DialogTitle>Great Job! Your Score is Logged!</DialogTitle>
-            <DialogDescription>Here are your top 3 scores:</DialogDescription>
+            <DialogDescription>Here are your top 5 scores:</DialogDescription>
           </DialogHeader>
 
           <div className="mt-4">

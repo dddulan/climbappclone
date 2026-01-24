@@ -19,13 +19,13 @@ export const LeaderboardContestants: ColumnDef<Score>[] = [
       <div className="whitespace-normal">{row.getValue("contestant_name")}</div>
     ),
   },
-  // {
-  //   accessorKey: "school_name",
-  //   header: "School",
-  //   cell: ({ row }) => (
-  //     <div className="whitespace-normal">{row.getValue("school_name")}</div>
-  //   ),
-  // },
+  {
+    accessorKey: "school_name",
+    header: "School",
+    cell: ({ row }) => (
+      <div className="whitespace-normal">{row.getValue("school_name")}</div>
+    ),
+  },
   {
     accessorKey: "score",
     header: "Score",

@@ -12,7 +12,7 @@ export const ScoreTable: React.FC<ScoreTableProps> = ({ data }) => {
 
   useEffect(() => {
     const sortedByPoints = data.sort(
-      (a, b) => (b.points_earned || 0) - (a.points_earned || 0)
+      (a, b) => (b.points_earned || 0) - (a.points_earned || 0),
     );
     setRows(sortedByPoints);
   }, [data]);
@@ -20,7 +20,7 @@ export const ScoreTable: React.FC<ScoreTableProps> = ({ data }) => {
   return (
     <DataTable
       columns={ScoreColumn}
-      data={rows.slice(0, 3)}
+      data={rows.slice(0, 5)}
       showPagination={false}
     />
   );

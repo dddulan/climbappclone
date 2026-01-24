@@ -18,33 +18,41 @@ import {
 import type { Score } from "@/models/score";
 import { getLeaderboard } from "@/services/contestantService";
 import { useCompetition } from "@/hooks/useCompetition";
+import { Trophy } from "lucide-react";
 
-interface LeaderBoardChartProps {
-  data: Score[];
-}
-
-export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
-  const [chartData, setChartData] = useState<Score[]>([...data]);
+export const LeaderBoardChart: React.FC = () => {
+  const [chartData, setChartData] = useState<Score[]>([]);
   const [max, setMax] = useState<number>(0);
   const { comp } = useCompetition();
+  const [loading, setLoading] = useState(true);
 
-  // Refresh leaderboard every 15s
   useEffect(() => {
-    chartData.sort((a, b) => b.score - a.score);
-    setMax(chartData[0].score * 1.2);
-  }, []);
+    loadData();
+  }, [comp.id]);
+
+  const loadData = () => {
+    setLoading(true);
+    getLeaderboardData();
+  };
 
   const getLeaderboardData = () => {
     getLeaderboard(comp.id)
       .then((res: Score[]) => {
-        setChartData(res.sort((a, b) => b.score - a.score));
+        setChartData(res);
+
+        // set maximum length used for chart width
+        if (res.length > 0) {
+          let highest = Math.max(...res.map((item) => item.score));
+          setMax(highest * 1.2);
+        }
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false));
   };
 
   // Refresh leaderboard every 15s
   useEffect(() => {
-    const interval = setInterval(getLeaderboardData, 10000);
+    const interval = setInterval(getLeaderboardData, 15000);
 
     return () => {
       clearInterval(interval);
@@ -71,72 +79,96 @@ export const LeaderBoardChart: React.FC<LeaderBoardChartProps> = ({ data }) => {
       label: "Mobile",
     },
     label: {
-      color: "var(--background)",
+      color: "red",
     },
   } satisfies ChartConfig;
 
   return (
     <div>
-      <Card className="gap-0">
-        <CardContent>
-          <ChartContainer config={chartConfig}>
-            <BarChart
-              accessibilityLayer
-              data={chartData}
-              layout="vertical"
-              margin={{
-                left: 150,
-              }}
-            >
-              <CartesianGrid horizontal={false} />
-              <YAxis
-                dataKey="school_name"
-                type="category"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
-                hide
-              />
-              <XAxis
-                dataKey="score"
-                type="number"
-                domain={[0, max]}
-                hide
-                allowDataOverflow
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="line" />}
-              />
-              <Bar
-                dataKey="score"
+      {loading ? (
+        <div className="space-y-6">
+          <div className="animate-pulse bg-white rounded-xl shadow-lg p-6">
+            <div className="h-8 bg-gray-200 rounded mb-4"></div>
+            <div className="h-64 bg-gray-200 rounded"></div>
+          </div>
+          <div className="animate-pulse bg-white rounded-xl shadow-lg p-6">
+            <div className="h-8 bg-gray-200 rounded mb-4"></div>
+            <div className="h-96 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      ) : chartData.length === 0 ? (
+        <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-12 text-center">
+          <Trophy className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            No Results Yet
+          </h3>
+          <p className="text-gray-500">
+            Start logging scores to see the leaderboard!
+          </p>
+        </div>
+      ) : (
+        <Card className="gap-0">
+          <CardContent>
+            <ChartContainer config={chartConfig}>
+              <BarChart
+                accessibilityLayer
+                data={chartData}
                 layout="vertical"
-                fill="var(--color-desktop)"
-                radius={5}
+                margin={{
+                  left: 150,
+                }}
               >
-                {chartData.map((_, index) => (
-                  <Cell key={index} fill={colors[index % colors.length]} />
-                ))}
-                <LabelList
+                <CartesianGrid horizontal={false} />
+                <YAxis
                   dataKey="school_name"
-                  position="left"
-                  offset={8}
-                  fontSize={12}
+                  type="category"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                  hide
                 />
-                <LabelList
+                <XAxis
                   dataKey="score"
-                  position="right"
-                  offset={8}
-                  className="fill-foreground"
-                  fontSize={12}
+                  type="number"
+                  domain={[0, max]}
+                  hide
+                  allowDataOverflow
                 />
-              </Bar>
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-        <CardFooter className="flex-col items-start gap-2 text-sm"></CardFooter>
-      </Card>
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="line" />}
+                />
+                <Bar
+                  dataKey="score"
+                  layout="vertical"
+                  fill="var(--color-desktop)"
+                  radius={5}
+                >
+                  {chartData.map((_, index) => (
+                    <Cell key={index} fill={colors[index % colors.length]} />
+                  ))}
+                  <LabelList
+                    dataKey="school_name"
+                    position="left"
+                    offset={8}
+                    fontSize={13}
+                    className="font-bold"
+                  />
+                  <LabelList
+                    dataKey="score"
+                    position="right"
+                    offset={8}
+                    className="fill-foreground"
+                    fontSize={13}
+                  />
+                </Bar>
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+          <CardFooter className="flex-col items-start gap-2 text-sm"></CardFooter>
+        </Card>
+      )}
     </div>
   );
 };
