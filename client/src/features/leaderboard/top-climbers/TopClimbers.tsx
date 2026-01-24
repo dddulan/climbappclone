@@ -12,8 +12,6 @@ export const TopClimbers: React.FC = () => {
   const [femaleLeaderboard, setFemaleLeaderboard] = useState<Score[]>([]);
   const [nonbinaryLeaderboard, setNonbinaryLeaderboard] = useState<Score[]>([]);
   const { comp } = useCompetition();
-  // Get competition type from context (e.g., "Boulder", "Top Rope", "Both")
-  const competitionType = comp?.type || "";
 
   useEffect(() => {
     loadData();
