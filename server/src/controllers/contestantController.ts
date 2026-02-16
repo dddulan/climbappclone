@@ -370,7 +370,7 @@ export const getContestantScores = async (
           co.gender, 
           s.name AS school_name, 
           SUM(value) AS score,
-          ROW_NUMBER()  OVER (PARTITION BY gender) AS gender_count
+          ROW_NUMBER()  OVER (PARTITION BY gender ORDER BY SUM(value) DESC) AS gender_count
 
         FROM (
             SELECT contestant_id, value
